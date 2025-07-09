@@ -4,7 +4,7 @@ import authenticationApi from "apis/authentication";
 import {
   PROFILE_PATH,
   CHANGE_PASSWORD_PATH,
-  DASHBOARD_PATH,
+  PUBLIC_PATH,
 } from "components/routeConstants";
 import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
@@ -22,8 +22,7 @@ const Sidebar = () => {
     try {
       await authenticationApi.logout();
       authDispatch({ type: "LOGOUT" });
-      // window.location.href = LOGIN_PATH;
-      window.location.href = DASHBOARD_PATH;
+      window.location.href = PUBLIC_PATH;
     } catch (error) {
       logger.error(error);
     }

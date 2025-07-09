@@ -6,6 +6,7 @@ import Quizzes from "components/Dashboard/Quizzes";
 import Settings from "components/Dashboard/Settings";
 
 export const DASHBOARD_PATH = "/";
+export const PUBLIC_PATH = "/public";
 export const QUIZZES_PATH = "/quizzes";
 export const CHANGE_PASSWORD_PATH = "/settings?tab=password";
 export const PROFILE_PATH = "/settings?tab=profile";

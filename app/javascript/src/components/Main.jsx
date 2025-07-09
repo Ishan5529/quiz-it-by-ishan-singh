@@ -7,7 +7,7 @@ import Public from "components/Public";
 import {
   AUTH_ROUTES,
   PRIVATE_ROUTES,
-  DASHBOARD_PATH,
+  PUBLIC_PATH,
   LOGIN_PATH,
 } from "components/routeConstants";
 import { useAuthState, useAuthDispatch } from "contexts/auth";
@@ -67,9 +67,7 @@ const Main = props => {
             path={route.path}
           />
         ))}
-        {!isLoggedIn && (
-          <Route exact component={Public} path={DASHBOARD_PATH} />
-        )}
+        <Route exact component={Public} path={PUBLIC_PATH} />
         {PRIVATE_ROUTES.map(route => (
           <PrivateRoute
             component={route.component}
