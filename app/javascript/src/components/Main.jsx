@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { PageLoader } from "neetoui";
-import PropTypes from "prop-types";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import { isPresent } from "utils";
-
 import { setAuthHeaders, registerIntercepts } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import PrivateRoute from "components/commons/PrivateRoute";
-import Hero from "components/Hero";
+import Public from "components/Public";
 import {
   AUTH_ROUTES,
   PRIVATE_ROUTES,
@@ -18,6 +12,11 @@ import {
 } from "components/routeConstants";
 import { useAuthState, useAuthDispatch } from "contexts/auth";
 import { useUserDispatch, useUserState } from "contexts/user";
+import { PageLoader } from "neetoui";
+import PropTypes from "prop-types";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { isPresent } from "utils";
 import {
   clearLocalStorageCredentials,
   getFromLocalStorage,
@@ -68,7 +67,9 @@ const Main = props => {
             path={route.path}
           />
         ))}
-        {!isLoggedIn && <Route exact component={Hero} path={DASHBOARD_PATH} />}
+        {!isLoggedIn && (
+          <Route exact component={Public} path={DASHBOARD_PATH} />
+        )}
         {PRIVATE_ROUTES.map(route => (
           <PrivateRoute
             component={route.component}

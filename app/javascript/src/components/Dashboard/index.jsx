@@ -1,13 +1,12 @@
 import React from "react";
 
-import { Route, Redirect, Switch } from "react-router-dom";
-
 import Sidebar from "components/commons/Sidebar";
 import {
   DASHBOARD_ROUTES,
-  NOTES_PATH,
+  QUIZZES_PATH,
   DASHBOARD_PATH,
 } from "components/routeConstants";
+import { Route, Redirect, Switch } from "react-router-dom";
 
 const Dashboard = () => (
   <div className="flex h-screen w-full">
@@ -16,7 +15,7 @@ const Dashboard = () => (
       {DASHBOARD_ROUTES.map(({ path, component }) => (
         <Route exact component={component} key={path} path={path} />
       ))}
-      <Redirect from={DASHBOARD_PATH} to={NOTES_PATH} />
+      <Redirect from={DASHBOARD_PATH} to={QUIZZES_PATH} />
     </Switch>
   </div>
 );

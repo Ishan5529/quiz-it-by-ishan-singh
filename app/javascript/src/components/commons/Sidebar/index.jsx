@@ -1,16 +1,15 @@
 import React from "react";
 
-import { Sidebar as NeetoUISidebar } from "neetoui/layouts";
-import { useHistory } from "react-router-dom";
-
 import authenticationApi from "apis/authentication";
 import {
   PROFILE_PATH,
   CHANGE_PASSWORD_PATH,
-  LOGIN_PATH,
+  DASHBOARD_PATH,
 } from "components/routeConstants";
 import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
+import { Sidebar as NeetoUISidebar } from "neetoui/layouts";
+import { useHistory } from "react-router-dom";
 
 import { APP_NAME, SIDENAV_LINKS } from "./constants";
 
@@ -23,7 +22,8 @@ const Sidebar = () => {
     try {
       await authenticationApi.logout();
       authDispatch({ type: "LOGOUT" });
-      window.location.href = LOGIN_PATH;
+      // window.location.href = LOGIN_PATH;
+      window.location.href = DASHBOARD_PATH;
     } catch (error) {
       logger.error(error);
     }
@@ -50,7 +50,7 @@ const Sidebar = () => {
       changelogProps={{ id: "neetochangelog-trigger" }}
       navLinks={SIDENAV_LINKS}
       organizationInfo={{
-        name: "BlogIt",
+        name: "QuizIt",
         subdomain: "bigbinary.com",
       }}
       profileInfo={{
