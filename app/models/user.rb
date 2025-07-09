@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :trackable, :validatable, :rememberable
-  has_many :notes, dependent: :delete_all
+  has_many :quizzes, dependent: :delete_all
 
   validates :email, uniqueness: true
   validates :password_confirmation, presence: true, on: :create

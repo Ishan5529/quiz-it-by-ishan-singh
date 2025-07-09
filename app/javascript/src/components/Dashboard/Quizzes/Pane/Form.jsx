@@ -1,6 +1,6 @@
 import React from "react";
 
-import notesApi from "apis/notes";
+import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
 import { Pane } from "neetoui";
 import { ActionBlock, Input, Textarea } from "neetoui/formik";
@@ -11,9 +11,9 @@ const Form = ({ onClose, refetch, quiz, isEdit }) => {
   const handleSubmit = async values => {
     try {
       if (isEdit) {
-        await notesApi.update(quiz.id, values);
+        await quizzesApi.update(quiz.id, values);
       } else {
-        await notesApi.create(values);
+        await quizzesApi.create(values);
       }
       refetch();
       onClose();

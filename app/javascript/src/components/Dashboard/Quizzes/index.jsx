@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import notesApi from "apis/notes";
+import quizzesApi from "apis/quizzes";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
 import { Delete } from "neetoicons";
@@ -27,8 +27,8 @@ const Quizzes = () => {
     try {
       setLoading(true);
       const {
-        data: { notes: quizzes },
-      } = await notesApi.fetch();
+        data: { quizzes },
+      } = await quizzesApi.fetch();
       setQuizzes(quizzes);
     } catch (error) {
       logger.error(error);

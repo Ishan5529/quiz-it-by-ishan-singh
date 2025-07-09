@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import notesApi from "apis/notes";
+import quizzesApi from "apis/quizzes";
 import { Alert } from "neetoui";
 
 const DeleteAlert = ({
@@ -14,7 +14,7 @@ const DeleteAlert = ({
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      await notesApi.destroy({ ids: selectedQuizIds });
+      await quizzesApi.destroy({ ids: selectedQuizIds });
       onClose();
       setSelectedQuizIds([]);
       refetch();

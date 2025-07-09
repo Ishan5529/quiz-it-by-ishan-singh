@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Table as NeetoUITable } from "neetoui";
 
 import { QUIZZES_TABLE_COLUMN_DATA } from "./constants";
-import EditNotePane from "./Pane/Edit";
+import EditQuizPane from "./Pane/Edit";
 
 const Table = ({
   selectedQuizIds,
@@ -16,7 +16,7 @@ const Table = ({
 
   return (
     <>
-      <div className="notes-table-height w-full">
+      <div className="quizzes-table-height w-full">
         <NeetoUITable
           allowRowClick
           rowSelection
@@ -30,7 +30,7 @@ const Table = ({
           }}
         />
       </div>
-      <EditNotePane
+      <EditQuizPane
         fetchQuizzes={fetchQuizzes}
         quiz={selectedQuiz}
         setShowPane={setShowEditQuiz}
