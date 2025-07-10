@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button } from "neetoui";
 
-import { FEATURE_LIST } from "./constants";
+import { QUIZ_LIST } from "./constants";
 
 const Features = ({ features }) => (
   <ul className="list-disc">
@@ -17,15 +17,17 @@ const Features = ({ features }) => (
   </ul>
 );
 
-const Hero = () => (
+const Public = () => (
   <div className="flex h-screen flex-row items-center justify-center">
     <div className="m-auto flex max-w-3xl flex-col items-center justify-center p-8">
-      <h1 className="mb-3 text-4xl font-bold">BlogIt</h1>
+      <h1 className="mb-3 text-4xl font-bold">QuizIt</h1>
       <p className="neeto-ui-text-gray-800 mx-auto mb-6 text-center text-lg">
-        Don&apos;t reinvent the wheel. Use sane defaults to bootstrap your
-        react-rails project!
+        This is the public page of QuizIt, a platform for creating and sharing
+        quizzes.
+        <br />
+        Please login to access your quizzes and manage your account.
       </p>
-      <Features features={FEATURE_LIST} />
+      <Features features={QUIZ_LIST} />
       <div className="mt-6 flex items-center justify-center">
         <Button label="Login" to="/login" type="primary" />
       </div>
@@ -33,4 +35,4 @@ const Hero = () => (
   </div>
 );
 
-export default Hero;
+export default Public;

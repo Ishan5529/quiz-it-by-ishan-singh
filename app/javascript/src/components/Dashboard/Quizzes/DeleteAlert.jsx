@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 
+import quizzesApi from "apis/quizzes";
 import { Alert } from "neetoui";
-
-import notesApi from "apis/notes";
 
 const DeleteAlert = ({
   refetch,
   onClose,
-  selectedNoteIds,
-  setSelectedNoteIds,
+  selectedQuizIds,
+  setSelectedQuizIds,
 }) => {
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      await notesApi.destroy({ ids: selectedNoteIds });
+      await quizzesApi.destroy({ ids: selectedQuizIds });
       onClose();
-      setSelectedNoteIds([]);
+      setSelectedQuizIds([]);
       refetch();
     } catch (error) {
       logger.error(error);
@@ -30,8 +29,8 @@ const DeleteAlert = ({
       isOpen
       isSubmitting={deleting}
       message="Are you sure you want to continue? This cannot be undone."
-      title={`Delete ${selectedNoteIds.length} ${
-        selectedNoteIds.length > 1 ? "notes" : "note"
+      title={`Delete ${selectedQuizIds.length} ${
+        selectedQuizIds.length > 1 ? "quizzes" : "quiz"
       }?`}
       onClose={onClose}
       onSubmit={handleDelete}

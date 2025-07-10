@@ -1,20 +1,19 @@
 import React from "react";
 
+import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
 import { Pane } from "neetoui";
 import { ActionBlock, Input, Textarea } from "neetoui/formik";
 
-import notesApi from "apis/notes";
+import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
-import { NOTES_FORM_VALIDATION_SCHEMA } from "../constants";
-
-const Form = ({ onClose, refetch, note, isEdit }) => {
+const Form = ({ onClose, refetch, quiz, isEdit }) => {
   const handleSubmit = async values => {
     try {
       if (isEdit) {
-        await notesApi.update(note.id, values);
+        await quizzesApi.update(quiz.id, values);
       } else {
-        await notesApi.create(values);
+        await quizzesApi.create(values);
       }
       refetch();
       onClose();
@@ -25,8 +24,8 @@ const Form = ({ onClose, refetch, note, isEdit }) => {
 
   return (
     <Formik
-      initialValues={note}
-      validationSchema={NOTES_FORM_VALIDATION_SCHEMA}
+      initialValues={quiz}
+      validationSchema={QUIZZES_FORM_VALIDATION_SCHEMA}
       onSubmit={handleSubmit}
     >
       <FormikForm className="w-full">

@@ -1,5 +1,5 @@
 {
-  "name": "BlogIt",
+  "name": "QuizIt",
   "version": "1.0.0",
   "engines": {
     "node": "22.13",
@@ -64,7 +64,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.21.0",
     "@babel/runtime": "^7.26.10",
-    "@bigbinary/neeto-icons": "1.8.17",
+    "@bigbinary/neeto-icons": "1.20.47",
     "@bigbinary/neetoui": "^4.0.3",
     "@emotion/is-prop-valid": "^1.2.0",
     "@rollup/pluginutils": "^5.1.4",

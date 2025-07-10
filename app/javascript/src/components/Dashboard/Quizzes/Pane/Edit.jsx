@@ -4,17 +4,17 @@ import { Pane, Typography } from "neetoui";
 
 import Form from "./Form";
 
-const Edit = ({ fetchNotes, showPane, setShowPane, note }) => {
+const Edit = ({ fetchQuizzes, showPane, setShowPane, quiz }) => {
   const onClose = () => setShowPane(false);
 
   return (
     <Pane isOpen={showPane} onClose={onClose}>
       <Pane.Header>
         <Typography style="h2" weight="semibold">
-          Edit note
+          Edit quiz
         </Typography>
       </Pane.Header>
-      <Form isEdit note={note} refetch={fetchNotes} onClose={onClose} />
+      <Form isEdit quiz={quiz} refetch={fetchQuizzes} onClose={onClose} />
     </Pane>
   );
 };

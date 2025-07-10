@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from "react";
 
-import notesApi from "apis/notes";
-import EmptyNotesListImage from "assets/images/EmptyNotesList";
+import quizzesApi from "apis/quizzes";
+import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
 import { Delete } from "neetoicons";
 import { Button, PageLoader } from "neetoui";
 import { Container, Header, SubHeader } from "neetoui/layouts";
 
 import DeleteAlert from "./DeleteAlert";
-import NewNotePane from "./Pane/Create";
+import NewQuizPane from "./Pane/Create";
 import Table from "./Table";
 
-const Notes = () => {
+const Quizzes = () => {
   const [loading, setLoading] = useState(true);
-  const [showNewNotePane, setShowNewNotePane] = useState(false);
+  const [showNewQuizPane, setShowNewQuizPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedNoteIds, setSelectedNoteIds] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [selectedQuizIds, setSelectedQuizIds] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
-    fetchNotes();
+    fetchQuizzes();
   }, []);
 
-  const fetchNotes = async () => {
+  const fetchQuizzes = async () => {
     try {
       setLoading(true);
       const {
-        data: { notes },
-      } = await notesApi.fetch();
-      setNotes(notes);
+        data: { quizzes },
+      } = await quizzesApi.fetch();
+      setQuizzes(quizzes);
     } catch (error) {
       logger.error(error);
     } finally {
@@ -44,13 +44,13 @@ const Notes = () => {
   return (
     <Container>
       <Header
-        title="Notes"
+        title="All Quizzes"
         actionBlock={
           <Button
             icon="ri-add-line"
-            label="Add new note"
+            label="Add new quiz"
             size="small"
-            onClick={() => setShowNewNotePane(true)}
+            onClick={() => setShowNewQuizPane(true)}
           />
         }
         searchProps={{
@@ -58,12 +58,12 @@ const Notes = () => {
           onChange: e => setSearchTerm(e.target.value),
         }}
       />
-      {notes.length ? (
+      {quizzes.length ? (
         <>
           <SubHeader
             rightActionBlock={
               <Button
-                disabled={!selectedNoteIds.length}
+                disabled={!selectedQuizIds.length}
                 icon={Delete}
                 label="Delete"
                 size="small"
@@ -72,31 +72,31 @@ const Notes = () => {
             }
           />
           <Table
-            fetchNotes={fetchNotes}
-            notes={notes}
-            selectedNoteIds={selectedNoteIds}
-            setSelectedNoteIds={setSelectedNoteIds}
+            fetchQuizzes={fetchQuizzes}
+            quizzes={quizzes}
+            selectedQuizIds={selectedQuizIds}
+            setSelectedQuizIds={setSelectedQuizIds}
           />
         </>
       ) : (
         <EmptyState
-          image={<EmptyNotesListImage />}
-          primaryAction={() => setShowNewNotePane(true)}
-          primaryActionLabel="Add new note"
-          subtitle="Add your notes to send customized emails to them."
-          title="Looks like you don't have any notes!"
+          image={<EmptyQuizzesListImage />}
+          primaryAction={() => setShowNewQuizPane(true)}
+          primaryActionLabel="Add new quiz"
+          subtitle="Create your first quiz to get started."
+          title="Looks like you don't have any quizzes!"
         />
       )}
-      <NewNotePane
-        fetchNotes={fetchNotes}
-        setShowPane={setShowNewNotePane}
-        showPane={showNewNotePane}
+      <NewQuizPane
+        fetchQuizzes={fetchQuizzes}
+        setShowPane={setShowNewQuizPane}
+        showPane={showNewQuizPane}
       />
       {showDeleteAlert && (
         <DeleteAlert
-          refetch={fetchNotes}
-          selectedNoteIds={selectedNoteIds}
-          setSelectedNoteIds={setSelectedNoteIds}
+          refetch={fetchQuizzes}
+          selectedQuizIds={selectedQuizIds}
+          setSelectedQuizIds={setSelectedQuizIds}
           onClose={() => setShowDeleteAlert(false)}
         />
       )}
@@ -104,4 +104,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default Quizzes;
