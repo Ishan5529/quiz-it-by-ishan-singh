@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import { setAuthHeaders, registerIntercepts } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import PrivateRoute from "components/commons/PrivateRoute";
@@ -12,7 +13,6 @@ import {
 } from "components/routeConstants";
 import { useAuthState, useAuthDispatch } from "contexts/auth";
 import { useUserDispatch, useUserState } from "contexts/user";
-import { PageLoader } from "neetoui";
 import PropTypes from "prop-types";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";

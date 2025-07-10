@@ -1,4 +1,5 @@
-import { Bulb, Settings, Community } from "neetoicons";
+// import { Bulb, Settings, Community } from "neetoicons";
+import { Notes, Settings } from "neetoicons";
 
 export const APP_NAME = "QuizIt";
 
@@ -10,7 +11,8 @@ export const SIDENAV_LINKS = [
   {
     label: "Quizzes",
     to: "/quizzes",
-    icon: Bulb,
+    // icon: Bulb,
+    icon: Notes,
   },
   {
     label: "Settings",
@@ -20,7 +22,8 @@ export const SIDENAV_LINKS = [
   {
     label: "Public page",
     to: "/public",
-    icon: Community,
+    // icon: Community,
+    icon: Notes,
     target: "_blank",
   },
 ];
