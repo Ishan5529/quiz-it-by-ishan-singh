@@ -8,6 +8,7 @@ import {
 } from "components/routeConstants";
 import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
+import { NeetoQuiz } from "neetoicons/logos";
 import { Sidebar as NeetoUISidebar } from "neetoui/layouts";
 import { useHistory } from "react-router-dom";
 
@@ -51,6 +52,7 @@ const Sidebar = () => {
       organizationInfo={{
         name: "QuizIt",
         subdomain: "bigbinary.com",
+        logo: <NeetoQuiz />,
       }}
       profileInfo={{
         name: `${user.first_name} ${user.last_name}`,
