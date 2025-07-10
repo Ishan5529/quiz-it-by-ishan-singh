@@ -1,22 +1,20 @@
 import React from "react";
 
-{
-  /* <SidebarMenu
-  appName={APP_NAME}
-  navLinks={SIDENAV_LINKS}
-  organizationInfo={{
-    name: "QuizIt",
-    subdomain: "bigbinary.com",
-    logo: <NeetoQuiz />,
-  }}
-  profileInfo={{
-    name: `${user.first_name} ${user.last_name}`,
-    imageUrl: user.profile_image_path,
-    email: user.email,
-    bottomLinks,
-  }}
-/> */
-}
+// <SidebarMenu
+//   appName={APP_NAME}
+//   navLinks={SIDENAV_LINKS}
+//   organizationInfo={{
+//     name: "QuizIt",
+//     subdomain: "bigbinary.com",
+//     logo: <NeetoQuiz />,
+//   }}
+//   profileInfo={{
+//     name: `${user.first_name} ${user.last_name}`,
+//     imageUrl: user.profile_image_path,
+//     email: user.email,
+//     bottomLinks,
+//   }}
+// />
 
 const SidebarMenu = ({ appName, navLinks, organizationInfo, profileInfo }) => (
   <div className="sidebar-menu">
