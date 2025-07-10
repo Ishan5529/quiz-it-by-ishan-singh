@@ -11,9 +11,7 @@ const getFromLocalStorage = key => {
     const value = localStorage.getItem(key);
 
     return isPresent(value) ? JSON.parse(value) : null;
-  } catch (error) {
-    logger.error(error);
-
+  } catch {
     return null;
   }
 };

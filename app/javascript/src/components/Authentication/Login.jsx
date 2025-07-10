@@ -1,18 +1,13 @@
 import React from "react";
 
+import authenticationApi from "apis/authentication";
+import { useAuthDispatch } from "contexts/auth";
+import { useUserDispatch } from "contexts/user";
 import { Form, Formik } from "formik";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
-
-import authenticationApi from "apis/authentication";
-import {
-  SIGNUP_PATH,
-  RESET_PASSWORD_PATH,
-  DASHBOARD_PATH,
-} from "components/routeConstants";
-import { useAuthDispatch } from "contexts/auth";
-import { useUserDispatch } from "contexts/user";
+import { routes } from "src/routes";
 
 import {
   LOGIN_FORM_INITIAL_VALUES,
@@ -30,7 +25,7 @@ const Login = ({ history }) => {
       } = await authenticationApi.login({ email, password });
       authDispatch({ type: "LOGIN", payload: { auth_token, email, is_admin } });
       userDispatch({ type: "SET_USER", payload: { user } });
-      history.push(DASHBOARD_PATH);
+      history.push(routes.dashboard.index);
     } catch (error) {
       logger.error(error);
     }
@@ -88,7 +83,7 @@ const Login = ({ history }) => {
               label="Signup"
               size="small"
               style="link"
-              to={SIGNUP_PATH}
+              to={routes.auth.signup}
             />
           </div>
           <Button
@@ -96,7 +91,7 @@ const Login = ({ history }) => {
             label="Forgot password?"
             size="small"
             style="link"
-            to={RESET_PASSWORD_PATH}
+            to={routes.auth.resetPassword}
           />
         </div>
       </div>

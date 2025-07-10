@@ -5,40 +5,34 @@ import Dashboard from "components/Dashboard";
 import Quizzes from "components/Dashboard/Quizzes";
 import Settings from "components/Dashboard/Settings";
 
-export const DASHBOARD_PATH = "/";
-export const PUBLIC_PATH = "/public";
-export const QUIZZES_PATH = "/quizzes";
-export const CHANGE_PASSWORD_PATH = "/settings?tab=password";
-export const PROFILE_PATH = "/settings?tab=profile";
-export const SETTINGS_PATH = "/settings";
-export const LOGIN_PATH = "/login";
-export const SIGNUP_PATH = "/signup";
-export const RESET_PASSWORD_PATH = "/my/password/new";
+import { routes } from "../routes";
 
 export const AUTH_ROUTES = [
   {
-    path: RESET_PASSWORD_PATH,
+    path: routes.auth.resetPassword,
     component: PasswordReset,
   },
   {
-    path: SIGNUP_PATH,
+    path: routes.auth.signup,
     component: Signup,
   },
   {
-    path: LOGIN_PATH,
+    path: routes.auth.login,
     component: Login,
   },
 ];
 
-export const PRIVATE_ROUTES = [{ path: DASHBOARD_PATH, component: Dashboard }];
+export const PRIVATE_ROUTES = [
+  { path: routes.dashboard.index, component: Dashboard },
+];
 
 export const DASHBOARD_ROUTES = [
   {
-    path: QUIZZES_PATH,
+    path: routes.dashboard.quizzes,
     component: Quizzes,
   },
   {
-    path: SETTINGS_PATH,
+    path: routes.dashboard.settings.index,
     component: Settings,
   },
 ];

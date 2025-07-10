@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 
+import Container from "@bigbinary/neeto-molecules/Container";
+import Header from "@bigbinary/neeto-molecules/Header";
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
 import quizzesApi from "apis/quizzes";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
 import { Delete } from "neetoicons";
-import { Button, PageLoader } from "neetoui";
-import { Container, Header, SubHeader } from "neetoui/layouts";
+import { Button } from "neetoui";
 
 import DeleteAlert from "./DeleteAlert";
 import NewQuizPane from "./Pane/Create";
 import Table from "./Table";
+
+3;
 
 const Quizzes = () => {
   const [loading, setLoading] = useState(true);

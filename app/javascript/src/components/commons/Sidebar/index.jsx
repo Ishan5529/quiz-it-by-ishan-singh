@@ -1,18 +1,15 @@
 import React from "react";
 
+// import { Sidebar as NeetoUISidebar } from "@bigbinary/neeto-molecules/Sidebar";
 import authenticationApi from "apis/authentication";
-import {
-  PROFILE_PATH,
-  CHANGE_PASSWORD_PATH,
-  PUBLIC_PATH,
-} from "components/routeConstants";
 import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
 import { NeetoQuiz } from "neetoicons/logos";
-import { Sidebar as NeetoUISidebar } from "neetoui/layouts";
 import { useHistory } from "react-router-dom";
+import { routes } from "src/routes";
 
 import { APP_NAME, SIDENAV_LINKS } from "./constants";
+import SidebarMenu from "./SidebarMenu";
 
 const Sidebar = () => {
   const history = useHistory();
@@ -23,7 +20,7 @@ const Sidebar = () => {
     try {
       await authenticationApi.logout();
       authDispatch({ type: "LOGOUT" });
-      window.location.href = PUBLIC_PATH;
+      window.location.href = routes.auth.public;
     } catch (error) {
       logger.error(error);
     }
@@ -32,11 +29,15 @@ const Sidebar = () => {
   const bottomLinks = [
     {
       label: "My profile",
-      onClick: () => history.push(PROFILE_PATH, { resetTab: true }),
+      onClick: () =>
+        history.push(routes.dashboard.settings.profile, { resetTab: true }),
     },
     {
       label: "Change password",
-      onClick: () => history.push(CHANGE_PASSWORD_PATH, { resetTab: true }),
+      onClick: () =>
+        history.push(routes.dashboard.settings.changePassword, {
+          resetTab: true,
+        }),
     },
     {
       label: "Logout",
@@ -45,9 +46,8 @@ const Sidebar = () => {
   ];
 
   return (
-    <NeetoUISidebar
+    <SidebarMenu
       appName={APP_NAME}
-      changelogProps={{ id: "neetochangelog-trigger" }}
       navLinks={SIDENAV_LINKS}
       organizationInfo={{
         name: "QuizIt",
