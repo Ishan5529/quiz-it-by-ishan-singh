@@ -1,29 +1,23 @@
-// import { Bulb, Settings, Community } from "neetoicons";
-import { Notes, Settings } from "neetoicons";
+import { Bulb, Settings, Community } from "neetoicons";
+import { routes } from "src/routes";
 
 export const APP_NAME = "QuizIt";
-
-export const PASSWORD_PATH = "/my/password/edit";
-export const PROFILE_PATH = "/my/profile";
-export const LOGOUT_PATH = "/logout";
 
 export const SIDENAV_LINKS = [
   {
     label: "Quizzes",
-    to: "/quizzes",
-    // icon: Bulb,
-    icon: Notes,
+    to: routes.dashboard.quizzes,
+    icon: Bulb,
   },
   {
     label: "Settings",
-    to: "/settings",
+    to: routes.dashboard.settings.index,
     icon: Settings,
   },
   {
     label: "Public page",
-    to: "/public",
-    // icon: Community,
-    icon: Notes,
+    to: routes.public,
+    icon: Community,
     target: "_blank",
   },
 ];

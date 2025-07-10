@@ -3,8 +3,7 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
-
-import { LOGIN_PATH, SIGNUP_PATH } from "components/routeConstants";
+import { routes } from "src/routes";
 
 import {
   RESET_PASSWORD_FORM_INITIAL_VALUES,
@@ -17,7 +16,7 @@ const ResetPassword = () => (
       <h2 className="neeto-ui-text-gray-800 mb-5 text-center text-3xl font-extrabold">
         Forgot your password?
       </h2>
-      <div className="neeto-ui-text-gray-700 mb-5 -mt-4 w-2/3 text-center">
+      <div className="neeto-ui-text-gray-700 -mt-4 mb-5 w-2/3 text-center">
         Enter your email address below and we&apos;ll send you a link to reset
         your password.
       </div>
@@ -43,14 +42,24 @@ const ResetPassword = () => (
                 size="small"
                 type="submit"
               />
-              <Button label="Back" size="small" style="link" to={LOGIN_PATH} />
+              <Button
+                label="Back"
+                size="small"
+                style="link"
+                to={routes.auth.login}
+              />
             </div>
           </Form>
         )}
       </Formik>
       <div className="mt-4 flex flex-row items-center justify-start space-x-1">
         <p className="neeto-ui-text-gray-600 font-normal">{`Don't have an account?`}</p>
-        <Button label="Signup" size="small" style="link" to={SIGNUP_PATH} />
+        <Button
+          label="Signup"
+          size="small"
+          style="link"
+          to={routes.auth.signup}
+        />
       </div>
     </div>
   </div>

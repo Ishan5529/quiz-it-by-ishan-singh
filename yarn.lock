@@ -1972,10 +1972,10 @@
   resolved "https://registry.yarnpkg.com/@bigbinary/neeto-hotkeys/-/neeto-hotkeys-1.0.9.tgz#13f2ba94332387a7308edf50126151ed89a0b384"
   integrity sha512-JFn7Wvg75Ib03Ncoqpdsl2I3zEYNKJrvjVLr+4Wahxz8OIwe2feyir/0++bVdoROl69Zz6VBd89EmBgVXlp35Q==
 
-"@bigbinary/neeto-icons@1.20.5":
-  version "1.20.5"
-  resolved "https://registry.yarnpkg.com/@bigbinary/neeto-icons/-/neeto-icons-1.20.5.tgz#94c116451fc8ab4e58e7e5eb4e706cdbab858530"
-  integrity sha512-RZFkDl2edGoXwYyNeCZ7fTvk1B8s8xnGtJ8GXworBSbDF34WpFIuNjP3cYGJQLaebF0yAcZDE+G00GcVypcufA==
+"@bigbinary/neeto-icons@^1.20.47":
+  version "1.20.53"
+  resolved "https://registry.yarnpkg.com/@bigbinary/neeto-icons/-/neeto-icons-1.20.53.tgz#a9d198b2ed07d3186f24e6c54b4fdc6ad45c5b1c"
+  integrity sha512-fkMod07z9iqnDak2H7fSzOwBpN+p3TJVQL/4V+2pVOcHG29X17UUTKaaq9buo4bR0unaCHT3KUy4aFAj6NUBhw==
 
 "@bigbinary/neeto-molecules@^3.15.47":
   version "3.16.81"

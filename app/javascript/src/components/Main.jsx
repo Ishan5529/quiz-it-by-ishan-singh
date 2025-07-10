@@ -5,17 +5,13 @@ import { setAuthHeaders, registerIntercepts } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import PrivateRoute from "components/commons/PrivateRoute";
 import Public from "components/Public";
-import {
-  AUTH_ROUTES,
-  PRIVATE_ROUTES,
-  PUBLIC_PATH,
-  LOGIN_PATH,
-} from "components/routeConstants";
+import { AUTH_ROUTES, PRIVATE_ROUTES } from "components/routeConstants";
 import { useAuthState, useAuthDispatch } from "contexts/auth";
 import { useUserDispatch, useUserState } from "contexts/user";
 import PropTypes from "prop-types";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { routes } from "src/routes";
 import { isPresent } from "utils";
 import {
   clearLocalStorageCredentials,
@@ -67,14 +63,14 @@ const Main = props => {
             path={route.path}
           />
         ))}
-        <Route exact component={Public} path={PUBLIC_PATH} />
+        <Route exact component={Public} path={routes.public} />
         {PRIVATE_ROUTES.map(route => (
           <PrivateRoute
             component={route.component}
             condition={isLoggedIn}
             key={route.path}
             path={route.path}
-            redirectRoute={LOGIN_PATH}
+            redirectRoute={routes.auth.login}
           />
         ))}
       </Switch>

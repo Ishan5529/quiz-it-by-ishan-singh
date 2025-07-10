@@ -75,7 +75,7 @@
     "@bigbinary/neeto-editor": "1.38.1",
     "@bigbinary/neeto-filters-frontend": "4.3.15",
     "@bigbinary/neeto-hotkeys": "^1.0.7",
-    "@bigbinary/neeto-icons": "1.20.5",
+    "@bigbinary/neeto-icons": "^1.20.47",
     "@bigbinary/neeto-molecules": "^3.15.47",
     "@bigbinary/neetoui": "8.2.13",
     "@emotion/is-prop-valid": "^1.2.0",
