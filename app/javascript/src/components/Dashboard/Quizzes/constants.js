@@ -15,12 +15,12 @@ export const QUIZZES_TABLE_COLUMN_DATA = [
     title: "Title",
     dataIndex: "title",
     key: "title",
-    flex: 3,
+    width: "30%",
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
-    flex: 7,
+    width: "70%",
   },
 ];
