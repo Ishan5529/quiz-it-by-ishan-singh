@@ -11,7 +11,7 @@ const Form = ({ onClose, refetch, quiz, isEdit, onSuccess }) => {
   const handleSubmit = async values => {
     try {
       if (isEdit) {
-        await quizzesApi.update(quiz.id, values);
+        await quizzesApi.update(quiz.slug, values);
       } else {
         await quizzesApi.create(values);
       }

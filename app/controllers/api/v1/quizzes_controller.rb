@@ -5,7 +5,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   before_action :load_quizzes, only: :bulk_destroy
 
   def index
-    render_json({ quizzes: current_user.quizzes })
+    render_json({ quizzes: current_user.quizzes.includes(:questions).as_json(include: :questions) })
   end
 
   def create
@@ -30,15 +30,15 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   private
 
     def quiz_params
-      params.require(:quiz).permit(:title)
+      params.require(:quiz).permit(:title, :slug)
     end
 
     def load_quiz!
-      @quiz = current_user.quizzes.find(params[:id])
+      @quiz = current_user.quizzes.find(params[:slug])
     end
 
     def load_quizzes
-      @quizzes = current_user.quizzes.where(id: params[:ids])
+      @quizzes = current_user.quizzes.where(slug: params[:slugs])
       render_error(t("not_found", entity: "Quiz")) if @quizzes.empty?
     end
 end

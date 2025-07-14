@@ -2,6 +2,8 @@
 
 class Quiz < ApplicationRecord
   belongs_to :user
+  has_many :questions, dependent: :destroy
+
   validates :title, :slug, presence: true
   validates :slug, uniqueness: true
   validate :slug_not_changed

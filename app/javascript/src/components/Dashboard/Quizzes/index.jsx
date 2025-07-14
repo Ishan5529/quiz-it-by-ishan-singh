@@ -21,7 +21,7 @@ const Quizzes = () => {
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedQuizIds, setSelectedQuizIds] = useState([]);
+  const [selectedQuizSlugs, setSelectedQuizSlugs] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const Quizzes = () => {
           <SubHeader
             rightActionBlock={
               <Button
-                disabled={!selectedQuizIds.length}
+                disabled={!selectedQuizSlugs.length}
                 icon={Delete}
                 label="Delete"
                 size="small"
@@ -79,8 +79,8 @@ const Quizzes = () => {
           <Table
             fetchQuizzes={fetchQuizzes}
             quizzes={quizzes}
-            selectedQuizIds={selectedQuizIds}
-            setSelectedQuizIds={setSelectedQuizIds}
+            selectedQuizSlugs={selectedQuizSlugs}
+            setSelectedQuizSlugs={setSelectedQuizSlugs}
           />
         </>
       ) : (
@@ -100,8 +100,8 @@ const Quizzes = () => {
       {showDeleteAlert && (
         <DeleteAlert
           refetch={fetchQuizzes}
-          selectedQuizIds={selectedQuizIds}
-          setSelectedQuizIds={setSelectedQuizIds}
+          selectedQuizSlugs={selectedQuizSlugs}
+          setSelectedQuizSlugs={setSelectedQuizSlugs}
           onClose={() => setShowDeleteAlert(false)}
         />
       )}

@@ -6,8 +6,8 @@ import { QUIZZES_TABLE_COLUMN_DATA } from "./constants";
 import EditQuizPane from "./Pane/Edit";
 
 const Table = ({
-  selectedQuizIds,
-  setSelectedQuizIds,
+  selectedQuizSlugs,
+  setSelectedQuizSlugs,
   quizzes = [],
   fetchQuizzes,
 }) => {
@@ -25,11 +25,12 @@ const Table = ({
           // currentPageNumber={page}
           // handlePageChange={setPage}
           rowData={quizzes}
-          selectedRowKeys={selectedQuizIds}
+          rowKey="slug"
+          selectedRowKeys={selectedQuizSlugs}
           scroll={{
             x: "100%",
           }}
-          onRowSelect={selectedRowKeys => setSelectedQuizIds(selectedRowKeys)}
+          onRowSelect={selectedRowKeys => setSelectedQuizSlugs(selectedRowKeys)}
           onRowClick={(_, quiz) => {
             setSelectedQuiz(quiz);
             setShowEditQuiz(true);
