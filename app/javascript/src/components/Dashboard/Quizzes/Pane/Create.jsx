@@ -8,12 +8,14 @@ import Form from "./Form";
 import { routes } from "../../../../routes";
 import { QUIZZES_FORM_INITIAL_FORM_VALUES } from "../constants";
 
-const Create = ({ fetchQuizzes, showPane, setShowPane }) => {
+const Create = ({ showPane, setShowPane }) => {
   const history = useHistory();
 
-  const handleSuccess = () => {
+  const handleSuccess = slug => {
     setShowPane(false);
-    history.push(routes.dashboard.quizzes.create);
+    alert("Above");
+    history.push(routes.dashboard.quizzes.edit.replace(":slug", slug));
+    alert("Below");
   };
 
   const onClose = () => {
@@ -30,7 +32,6 @@ const Create = ({ fetchQuizzes, showPane, setShowPane }) => {
       <Form
         isEdit={false}
         quiz={QUIZZES_FORM_INITIAL_FORM_VALUES}
-        refetch={fetchQuizzes}
         onClose={onClose}
         onSuccess={handleSuccess}
       />

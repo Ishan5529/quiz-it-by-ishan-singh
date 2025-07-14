@@ -6,7 +6,7 @@ import { QUERY_KEYS } from "../../constants/query";
 export const useQuizzesFetch = params =>
   useQuery({
     keepPreviousData: true,
-    queryKey: [QUERY_KEYS.QUIZ, params],
+    queryKey: [QUERY_KEYS.QUIZZES, params],
     queryFn: () => quizzesApi.fetch(params),
     enabled: true,
     // enabled: !!params.s,

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
-import quizzesApi from "apis/quizzes";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
+import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
 import { Delete } from "neetoicons";
 import { Button } from "neetoui";
 
@@ -17,32 +17,18 @@ import Table from "./Table";
 3;
 
 const Quizzes = () => {
-  const [loading, setLoading] = useState(true);
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedQuizSlugs, setSelectedQuizSlugs] = useState([]);
-  const [quizzes, setQuizzes] = useState([]);
 
-  useEffect(() => {
-    fetchQuizzes();
-  }, []);
+  // const { searchKey = "", status = "", category = "" } = useQueryParams();
 
-  const fetchQuizzes = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { quizzes },
-      } = await quizzesApi.fetch();
-      setQuizzes(quizzes);
-    } catch (error) {
-      logger.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState("");
 
-  if (loading) {
+  const { data: { data: { quizzes = [] } = {}, isLoading } = {} } =
+    useQuizzesFetch();
+
+  if (isLoading) {
     return <PageLoader />;
   }
 
@@ -77,7 +63,7 @@ const Quizzes = () => {
             }
           />
           <Table
-            fetchQuizzes={fetchQuizzes}
+            // fetchQuizzes={fetchQuizzes}
             quizzes={quizzes}
             selectedQuizSlugs={selectedQuizSlugs}
             setSelectedQuizSlugs={setSelectedQuizSlugs}
@@ -93,13 +79,13 @@ const Quizzes = () => {
         />
       )}
       <NewQuizPane
-        fetchQuizzes={fetchQuizzes}
+        // fetchQuizzes={fetchQuizzes}
         setShowPane={setShowNewQuizPane}
         showPane={showNewQuizPane}
       />
       {showDeleteAlert && (
         <DeleteAlert
-          refetch={fetchQuizzes}
+          // refetch={fetchQuizzes}
           selectedQuizSlugs={selectedQuizSlugs}
           setSelectedQuizSlugs={setSelectedQuizSlugs}
           onClose={() => setShowDeleteAlert(false)}

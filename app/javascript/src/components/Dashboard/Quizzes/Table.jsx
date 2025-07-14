@@ -5,12 +5,7 @@ import { Table as NeetoUITable } from "neetoui";
 import { QUIZZES_TABLE_COLUMN_DATA } from "./constants";
 import EditQuizPane from "./Pane/Edit";
 
-const Table = ({
-  selectedQuizSlugs,
-  setSelectedQuizSlugs,
-  quizzes = [],
-  fetchQuizzes,
-}) => {
+const Table = ({ selectedQuizSlugs, setSelectedQuizSlugs, quizzes = [] }) => {
   const [showEditQuiz, setShowEditQuiz] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState({});
 
@@ -38,7 +33,6 @@ const Table = ({
         />
       </div>
       <EditQuizPane
-        fetchQuizzes={fetchQuizzes}
         quiz={selectedQuiz}
         setShowPane={setShowEditQuiz}
         showPane={showEditQuiz}

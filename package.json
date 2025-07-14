@@ -69,7 +69,7 @@
     "@babel/preset-typescript": "^7.21.0",
     "@babel/runtime": "7.26.0",
     "@bigbinary/babel-preset-neeto": "1.0.8",
-    "@bigbinary/neeto-cist": "1.0.15",
+    "@bigbinary/neeto-cist": "^1.0.17",
     "@bigbinary/neeto-commons-frontend": "4.13.25",
     "@bigbinary/neeto-datepicker": "^1.0.4",
     "@bigbinary/neeto-editor": "1.38.1",

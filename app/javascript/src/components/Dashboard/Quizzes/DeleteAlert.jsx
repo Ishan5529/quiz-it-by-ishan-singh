@@ -3,12 +3,7 @@ import React, { useState } from "react";
 import quizzesApi from "apis/quizzes";
 import { Alert } from "neetoui";
 
-const DeleteAlert = ({
-  refetch,
-  onClose,
-  selectedQuizSlugs,
-  setSelectedQuizSlugs,
-}) => {
+const DeleteAlert = ({ onClose, selectedQuizSlugs, setSelectedQuizSlugs }) => {
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -17,10 +12,9 @@ const DeleteAlert = ({
       await quizzesApi.destroy({ slugs: selectedQuizSlugs });
       onClose();
       setSelectedQuizSlugs([]);
-      refetch();
     } catch (error) {
-      logger.error(error);
       setDeleting(false);
+      logger.error(error);
     }
   };
 
