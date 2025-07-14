@@ -41,3 +41,12 @@ en:
   signup_successful: "Signup successful. Please login to continue"
   session:
     expiry: "Your session has expired. Please login again."
+  quiz:
+    not_found: "Quiz not found!"
+    already_exists: "Quiz with this name already exists!"
+    creation_failed: "Quiz creation failed! Please try again."
+    update_failed: "Quiz update failed! Please try again."
+    slug:
+      already_exists: "Quiz with this slug already exists!"
+      invalid: "Slug is invalid! Please use only alphanumeric characters, dashes, and underscores."
+      immutable: "Slug cannot be changed once set!"
