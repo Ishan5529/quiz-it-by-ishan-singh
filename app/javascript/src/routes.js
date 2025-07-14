@@ -12,8 +12,8 @@ export const routes = {
     quizzes: {
       index: "/dashboard/quizzes",
       create: "/dashboard/quizzes/create",
-      edit: quizId => `/dashboard/quizzes/${quizId}/edit`,
-      view: quizId => `/dashboard/quizzes/${quizId}`,
+      edit: "/dashboard/quizzes/:slug/edit",
+      show: "/dashboard/quizzes/:slug",
     },
     settings: {
       index: "/dashboard/settings",

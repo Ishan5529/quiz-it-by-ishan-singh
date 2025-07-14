@@ -34,7 +34,7 @@ export const DASHBOARD_ROUTES = [
     component: Quizzes,
   },
   {
-    path: routes.dashboard.quizzes.create,
+    path: routes.dashboard.quizzes.edit,
     exact: true,
     component: QuizPage,
   },

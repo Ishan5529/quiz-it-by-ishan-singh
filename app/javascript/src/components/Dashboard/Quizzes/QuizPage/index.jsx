@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Body from "./Body";
 import Header from "./Header";
 
-const CreationPage = () => {
+const QuizPage = () => {
   const [title, setTitle] = useState("");
   const handleTitleUpdate = event => {
     // Logic to handle title update
@@ -19,4 +19,4 @@ const CreationPage = () => {
   );
 };
 
-export default CreationPage;
+export default QuizPage;
