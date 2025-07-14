@@ -13,7 +13,7 @@ const Create = ({ fetchQuizzes, showPane, setShowPane }) => {
     <Pane isOpen={showPane} onClose={onClose}>
       <Pane.Header>
         <Typography style="h2" weight="semibold">
-          Create a new quiz
+          Add new quiz
         </Typography>
       </Pane.Header>
       <Form

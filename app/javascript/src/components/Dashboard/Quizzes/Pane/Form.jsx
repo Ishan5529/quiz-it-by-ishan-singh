@@ -3,7 +3,7 @@ import React from "react";
 import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
 import { Pane } from "neetoui";
-import { ActionBlock, Input, Textarea } from "neetoui/formik";
+import { ActionBlock, Input } from "neetoui/formik";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
@@ -36,13 +36,6 @@ const Form = ({ onClose, refetch, quiz, isEdit }) => {
             label="Title"
             name="title"
           />
-          <Textarea
-            required
-            className="w-full flex-grow-0"
-            label="Description"
-            name="description"
-            rows={8}
-          />
         </Pane.Body>
         <Pane.Footer>
           <ActionBlock
@@ -51,6 +44,7 @@ const Form = ({ onClose, refetch, quiz, isEdit }) => {
             }}
             submitButtonProps={{
               className: "mr-3",
+              label: isEdit ? "Save changes" : "Save",
             }}
           />
         </Pane.Footer>
