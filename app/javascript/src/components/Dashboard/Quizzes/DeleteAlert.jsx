@@ -6,17 +6,17 @@ import { Alert } from "neetoui";
 const DeleteAlert = ({
   refetch,
   onClose,
-  selectedQuizIds,
-  setSelectedQuizIds,
+  selectedQuizSlugs,
+  setSelectedQuizSlugs,
 }) => {
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      await quizzesApi.destroy({ ids: selectedQuizIds });
+      await quizzesApi.destroy({ slugs: selectedQuizSlugs });
       onClose();
-      setSelectedQuizIds([]);
+      setSelectedQuizSlugs([]);
       refetch();
     } catch (error) {
       logger.error(error);
@@ -29,8 +29,8 @@ const DeleteAlert = ({
       isOpen
       isSubmitting={deleting}
       message="Are you sure you want to continue? This cannot be undone."
-      title={`Delete ${selectedQuizIds.length} ${
-        selectedQuizIds.length > 1 ? "quizzes" : "quiz"
+      title={`Delete ${selectedQuizSlugs.length} ${
+        selectedQuizSlugs.length > 1 ? "quizzes" : "quiz"
       }?`}
       onClose={onClose}
       onSubmit={handleDelete}

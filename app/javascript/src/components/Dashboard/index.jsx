@@ -12,7 +12,10 @@ const Dashboard = () => (
       {DASHBOARD_ROUTES.map(({ path, component }) => (
         <Route exact component={component} key={path} path={path} />
       ))}
-      <Redirect from={routes.dashboard.index} to={routes.dashboard.quizzes} />
+      <Redirect
+        from={routes.dashboard.index}
+        to={routes.dashboard.quizzes.index}
+      />
     </Switch>
   </div>
 );
