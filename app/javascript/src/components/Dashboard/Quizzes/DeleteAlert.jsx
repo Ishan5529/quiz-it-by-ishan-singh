@@ -1,26 +1,25 @@
+import { QUERY_KEYS } from "constants/query";
+
 import React, { useState } from "react";
 
 import quizzesApi from "apis/quizzes";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { Alert } from "neetoui";
 
-const DeleteAlert = ({
-  refetch,
-  onClose,
-  selectedQuizSlugs,
-  setSelectedQuizSlugs,
-}) => {
+const DeleteAlert = ({ onClose, selectedQuizSlugs, setSelectedQuizSlugs }) => {
   const [deleting, setDeleting] = useState(false);
+  const clearQueryClient = useClearQueryClient();
 
   const handleDelete = async () => {
     try {
       setDeleting(true);
       await quizzesApi.destroy({ slugs: selectedQuizSlugs });
+      clearQueryClient(QUERY_KEYS.QUIZZES);
       onClose();
       setSelectedQuizSlugs([]);
-      refetch();
     } catch (error) {
-      logger.error(error);
       setDeleting(false);
+      logger.error(error);
     }
   };
 

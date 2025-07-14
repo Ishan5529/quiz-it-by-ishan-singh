@@ -9,10 +9,12 @@ import { AUTH_ROUTES, PRIVATE_ROUTES } from "components/routeConstants";
 import { useAuthState, useAuthDispatch } from "contexts/auth";
 import { useUserDispatch, useUserState } from "contexts/user";
 import PropTypes from "prop-types";
+import { QueryClientProvider } from "react-query";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { routes } from "src/routes";
 import { isPresent } from "utils";
+import queryClient from "utils/queryClient";
 import {
   clearLocalStorageCredentials,
   getFromLocalStorage,
@@ -52,29 +54,31 @@ const Main = props => {
   }
 
   return (
-    <BrowserRouter>
-      <ToastContainer />
-      <Switch>
-        {AUTH_ROUTES.map(route => (
-          <Route
-            exact
-            component={route.component}
-            key={route.path}
-            path={route.path}
-          />
-        ))}
-        <Route exact component={Public} path={routes.public} />
-        {PRIVATE_ROUTES.map(route => (
-          <PrivateRoute
-            component={route.component}
-            condition={isLoggedIn}
-            key={route.path}
-            path={route.path}
-            redirectRoute={routes.auth.login}
-          />
-        ))}
-      </Switch>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ToastContainer />
+        <Switch>
+          {AUTH_ROUTES.map(route => (
+            <Route
+              exact
+              component={route.component}
+              key={route.path}
+              path={route.path}
+            />
+          ))}
+          <Route exact component={Public} path={routes.public} />
+          {PRIVATE_ROUTES.map(route => (
+            <PrivateRoute
+              component={route.component}
+              condition={isLoggedIn}
+              key={route.path}
+              path={route.path}
+              redirectRoute={routes.auth.login}
+            />
+          ))}
+        </Switch>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 

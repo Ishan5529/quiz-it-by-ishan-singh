@@ -1,23 +1,30 @@
+import { QUERY_KEYS } from "constants/query";
+
 import React from "react";
 
 import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
 import { Pane } from "neetoui";
 import { ActionBlock, Input } from "neetoui/formik";
+import { useClearQueryClient } from "react-query";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
-const Form = ({ onClose, refetch, quiz, isEdit, onSuccess }) => {
+const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
+  const clearQueryClient = useClearQueryClient();
+
   const handleSubmit = async values => {
     try {
+      let data;
       if (isEdit) {
-        await quizzesApi.update(quiz.slug, values);
+        data = await quizzesApi.update(quiz.slug, values);
       } else {
-        await quizzesApi.create(values);
+        data = await quizzesApi.create(values);
       }
-      refetch();
+
       if (onSuccess) {
-        onSuccess();
+        clearQueryClient.invalidateQueries(QUERY_KEYS.QUIZZES);
+        onSuccess(data.data.slug);
       } else {
         onClose();
       }

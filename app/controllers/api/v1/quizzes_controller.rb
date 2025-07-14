@@ -9,13 +9,14 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   end
 
   def create
-    current_user.quizzes.create!(quiz_params)
-    render_message(t("successfully_created", entity: "Quiz"))
+    new_quiz = current_user.quizzes.create!(quiz_params)
+    render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
   end
 
   def update
     @quiz.update!(quiz_params)
-    render_message(t("successfully_updated", entity: "Quiz"))
+    render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
+    # render_message(t("successfully_updated", entity: "Quiz"))
   end
 
   def bulk_destroy
