@@ -6,12 +6,12 @@ import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
 import { Pane } from "neetoui";
 import { ActionBlock, Input } from "neetoui/formik";
-import { useQueryClient } from "react-query";
+import { useClearQueryClient } from "react-query";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
 const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
-  const queryClient = useQueryClient();
+  const clearQueryClient = useClearQueryClient();
 
   const handleSubmit = async values => {
     try {
@@ -23,7 +23,7 @@ const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
       }
 
       if (onSuccess) {
-        queryClient.invalidateQueries(QUERY_KEYS.QUIZZES);
+        clearQueryClient.invalidateQueries(QUERY_KEYS.QUIZZES);
         onSuccess(data.data.slug);
       } else {
         onClose();

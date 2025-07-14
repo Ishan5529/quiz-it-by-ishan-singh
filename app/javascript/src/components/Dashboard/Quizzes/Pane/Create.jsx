@@ -13,9 +13,7 @@ const Create = ({ showPane, setShowPane }) => {
 
   const handleSuccess = slug => {
     setShowPane(false);
-    alert("Above");
     history.push(routes.dashboard.quizzes.edit.replace(":slug", slug));
-    alert("Below");
   };
 
   const onClose = () => {
