@@ -21,8 +21,14 @@ const Table = ({
           allowRowClick
           rowSelection
           columnData={QUIZZES_TABLE_COLUMN_DATA}
+          // defaultPageSize={2}
+          // currentPageNumber={page}
+          // handlePageChange={setPage}
           rowData={quizzes}
           selectedRowKeys={selectedQuizIds}
+          scroll={{
+            x: "100%",
+          }}
           onRowSelect={selectedRowKeys => setSelectedQuizIds(selectedRowKeys)}
           onRowClick={(_, quiz) => {
             setSelectedQuiz(quiz);
