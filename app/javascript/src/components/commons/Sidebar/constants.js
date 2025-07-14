@@ -6,23 +6,23 @@ export const APP_NAME = "QuizIt";
 export const SIDENAV_LINKS = [
   {
     label: "Quizzes",
-    to: routes.dashboard.quizzes,
+    to: routes.dashboard.quizzes.index,
     icon: Bulb,
     icon_size: 28,
     sub_links: [
       {
         label: "All",
-        to: routes.dashboard.quizzes,
+        to: routes.dashboard.quizzes.index,
         count: 30,
       },
       {
         label: "Published",
-        to: `${routes.dashboard.quizzes}?status=published`,
+        to: `${routes.dashboard.quizzes.index}?status=published`,
         count: 20,
       },
       {
         label: "Draft",
-        to: `${routes.dashboard.quizzes}?status=draft`,
+        to: `${routes.dashboard.quizzes.index}?status=draft`,
         count: 10,
       },
     ],

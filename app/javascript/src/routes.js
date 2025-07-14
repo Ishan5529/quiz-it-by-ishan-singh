@@ -9,7 +9,12 @@ export const routes = {
   },
   dashboard: {
     index: "/dashboard",
-    quizzes: "/dashboard/quizzes",
+    quizzes: {
+      index: "/dashboard/quizzes",
+      create: "/dashboard/quizzes/create",
+      edit: quizId => `/dashboard/quizzes/${quizId}/edit`,
+      view: quizId => `/dashboard/quizzes/${quizId}`,
+    },
     settings: {
       index: "/dashboard/settings",
       email: "/dashboard/settings?tab=email",

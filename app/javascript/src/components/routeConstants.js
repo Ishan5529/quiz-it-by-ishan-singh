@@ -3,6 +3,7 @@ import PasswordReset from "components/Authentication/ResetPassword";
 import Signup from "components/Authentication/Signup";
 import Dashboard from "components/Dashboard";
 import Quizzes from "components/Dashboard/Quizzes";
+import QuizPage from "components/Dashboard/Quizzes/QuizPage";
 import Settings from "components/Dashboard/Settings";
 
 import { routes } from "../routes";
@@ -28,8 +29,14 @@ export const PRIVATE_ROUTES = [
 
 export const DASHBOARD_ROUTES = [
   {
-    path: routes.dashboard.quizzes,
+    path: routes.dashboard.quizzes.index,
+    exact: true,
     component: Quizzes,
+  },
+  {
+    path: routes.dashboard.quizzes.create,
+    exact: true,
+    component: QuizPage,
   },
   {
     path: routes.dashboard.settings.index,

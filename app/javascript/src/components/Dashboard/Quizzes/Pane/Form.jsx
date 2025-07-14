@@ -7,7 +7,7 @@ import { ActionBlock, Input } from "neetoui/formik";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
-const Form = ({ onClose, refetch, quiz, isEdit }) => {
+const Form = ({ onClose, refetch, quiz, isEdit, onSuccess }) => {
   const handleSubmit = async values => {
     try {
       if (isEdit) {
@@ -16,7 +16,11 @@ const Form = ({ onClose, refetch, quiz, isEdit }) => {
         await quizzesApi.create(values);
       }
       refetch();
-      onClose();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
     } catch (err) {
       logger.error(err);
     }
