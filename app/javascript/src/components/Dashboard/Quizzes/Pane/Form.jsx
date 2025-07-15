@@ -10,17 +10,12 @@ import { ActionBlock, Input } from "neetoui/formik";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
-const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
+const Form = ({ onClose, quiz, onSuccess }) => {
   const clearQueryClient = useClearQueryClient();
 
   const handleSubmit = async values => {
     try {
-      let data;
-      if (isEdit) {
-        data = await quizzesApi.update(quiz.slug, values);
-      } else {
-        data = await quizzesApi.create(values);
-      }
+      const data = await quizzesApi.create(values);
 
       if (onSuccess) {
         clearQueryClient(QUERY_KEYS.QUIZZES);
@@ -55,7 +50,7 @@ const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
             }}
             submitButtonProps={{
               className: "mr-3",
-              label: isEdit ? "Save changes" : "Save",
+              label: "Save",
             }}
           />
         </Pane.Footer>

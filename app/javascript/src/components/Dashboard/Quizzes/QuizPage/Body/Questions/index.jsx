@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import questionsApi from "apis/questions";
+import EmptyState from "components/commons/EmptyState";
 
 import Question from "./Question";
 
@@ -10,7 +11,8 @@ const Questions = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const quizSlug = "bwahha";
+      // const quizSlug = "bwahha";
+      const quizSlug = "sdm";
       try {
         const response = await questionsApi.fetch(quizSlug);
         setQuestions(response.data.questions || []);
@@ -23,6 +25,14 @@ const Questions = () => {
 
     fetchData();
   }, []);
+
+  if (loading) {
+    return <EmptyState title="Loading questions" />;
+  }
+
+  if (questions.length === 0) {
+    return <EmptyState title="There are no questions to show." />;
+  }
 
   return (
     <div className="edit-quiz-container">

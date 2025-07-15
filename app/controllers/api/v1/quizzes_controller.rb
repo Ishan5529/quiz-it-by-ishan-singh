@@ -5,7 +5,11 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   before_action :load_quizzes, only: :bulk_destroy
 
   def index
-    render_json({ quizzes: current_user.quizzes.includes(:questions).as_json(include: :questions) })
+    quizzes = current_user.quizzes
+      .includes(:questions)
+      .order(updated_at: :desc)
+    quizzes_json = quizzes.as_json(include: :questions)
+    render_json({ quizzes: quizzes_json })
   end
 
   def create

@@ -63,7 +63,6 @@ const Quizzes = () => {
             }
           />
           <Table
-            // fetchQuizzes={fetchQuizzes}
             quizzes={quizzes}
             selectedQuizSlugs={selectedQuizSlugs}
             setSelectedQuizSlugs={setSelectedQuizSlugs}
@@ -79,13 +78,11 @@ const Quizzes = () => {
         />
       )}
       <NewQuizPane
-        // fetchQuizzes={fetchQuizzes}
         setShowPane={setShowNewQuizPane}
         showPane={showNewQuizPane}
       />
       {showDeleteAlert && (
         <DeleteAlert
-          // refetch={fetchQuizzes}
           selectedQuizSlugs={selectedQuizSlugs}
           setSelectedQuizSlugs={setSelectedQuizSlugs}
           onClose={() => setShowDeleteAlert(false)}

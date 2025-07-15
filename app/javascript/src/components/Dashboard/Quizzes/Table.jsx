@@ -1,43 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Table as NeetoUITable } from "neetoui";
+import { useHistory } from "react-router-dom";
 
 import { QUIZZES_TABLE_COLUMN_DATA } from "./constants";
-import EditQuizPane from "./Pane/Edit";
 
 const Table = ({ selectedQuizSlugs, setSelectedQuizSlugs, quizzes = [] }) => {
-  const [showEditQuiz, setShowEditQuiz] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState({});
+  const history = useHistory();
+
+  const handleRowClick = slug => {
+    history.push(`/dashboard/quizzes/${slug}/edit`);
+  };
 
   return (
-    <>
-      <div className="quizzes-table-height w-full">
-        <NeetoUITable
-          allowRowClick
-          rowSelection
-          columnData={QUIZZES_TABLE_COLUMN_DATA}
-          // defaultPageSize={2}
-          // currentPageNumber={page}
-          // handlePageChange={setPage}
-          rowData={quizzes}
-          rowKey="slug"
-          selectedRowKeys={selectedQuizSlugs}
-          scroll={{
-            x: "100%",
-          }}
-          onRowSelect={selectedRowKeys => setSelectedQuizSlugs(selectedRowKeys)}
-          onRowClick={(_, quiz) => {
-            setSelectedQuiz(quiz);
-            setShowEditQuiz(true);
-          }}
-        />
-      </div>
-      <EditQuizPane
-        quiz={selectedQuiz}
-        setShowPane={setShowEditQuiz}
-        showPane={showEditQuiz}
+    <div className="quizzes-table-height w-full">
+      <NeetoUITable
+        allowRowClick
+        rowSelection
+        columnData={QUIZZES_TABLE_COLUMN_DATA}
+        // defaultPageSize={2}
+        // currentPageNumber={page}
+        // handlePageChange={setPage}
+        rowData={quizzes}
+        rowKey="slug"
+        selectedRowKeys={selectedQuizSlugs}
+        scroll={{
+          x: "100%",
+        }}
+        onRowSelect={selectedRowKeys => setSelectedQuizSlugs(selectedRowKeys)}
+        onRowClick={(_, { slug }) => {
+          handleRowClick(slug);
+        }}
       />
-    </>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ import Questions from "./Questions";
 import Submissions from "./Submissions";
 
 const Body = () => (
-  <div className="quiz-body-container">
+  <div className="quiz-body-container h-full w-full">
     <BrowserRouter>
       <Switch>
         <Route
