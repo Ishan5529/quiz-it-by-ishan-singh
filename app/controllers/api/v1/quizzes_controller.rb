@@ -28,6 +28,11 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     end
   end
 
+  def show
+    quiz = current_user.quizzes.includes(:questions).find_by!(slug: params[:slug])
+    render_json({ quiz: quiz.as_json(include: :questions) })
+  end
+
   private
 
     def quiz_params

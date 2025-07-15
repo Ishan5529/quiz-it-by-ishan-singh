@@ -5,7 +5,7 @@ import { InlineInput } from "components/commons";
 import { LeftArrow } from "neetoicons";
 import { NavLink, useLocation } from "react-router-dom";
 
-const Header = ({ title, slug, handleTitleUpdate }) => {
+const Header = ({ title, slug, handleTitleUpdate, handleInputBlur }) => {
   const { pathname } = useLocation();
 
   const handleBackClick = () => {
@@ -21,6 +21,7 @@ const Header = ({ title, slug, handleTitleUpdate }) => {
         <InlineInput
           placeholder="Enter quiz title"
           value={title}
+          onBlur={handleInputBlur}
           onChange={handleTitleUpdate}
         />
       </div>

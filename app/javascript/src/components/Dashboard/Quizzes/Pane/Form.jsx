@@ -23,7 +23,7 @@ const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
       }
 
       if (onSuccess) {
-        clearQueryClient.invalidateQueries(QUERY_KEYS.QUIZZES);
+        clearQueryClient(QUERY_KEYS.QUIZZES);
         onSuccess(data.data.slug);
       } else {
         onClose();
