@@ -15,6 +15,10 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def create
     question = @quiz.questions.create!(question_params)
+    if params.key?(:quiet)
+      render_json({ question: question })
+      return
+    end
     render_json({ notice: t("successfully_created", entity: "Question"), question: question })
   end
 
@@ -26,6 +30,10 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def update
     @question.update!(question_params)
+    if params.key?(:quiet)
+      render_json({ question: @question })
+      return
+    end
     render_json({ notice: t("successfully_updated", entity: "Question"), question: @question })
   end
 

@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import { QUERY_KEYS } from "constants/query";
 
+import React, { useEffect, useState } from "react";
+
+import quizzesApi from "apis/quizzes";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import { useQuizzesShow } from "hooks/reactQuery/useQuizzesApi";
 import { useParams } from "react-router-dom";
 
 import Body from "./Body";
@@ -9,15 +14,33 @@ const QuizPage = () => {
   const [title, setTitle] = useState("");
   const { slug } = useParams();
 
+  const clearQueryClient = useClearQueryClient();
+
+  const { data: { data: { quiz } = {} } = {} } = useQuizzesShow(slug);
+
+  useEffect(() => {
+    if (quiz) {
+      setTitle(quiz.title);
+    }
+  }, [quiz]);
+
   const handleTitleUpdate = event => {
-    // Logic to handle title update
     setTitle(event.target.value);
-    // You can also add any additional logic here, like saving the title to a server
   };
 
-  const handleInputBlur = () => {
-    // console.log("Title updated successfully!");
-    // You can add logic here to save the title to a server or perform any other action
+  const handleInputBlur = async () => {
+    if (title.trim() === "" || title.trim() === quiz.title) {
+      setTitle(quiz.title);
+
+      return;
+    }
+
+    try {
+      await quizzesApi.update(slug, { title, quiet: true });
+      clearQueryClient(QUERY_KEYS.QUIZZES);
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   return (

@@ -10,13 +10,20 @@ class Api::V1::QuizzesController < Api::V1::BaseController
 
   def create
     new_quiz = current_user.quizzes.create!(quiz_params)
+    if params.key?(:quiet)
+      render_json({ slug: @quiz.slug })
+      return
+    end
     render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
   end
 
   def update
     @quiz.update!(quiz_params)
+    if params.key?(:quiet)
+      render_json({ slug: @quiz.slug })
+      return
+    end
     render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
-    # render_message(t("successfully_updated", entity: "Quiz"))
   end
 
   def bulk_destroy
@@ -40,7 +47,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     end
 
     def load_quiz!
-      @quiz = current_user.quizzes.find(params[:slug])
+      @quiz = current_user.quizzes.find_by!(slug: params[:slug])
     end
 
     def load_quizzes
