@@ -39,6 +39,11 @@ export const DASHBOARD_ROUTES = [
     component: QuizPage,
   },
   {
+    path: routes.dashboard.quizzes.submissions,
+    exact: true,
+    component: QuizPage,
+  },
+  {
     path: routes.dashboard.settings.index,
     component: Settings,
   },

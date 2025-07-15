@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 
+import { useParams } from "react-router-dom";
+
 import Body from "./Body";
 import Header from "./Header";
 
 const QuizPage = () => {
   const [title, setTitle] = useState("");
+  const { slug } = useParams();
   const handleTitleUpdate = event => {
     // Logic to handle title update
     setTitle(event.target.value);
@@ -12,9 +15,13 @@ const QuizPage = () => {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <Header {...{ title, handleTitleUpdate }} />
-      <Body />
+    <div className="flex h-full w-full flex-col">
+      <div className="flex h-[10%] w-full items-center border-b-2 border-gray-300">
+        <Header {...{ title, slug, handleTitleUpdate }} />
+      </div>
+      <div className="h-[90%] w-full">
+        <Body />
+      </div>
     </div>
   );
 };

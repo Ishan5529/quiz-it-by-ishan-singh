@@ -4,9 +4,9 @@ import React from "react";
 
 import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { Pane } from "neetoui";
 import { ActionBlock, Input } from "neetoui/formik";
-import { useClearQueryClient } from "react-query";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 

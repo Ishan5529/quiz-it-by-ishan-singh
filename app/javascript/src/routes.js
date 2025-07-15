@@ -13,6 +13,7 @@ export const routes = {
       index: "/dashboard/quizzes",
       create: "/dashboard/quizzes/create",
       edit: "/dashboard/quizzes/:slug/edit",
+      submissions: "/dashboard/quizzes/:slug/submissions",
       show: "/dashboard/quizzes/:slug",
     },
     settings: {
