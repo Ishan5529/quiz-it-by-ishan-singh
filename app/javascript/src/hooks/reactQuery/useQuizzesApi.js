@@ -1,7 +1,7 @@
+import { QUERY_KEYS } from "constants/query";
+
 import quizzesApi from "apis/quizzes";
 import { useQuery } from "react-query";
-
-import { QUERY_KEYS } from "../../constants/query";
 
 export const useQuizzesFetch = params =>
   useQuery({

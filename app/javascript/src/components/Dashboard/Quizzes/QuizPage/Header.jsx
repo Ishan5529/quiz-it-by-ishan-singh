@@ -3,13 +3,14 @@ import React from "react";
 import classNames from "classnames";
 import { InlineInput } from "components/commons";
 import { LeftArrow } from "neetoicons";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useHistory } from "react-router-dom";
 
 const Header = ({ title, slug, handleTitleUpdate, handleInputBlur }) => {
   const { pathname } = useLocation();
+  const history = useHistory();
 
   const handleBackClick = () => {
-    window.location.href = "/dashboard/quizzes";
+    history.push(`/dashboard/quizzes`);
   };
 
   return (

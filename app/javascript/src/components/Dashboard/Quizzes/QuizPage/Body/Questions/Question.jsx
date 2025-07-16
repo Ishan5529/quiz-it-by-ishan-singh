@@ -15,8 +15,10 @@ const Question = ({ question, handleMenuClick }) => {
   return (
     <div className="question-container mb-10 w-3/4 rounded-lg border bg-white p-4">
       <Radio
+        disabled
         stacked
-        className="space-y-4"
+        class="cursor-default"
+        className="mt-1 space-y-4"
         labelProps={{ className: "w-full" }}
         label={
           <div className="flex w-full items-center justify-between">
@@ -29,7 +31,7 @@ const Question = ({ question, handleMenuClick }) => {
       >
         {options.map((option, idx) => (
           <Radio.Item
-            className="mt-1"
+            checked={idx + 1 === question.correct_option}
             key={idx}
             label={option}
             name={`question-${question.id}`}

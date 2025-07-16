@@ -73,7 +73,7 @@ const Main = props => {
               condition={isLoggedIn}
               key={route.path}
               path={route.path}
-              redirectRoute={routes.auth.login}
+              redirectRoute={routes.public}
             />
           ))}
         </Switch>

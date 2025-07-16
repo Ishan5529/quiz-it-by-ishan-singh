@@ -9,8 +9,8 @@ const Dashboard = () => (
   <div className="flex h-screen w-full">
     <Sidebar />
     <Switch>
-      {DASHBOARD_ROUTES.map(({ path, component }) => (
-        <Route exact component={component} key={path} path={path} />
+      {DASHBOARD_ROUTES.map(({ path, component, exact }) => (
+        <Route component={component} exact={exact} key={path} path={path} />
       ))}
       <Redirect
         from={routes.dashboard.index}

@@ -5,8 +5,7 @@ import Dashboard from "components/Dashboard";
 import Quizzes from "components/Dashboard/Quizzes";
 import QuizPage from "components/Dashboard/Quizzes/QuizPage";
 import Settings from "components/Dashboard/Settings";
-
-import { routes } from "../routes";
+import { routes } from "routes";
 
 export const AUTH_ROUTES = [
   {
@@ -34,13 +33,7 @@ export const DASHBOARD_ROUTES = [
     component: Quizzes,
   },
   {
-    path: routes.dashboard.quizzes.edit,
-    exact: true,
-    component: QuizPage,
-  },
-  {
-    path: routes.dashboard.quizzes.submissions,
-    exact: true,
+    path: routes.dashboard.quizzes.quizPage,
     component: QuizPage,
   },
   {
