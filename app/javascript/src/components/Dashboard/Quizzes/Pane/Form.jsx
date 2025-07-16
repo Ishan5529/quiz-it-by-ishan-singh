@@ -4,26 +4,21 @@ import React from "react";
 
 import quizzesApi from "apis/quizzes";
 import { Formik, Form as FormikForm } from "formik";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { Pane } from "neetoui";
 import { ActionBlock, Input } from "neetoui/formik";
-import { useClearQueryClient } from "react-query";
 
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
 
-const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
+const Form = ({ onClose, quiz, onSuccess }) => {
   const clearQueryClient = useClearQueryClient();
 
   const handleSubmit = async values => {
     try {
-      let data;
-      if (isEdit) {
-        data = await quizzesApi.update(quiz.slug, values);
-      } else {
-        data = await quizzesApi.create(values);
-      }
+      const data = await quizzesApi.create(values);
 
       if (onSuccess) {
-        clearQueryClient.invalidateQueries(QUERY_KEYS.QUIZZES);
+        clearQueryClient(QUERY_KEYS.QUIZZES);
         onSuccess(data.data.slug);
       } else {
         onClose();
@@ -55,7 +50,7 @@ const Form = ({ onClose, quiz, isEdit, onSuccess }) => {
             }}
             submitButtonProps={{
               className: "mr-3",
-              label: isEdit ? "Save changes" : "Save",
+              label: "Save",
             }}
           />
         </Pane.Footer>

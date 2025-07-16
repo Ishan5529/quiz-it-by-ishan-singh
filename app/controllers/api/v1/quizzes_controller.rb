@@ -5,18 +5,29 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   before_action :load_quizzes, only: :bulk_destroy
 
   def index
-    render_json({ quizzes: current_user.quizzes.includes(:questions).as_json(include: :questions) })
+    quizzes = current_user.quizzes
+      .includes(:questions)
+      .order(updated_at: :desc)
+    quizzes_json = quizzes.as_json(include: :questions)
+    render_json({ quizzes: quizzes_json })
   end
 
   def create
     new_quiz = current_user.quizzes.create!(quiz_params)
+    if params.key?(:quiet)
+      render_json({ slug: @quiz.slug })
+      return
+    end
     render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
   end
 
   def update
     @quiz.update!(quiz_params)
+    if params.key?(:quiet)
+      render_json({ slug: @quiz.slug })
+      return
+    end
     render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
-    # render_message(t("successfully_updated", entity: "Quiz"))
   end
 
   def bulk_destroy
@@ -28,6 +39,11 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     end
   end
 
+  def show
+    quiz = current_user.quizzes.includes(:questions).find_by!(slug: params[:slug])
+    render_json({ quiz: quiz.as_json(include: :questions) })
+  end
+
   private
 
     def quiz_params
@@ -35,7 +51,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     end
 
     def load_quiz!
-      @quiz = current_user.quizzes.find(params[:slug])
+      @quiz = current_user.quizzes.find_by!(slug: params[:slug])
     end
 
     def load_quizzes

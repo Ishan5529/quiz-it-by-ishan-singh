@@ -1,7 +1,7 @@
+import { QUERY_KEYS } from "constants/query";
+
 import quizzesApi from "apis/quizzes";
 import { useQuery } from "react-query";
-
-import { QUERY_KEYS } from "../../constants/query";
 
 export const useQuizzesFetch = params =>
   useQuery({
@@ -14,7 +14,7 @@ export const useQuizzesFetch = params =>
 
 export const useQuizzesShow = params =>
   useQuery({
-    queryKey: [QUERY_KEYS.QUIZ, params],
-    queryFn: () => quizzesApi.fetchBySlug(params),
+    queryKey: [QUERY_KEYS.QUIZZES, params],
+    queryFn: () => quizzesApi.show(params),
     // enabled: !!params.i,
   });

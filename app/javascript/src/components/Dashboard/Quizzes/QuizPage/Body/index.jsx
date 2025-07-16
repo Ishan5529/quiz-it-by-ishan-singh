@@ -1,15 +1,20 @@
 import React from "react";
 
-import Question from "./Question";
+import { Switch, Route } from "react-router-dom";
+
+import Questions from "./Questions";
+import Submissions from "./Submissions";
 
 const Body = () => (
-  <div className="flex-1 p-4">
-    <h2 className="text-xl font-semibold">Quiz Body</h2>
-    <p className="text-gray-600">
-      This is where the quiz content will be displayed.
-    </p>
-    {/* Quiz questions and options will be rendered here */}
-    <Question />
+  <div className="quiz-body-container h-full w-full">
+    <Switch>
+      <Route component={Questions} path="/dashboard/quizzes/:slug/edit" />
+      <Route
+        exact
+        component={Submissions}
+        path="/dashboard/quizzes/:slug/submissions"
+      />
+    </Switch>
   </div>
 );
 
