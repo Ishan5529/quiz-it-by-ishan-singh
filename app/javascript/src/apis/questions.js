@@ -28,8 +28,8 @@ const destroy = (quizSlug, ids, params = {}) =>
     { params }
   );
 
-const duplicate = (quizSlug, id) =>
-  axios.post(`${BASE_QUESTIONS_URL(quizSlug)}/${id}/duplicate`);
+const clone = (quizSlug, id) =>
+  axios.post(`${BASE_QUESTIONS_URL(quizSlug)}/${id}/clone`);
 
 const questionsApi = {
   fetch,
@@ -37,7 +37,7 @@ const questionsApi = {
   create,
   update,
   destroy,
-  duplicate,
+  clone,
 };
 
 export default questionsApi;

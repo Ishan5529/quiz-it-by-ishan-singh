@@ -27,10 +27,21 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     render_json({ notice: t("successfully_created", entity: "Question"), question: question })
   end
 
-  def duplicate
+  def clone
     original = @quiz.questions.find(params[:id])
-    duplicated = @quiz.questions.create!(original.attributes.except("id", "created_at", "updated_at", "position"))
-    render_json({ notice: t("successfully_created", entity: "Question (duplicate)"), question: duplicated })
+    ActiveRecord::Base.transaction do
+      new_position = original.position + 1
+
+      @quiz.questions.where("position >= ?", new_position).update_all("position = position + 1")
+
+      duplicated = @quiz.questions.create!(
+        original.attributes
+          .except("id", "created_at", "updated_at")
+          .merge(position: new_position)
+      )
+
+      render_json({ notice: t("successfully_created", entity: "Question (clone)"), question: duplicated })
+    end
   end
 
   def update
@@ -71,12 +82,4 @@ class Api::V1::QuestionsController < Api::V1::BaseController
         :option1, :option2, :option3, :option4, :option5, :option6, options: []
       )
     end
-
-  # def fill_missing_options_with_nil(options_hash)
-  #   (1..6).each do |i|
-  #     key = "option#{i}"
-  #     options_hash[key] = nil unless options_hash.key?(key)
-  #   end
-  #   options_hash
-  # end
 end
