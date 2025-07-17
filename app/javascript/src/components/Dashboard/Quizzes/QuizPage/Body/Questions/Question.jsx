@@ -29,8 +29,9 @@ const Question = ({ question, slug }) => {
     clearQueryClient(QUERY_KEYS.QUESTIONS);
   };
 
-  const handleDelete = () => {
-    // Logic to handle clone action
+  const handleDelete = async () => {
+    await questionsApi.destroy(slug, question.id);
+    clearQueryClient(QUERY_KEYS.QUESTIONS);
   };
 
   return (

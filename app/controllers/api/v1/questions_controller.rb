@@ -58,8 +58,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def bulk_destroy
     questions = @quiz.questions.where(id: params[:ids])
+    positions = questions.pluck(:position)
     count = questions.size
     if questions.destroy_all
+      positions.sort.reverse.each do |pos|
+        @quiz.questions.where("position > ?", pos).update_all("position = position - 1")
+      end
       render_message(t("successfully_deleted", count: count, entity: count > 1 ? "Questions" : "Question"))
     else
       render_error(t("Something went wrong!"))
