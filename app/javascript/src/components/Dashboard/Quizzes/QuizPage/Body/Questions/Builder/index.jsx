@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import { QUERY_KEYS } from "constants/query";
+
+import React from "react";
 
 import questionsApi from "apis/questions";
 import { InlineInput } from "components/commons";
+import {
+  QUESTIONS_FORM_INITIAL_FORM_VALUES,
+  QUESTIONS_FORM_VALIDATION_SCHEMA,
+} from "components/Dashboard/Quizzes/constants";
+import { Formik, Form as FormikForm, FieldArray } from "formik";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { Right } from "neetoicons";
 import { Typography, Button } from "neetoui";
 import { useParams, useHistory } from "react-router-dom";
@@ -9,70 +17,34 @@ import { useParams, useHistory } from "react-router-dom";
 import OptionField from "./OptionField";
 
 const Builder = ({ questionNumber }) => {
-  const [title, setTitle] = useState("");
-  const [options, setOptions] = useState(["", "", "", ""]);
-  const [correctOption, setCorrectOption] = useState(null);
   const { slug } = useParams();
   const history = useHistory();
-
-  const maxOptionsReached = options.length >= 6;
+  const clearQueryClient = useClearQueryClient();
 
   const handleQuestionsClick = () => {
     history.push(`/dashboard/quizzes/${slug}/edit`);
   };
 
-  const handleAddOption = () => {
-    setOptions([...options, ""]);
-  };
-
-  const handleDelete = idx => {
-    if (options.length <= 2) {
-      return;
-    }
-    setOptions(options.filter((_, index) => index !== idx));
-  };
-
-  const handleOptionChange = (idx, value) => {
-    const updated = [...options];
-    updated[idx] = value;
-    setOptions(updated);
-  };
-
-  const handleSave = async () => {
-    const validOptions = options.filter(option => option.trim() !== "");
-    if (validOptions.length < 2) {
-      // Show an error message or handle the case where there are not enough options
-      return;
-    }
-
-    if (correctOption === null) {
-      // Show an error message or handle the case where no correct option is selected
-      return;
-    }
-
-    if (title.trim() === "") {
-      // Show an error message or handle the case where title is empty
-      return;
-    }
-
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    const validOptions = values.options.filter(option => option.trim() !== "");
     const payload = {
-      title,
-      options: options.filter(option => option.trim() !== ""),
-      // option1: options[0],
-      // option2: options[1],
-      // option3: options[2],
-      // option4: options[3],
-      // option5: options[4],
-      // option6: options[5],
-      correct_option: correctOption,
+      title: values.title,
+      options: validOptions,
+      correct_option: values.correctOption + 1,
       quiz_slug: slug,
       question_number: questionNumber,
     };
     try {
       await questionsApi.create(slug, payload);
-      history.push(`/dashboard/quizzes/${slug}/edit`);
-    } catch {
-      // console.error("Error saving question:", error);
+      clearQueryClient(QUERY_KEYS.QUESTIONS);
+      if (values.isSaveAndAddNew) {
+        resetForm();
+        history.push(`/dashboard/quizzes/${slug}/edit/add-question`);
+      } else {
+        history.push(`/dashboard/quizzes/${slug}/edit`);
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -91,58 +63,122 @@ const Builder = ({ questionNumber }) => {
             Question {questionNumber}
           </Typography>
         </Typography>
-        <div className="body mt-10">
-          <div className="border-b-2 border-gray-300 pb-4">
-            <InlineInput
-              disableHover
-              placeholder="Enter question title"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="options mt-8 space-y-3">
-            {options.map((option, index) => (
-              <OptionField
-                correctOption={correctOption}
-                handleDelete={() => handleDelete(index)}
-                handleOptionChange={handleOptionChange}
-                index={index}
-                key={index}
-                option={option}
-                setCorrectOption={setCorrectOption}
-                // maxOptionsReached={maxOptionsReached}
-              />
-            ))}
-          </div>
-          <div className="mt-2">
-            <Button
-              className="mt-4"
-              disabled={maxOptionsReached}
-              label="Add Option"
-              style="link"
-              tooltipProps={{
-                content: "Maximum 6 options allowed",
-                disabled: maxOptionsReached,
-                position: "top",
-              }}
-              onClick={handleAddOption}
-            />
-          </div>
-          <div className="mt-6 flex flex-row space-x-3">
-            <Button
-              className="mt-6"
-              label="Save"
-              style="primary"
-              onClick={handleSave}
-            />
-            <Button
-              className="mt-6"
-              label="Save & add new question"
-              style="secondary"
-              onClick={handleSave}
-            />
-          </div>
-        </div>
+        <Formik
+          initialValues={QUESTIONS_FORM_INITIAL_FORM_VALUES}
+          validationSchema={QUESTIONS_FORM_VALIDATION_SCHEMA}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            setFieldValue,
+            isSubmitting,
+          }) => (
+            <FormikForm>
+              <div className="body mt-10">
+                <div className="border-b-2 border-gray-300 pb-4">
+                  <InlineInput
+                    disableHover
+                    error={touched.title && errors.title}
+                    name="title"
+                    placeholder="Enter question title"
+                    value={values.title}
+                    onChange={handleChange}
+                  />
+                  {touched.title && errors.title && (
+                    <div className="mt-1 text-xs text-red-500">
+                      {errors.title}
+                    </div>
+                  )}
+                </div>
+                <FieldArray name="options">
+                  {({ push, remove }) => (
+                    <div className="options mt-8 w-full space-y-3">
+                      {values.options.map((option, index) => (
+                        <div key={index}>
+                          <div
+                            className="flex w-full items-center space-x-3 rounded-lg bg-white px-3 hover:outline"
+                            key={index}
+                          >
+                            <input
+                              checked={values.correctOption === index}
+                              className="cursor-pointer"
+                              name="correctOption"
+                              type="radio"
+                              onChange={() =>
+                                setFieldValue("correctOption", index)
+                              }
+                            />
+                            <OptionField
+                              index={index}
+                              isDeleteDisabled={values.options.length <= 2}
+                              minimumOptions="two"
+                              option={option}
+                              handleDelete={() => {
+                                if (values.options.length > 2) remove(index);
+                              }}
+                              handleOptionChange={(idx, value) =>
+                                setFieldValue(`options[${idx}]`, value)
+                              }
+                            />
+                          </div>
+                          {touched.options &&
+                            touched.options[index] &&
+                            errors.options &&
+                            errors.options[index] && (
+                              <div className="mt-1 text-xs text-red-500">
+                                {errors.options[index]}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                      <div>
+                        <Button
+                          className="mt-4"
+                          disabled={values.options.length >= 6}
+                          label="Add Option"
+                          style="link"
+                          onClick={() => push("")}
+                        />
+                        {errors.options &&
+                          typeof errors.options === "string" && (
+                            <div className="mt-2 text-xs text-red-500">
+                              {errors.options}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+                {touched.correctOption && errors.correctOption && (
+                  <div className="mt-2 text-xs text-red-500">
+                    {errors.correctOption}
+                  </div>
+                )}
+                <div className="mt-6 flex flex-row space-x-3">
+                  <Button
+                    className="mt-6"
+                    disabled={isSubmitting}
+                    label="Save"
+                    style="primary"
+                    type="submit"
+                    onClick={() => setFieldValue("isSaveAndAddNew", false)}
+                  />
+                  <Button
+                    className="mt-6"
+                    disabled={isSubmitting}
+                    label="Save & add new question"
+                    style="secondary"
+                    type="submit"
+                    onClick={() => setFieldValue("isSaveAndAddNew", true)}
+                  />
+                </div>
+              </div>
+            </FormikForm>
+          )}
+        </Formik>
       </div>
     </div>
   );
