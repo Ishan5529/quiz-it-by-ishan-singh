@@ -8,7 +8,7 @@ const BASE_QUESTIONS_URL = quizSlug =>
 const fetch = (quizSlug, params = {}) =>
   axios.get(BASE_QUESTIONS_URL(quizSlug), { params });
 
-const show = (quizSlug, id) =>
+const show = ({ quizSlug, id }) =>
   axios.get(`${BASE_QUESTIONS_URL(quizSlug)}/${id}`);
 
 const create = (quizSlug, payload, params = {}) =>
@@ -28,8 +28,8 @@ const destroy = (quizSlug, ids, params = {}) =>
     { params }
   );
 
-const duplicate = (quizSlug, id) =>
-  axios.post(`${BASE_QUESTIONS_URL(quizSlug)}/${id}/duplicate`);
+const clone = (quizSlug, id) =>
+  axios.post(`${BASE_QUESTIONS_URL(quizSlug)}/${id}/clone`);
 
 const questionsApi = {
   fetch,
@@ -37,7 +37,7 @@ const questionsApi = {
   create,
   update,
   destroy,
-  duplicate,
+  clone,
 };
 
 export default questionsApi;

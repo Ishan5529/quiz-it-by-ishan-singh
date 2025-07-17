@@ -11,8 +11,9 @@ export const useQuestionsFetch = params =>
     enabled: true,
   });
 
-export const useQuestionsShow = params =>
+export const useQuestionsShow = (params, options) =>
   useQuery({
     queryKey: [QUERY_KEYS.QUESTIONS, params],
     queryFn: () => questionsApi.show(params),
+    ...options,
   });

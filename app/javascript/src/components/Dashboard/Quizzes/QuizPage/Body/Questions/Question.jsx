@@ -1,42 +1,70 @@
+import { QUERY_KEYS } from "constants/query";
+
 import React from "react";
 
+import questionsApi from "apis/questions";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { MenuHorizontal } from "neetoicons";
-import { Radio } from "neetoui";
+import { Typography, Radio, Dropdown } from "neetoui";
+import { useHistory } from "react-router-dom";
 
-const Question = ({ question, handleMenuClick }) => {
+const Question = ({ question, slug }) => {
+  const history = useHistory();
+  const clearQueryClient = useClearQueryClient();
+
   const options = [1, 2, 3, 4, 5, 6]
     .map(i => question[`option${i}`])
     .filter(option => option !== null);
 
-  const handleOptionChange = () => {
-    // Handle the change event for the radio buttons
+  const { Menu, MenuItem, Divider } = Dropdown;
+
+  const handleEdit = () => {
+    history.push(
+      `/dashboard/quizzes/${slug}/edit/edit-question/${question.id}`
+    );
+  };
+
+  const handleClone = async () => {
+    await questionsApi.clone(slug, question.id);
+    clearQueryClient(QUERY_KEYS.QUESTIONS);
+  };
+
+  const handleDelete = async () => {
+    await questionsApi.destroy(slug, question.id);
+    clearQueryClient(QUERY_KEYS.QUESTIONS);
   };
 
   return (
     <div className="question-container mb-10 w-3/4 rounded-lg border bg-white p-4">
+      <div className="mb-4 flex w-full items-center justify-between">
+        <Typography className="w-full text-gray-700" style="h3">
+          {question.title}
+        </Typography>
+        <Dropdown buttonStyle="text" icon={MenuHorizontal}>
+          <Menu>
+            <MenuItem.Button onClick={handleEdit}>Edit</MenuItem.Button>
+            <MenuItem.Button onClick={handleClone}>Clone</MenuItem.Button>
+            <Divider />
+            <MenuItem.Button style="danger" onClick={handleDelete}>
+              Delete
+            </MenuItem.Button>
+          </Menu>
+        </Dropdown>
+      </div>
       <Radio
         disabled
         stacked
         class="cursor-default"
-        className="mt-1 space-y-4"
-        labelProps={{ className: "w-full" }}
-        label={
-          <div className="flex w-full items-center justify-between">
-            <p className="text-lg font-semibold">{question.title}</p>
-            <div className="cursor-pointer" onClick={handleMenuClick}>
-              <MenuHorizontal />
-            </div>
-          </div>
-        }
+        className="w-full space-y-4"
       >
         {options.map((option, idx) => (
           <Radio.Item
             checked={idx + 1 === question.correct_option}
             key={idx}
-            label={option}
+            label={<div className="w-full break-words">{option}</div>}
+            labelProps={{ className: "w-[1000px]" }}
             name={`question-${question.id}`}
             value={`option${idx + 1}`}
-            onChange={handleOptionChange}
           />
         ))}
       </Radio>

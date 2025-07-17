@@ -15,11 +15,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    options_hash = {}
-    if params[:question].key?(:options)
-      options_hash = destructure_options(params[:question][:options])
-    end
-
+    options_hash = destructure_options_if_present(params)
     question = @quiz.questions.create!(
       question_params.except(:options).merge(options_hash)
     )
@@ -31,14 +27,28 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     render_json({ notice: t("successfully_created", entity: "Question"), question: question })
   end
 
-  def duplicate
+  def clone
     original = @quiz.questions.find(params[:id])
-    duplicated = @quiz.questions.create!(original.attributes.except("id", "created_at", "updated_at", "position"))
-    render_json({ notice: t("successfully_created", entity: "Question (duplicate)"), question: duplicated })
+    ActiveRecord::Base.transaction do
+      new_position = original.position + 1
+
+      @quiz.questions.where("position >= ?", new_position).update_all("position = position + 1")
+
+      duplicated = @quiz.questions.create!(
+        original.attributes
+          .except("id", "created_at", "updated_at")
+          .merge(position: new_position)
+      )
+
+      render_json({ notice: t("successfully_created", entity: "Question (clone)"), question: duplicated })
+    end
   end
 
   def update
-    @question.update!(question_params)
+    options_hash = destructure_options_if_present(params)
+    @question.update!(
+      question_params.except(:options).merge(options_hash)
+    )
     if params.key?(:quiet)
       render_json({ question: @question })
       return
@@ -48,8 +58,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def bulk_destroy
     questions = @quiz.questions.where(id: params[:ids])
+    positions = questions.pluck(:position)
     count = questions.size
     if questions.destroy_all
+      positions.sort.reverse.each do |pos|
+        @quiz.questions.where("position > ?", pos).update_all("position = position - 1")
+      end
       render_message(t("successfully_deleted", count: count, entity: count > 1 ? "Questions" : "Question"))
     else
       render_error(t("Something went wrong!"))
