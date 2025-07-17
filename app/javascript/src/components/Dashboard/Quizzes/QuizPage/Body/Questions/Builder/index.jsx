@@ -39,15 +39,31 @@ const Builder = ({ questionNumber }) => {
   };
 
   const handleSave = async () => {
+    const validOptions = options.filter(option => option.trim() !== "");
+    if (validOptions.length < 2) {
+      // Show an error message or handle the case where there are not enough options
+      return;
+    }
+
+    if (correctOption === null) {
+      // Show an error message or handle the case where no correct option is selected
+      return;
+    }
+
+    if (title.trim() === "") {
+      // Show an error message or handle the case where title is empty
+      return;
+    }
+
     const payload = {
       title,
-      // options: options.filter(option => option.trim() !== ""),
-      option1: options[0],
-      option2: options[1],
-      option3: options[2],
-      option4: options[3],
-      option5: options[4],
-      option6: options[5],
+      options: options.filter(option => option.trim() !== ""),
+      // option1: options[0],
+      // option2: options[1],
+      // option3: options[2],
+      // option4: options[3],
+      // option5: options[4],
+      // option6: options[5],
       correct_option: correctOption,
       quiz_slug: slug,
       question_number: questionNumber,

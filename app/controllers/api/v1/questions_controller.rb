@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::QuestionsController < Api::V1::BaseController
+  include DestructureOptions
   before_action :load_quiz
   before_action :load_question, only: %i[show update destroy]
 
@@ -14,7 +15,15 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    question = @quiz.questions.create!(question_params)
+    options_hash = {}
+    if params[:question].key?(:options)
+      options_hash = destructure_options(params[:question][:options])
+    end
+
+    question = @quiz.questions.create!(
+      question_params.except(:options).merge(options_hash)
+    )
+
     if params.key?(:quiet)
       render_json({ question: question })
       return
@@ -59,7 +68,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
     def question_params
       params.require(:question).permit(
-        :title, :option1, :option2, :option3, :option4, :option5, :option6,
-        :correct_option, :position)
+        :title, :correct_option, :position,
+        :option1, :option2, :option3, :option4, :option5, :option6, options: []
+      )
     end
 end
