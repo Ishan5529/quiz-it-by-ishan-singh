@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from "constants/query";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import questionsApi from "apis/questions";
 import { InlineInput } from "components/commons";
@@ -10,18 +10,53 @@ import {
 } from "components/Dashboard/Quizzes/constants";
 import { Formik, Form as FormikForm, FieldArray } from "formik";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import { useQuestionsShow } from "hooks/reactQuery/useQuestionsApi";
 import { Right } from "neetoicons";
 import { Typography, Button } from "neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
 import OptionField from "./OptionField";
 
-const Builder = ({ questionNumber }) => {
-  const { slug } = useParams();
+const Builder = ({ position, isEdit = false }) => {
+  const { slug, id } = useParams();
+  const [initialValues, setInitialValues] = useState(
+    QUESTIONS_FORM_INITIAL_FORM_VALUES
+  );
+  const [questionNumber, setQuestionNumber] = useState(position);
   const history = useHistory();
   const clearQueryClient = useClearQueryClient();
 
-  const handleQuestionsClick = () => {
+  const buildOptionsArray = question =>
+    Array.from({ length: 6 }, (_, i) => question[`option${i + 1}`]).filter(
+      option => typeof option === "string" && option.trim() !== ""
+    );
+
+  useEffect(() => {
+    if (!isEdit) {
+      setQuestionNumber(position);
+    }
+  }, [position, isEdit]);
+
+  useQuestionsShow(
+    {
+      quizSlug: slug,
+      id,
+    },
+    {
+      enabled: isEdit,
+      onSuccess: ({ data: { question } = {} }) => {
+        setQuestionNumber(question.position + 1);
+        setInitialValues({
+          title: question.title,
+          options: buildOptionsArray(question),
+          correctOption: question.correct_option - 1,
+          isSaveAndAddNew: false,
+        });
+      },
+    }
+  );
+
+  const handleAllQuestionsClick = () => {
     history.push(`/dashboard/quizzes/${slug}/edit`);
   };
 
@@ -35,7 +70,13 @@ const Builder = ({ questionNumber }) => {
       question_number: questionNumber,
     };
     try {
-      await questionsApi.create(slug, payload);
+      if (isEdit) {
+        payload.id = id;
+        await questionsApi.update(slug, id, payload);
+      } else {
+        payload.position = questionNumber - 1;
+        await questionsApi.create(slug, payload);
+      }
       clearQueryClient(QUERY_KEYS.QUESTIONS);
       if (values.isSaveAndAddNew) {
         resetForm();
@@ -55,7 +96,7 @@ const Builder = ({ questionNumber }) => {
           className="mb-4 flex flex-row items-center font-medium text-gray-400"
           style="h4"
         >
-          <div className="cursor-pointer" onClick={handleQuestionsClick}>
+          <div className="cursor-pointer" onClick={handleAllQuestionsClick}>
             All Questions
           </div>
           <Right size={20} />{" "}
@@ -64,7 +105,8 @@ const Builder = ({ questionNumber }) => {
           </Typography>
         </Typography>
         <Formik
-          initialValues={QUESTIONS_FORM_INITIAL_FORM_VALUES}
+          enableReinitialize
+          initialValues={initialValues}
           validationSchema={QUESTIONS_FORM_VALIDATION_SCHEMA}
           onSubmit={handleSubmit}
         >
@@ -72,6 +114,7 @@ const Builder = ({ questionNumber }) => {
             values,
             errors,
             touched,
+            handleBlur,
             handleChange,
             setFieldValue,
             isSubmitting,
@@ -85,6 +128,7 @@ const Builder = ({ questionNumber }) => {
                     name="title"
                     placeholder="Enter question title"
                     value={values.title}
+                    onBlur={handleBlur}
                     onChange={handleChange}
                   />
                   {touched.title && errors.title && (
@@ -138,7 +182,7 @@ const Builder = ({ questionNumber }) => {
                         <Button
                           className="mt-4"
                           disabled={values.options.length >= 6}
-                          label="Add Option"
+                          label="Add new option +"
                           style="link"
                           onClick={() => push("")}
                         />

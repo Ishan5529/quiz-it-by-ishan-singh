@@ -22,7 +22,11 @@ const Questions = () => {
     <Switch>
       <Route
         path={routes.dashboard.quizzes.edit.addQuestion}
-        render={() => <Builder questionNumber={questions?.length + 1 || 1} />}
+        render={() => <Builder position={questions?.length + 1 || 1} />}
+      />
+      <Route
+        path={routes.dashboard.quizzes.edit.editQuestion}
+        render={() => <Builder isEdit />}
       />
       <Route
         path={routes.dashboard.quizzes.edit.index}

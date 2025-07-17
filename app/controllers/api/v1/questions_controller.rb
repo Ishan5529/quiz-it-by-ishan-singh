@@ -15,11 +15,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    options_hash = {}
-    if params[:question].key?(:options)
-      options_hash = destructure_options(params[:question][:options])
-    end
-
+    options_hash = destructure_options_if_present(params)
     question = @quiz.questions.create!(
       question_params.except(:options).merge(options_hash)
     )
@@ -38,7 +34,10 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def update
-    @question.update!(question_params)
+    options_hash = destructure_options_if_present(params)
+    @question.update!(
+      question_params.except(:options).merge(options_hash)
+    )
     if params.key?(:quiet)
       render_json({ question: @question })
       return
@@ -72,4 +71,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
         :option1, :option2, :option3, :option4, :option5, :option6, options: []
       )
     end
+
+  # def fill_missing_options_with_nil(options_hash)
+  #   (1..6).each do |i|
+  #     key = "option#{i}"
+  #     options_hash[key] = nil unless options_hash.key?(key)
+  #   end
+  #   options_hash
+  # end
 end

@@ -8,7 +8,7 @@ const BASE_QUESTIONS_URL = quizSlug =>
 const fetch = (quizSlug, params = {}) =>
   axios.get(BASE_QUESTIONS_URL(quizSlug), { params });
 
-const show = (quizSlug, id) =>
+const show = ({ quizSlug, id }) =>
   axios.get(`${BASE_QUESTIONS_URL(quizSlug)}/${id}`);
 
 const create = (quizSlug, payload, params = {}) =>
