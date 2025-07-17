@@ -37,24 +37,22 @@ const Builder = ({ position, isEdit = false }) => {
     }
   }, [position, isEdit]);
 
-  useQuestionsShow(
-    {
-      quizSlug: slug,
-      id,
-    },
-    {
-      enabled: isEdit,
-      onSuccess: ({ data: { question } = {} }) => {
-        setQuestionNumber(question.position + 1);
-        setInitialValues({
-          title: question.title,
-          options: buildOptionsArray(question),
-          correctOption: question.correct_option - 1,
-          isSaveAndAddNew: false,
-        });
-      },
-    }
+  const { data: { data: { question } = {} } = {} } = useQuestionsShow(
+    { quizSlug: slug, id },
+    { enabled: isEdit }
   );
+
+  useEffect(() => {
+    if (question) {
+      setQuestionNumber(question.position + 1);
+      setInitialValues({
+        title: question.title,
+        options: buildOptionsArray(question),
+        correctOption: question.correct_option - 1,
+        isSaveAndAddNew: false,
+      });
+    }
+  }, [question]);
 
   const handleAllQuestionsClick = () => {
     history.push(`/dashboard/quizzes/${slug}/edit`);
@@ -118,6 +116,7 @@ const Builder = ({ position, isEdit = false }) => {
             handleChange,
             setFieldValue,
             isSubmitting,
+            dirty,
           }) => (
             <FormikForm>
               <div className="body mt-10">
@@ -204,7 +203,7 @@ const Builder = ({ position, isEdit = false }) => {
                 <div className="mt-6 flex flex-row space-x-3">
                   <Button
                     className="mt-6"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !dirty}
                     label="Save"
                     style="primary"
                     type="submit"
@@ -212,7 +211,7 @@ const Builder = ({ position, isEdit = false }) => {
                   />
                   <Button
                     className="mt-6"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !dirty}
                     label="Save & add new question"
                     style="secondary"
                     type="submit"

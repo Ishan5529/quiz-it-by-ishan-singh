@@ -32,8 +32,7 @@ const Questions = () => {
         path={routes.dashboard.quizzes.edit.index}
         render={() => (
           <Display
-            isLoading={isLoading}
-            questions={questions}
+            {...{ questions, slug, isLoading }}
             onAddClick={handleQuestionAddClick}
           />
         )}
