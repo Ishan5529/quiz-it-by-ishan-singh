@@ -1,5 +1,3 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useEffect, useState } from "react";
 
 import questionsApi from "apis/questions";
@@ -9,7 +7,6 @@ import {
   QUESTIONS_FORM_VALIDATION_SCHEMA,
 } from "components/Dashboard/Quizzes/constants";
 import { Formik, Form as FormikForm, FieldArray } from "formik";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuestionsShow } from "hooks/reactQuery/useQuestionsApi";
 import { Right } from "neetoicons";
 import { Typography, Button } from "neetoui";
@@ -17,14 +14,13 @@ import { useParams, useHistory } from "react-router-dom";
 
 import OptionField from "./OptionField";
 
-const Builder = ({ position, isEdit = false }) => {
+const Builder = ({ position, isEdit = false, setIsDirty }) => {
   const { slug, id } = useParams();
   const [initialValues, setInitialValues] = useState(
     QUESTIONS_FORM_INITIAL_FORM_VALUES
   );
   const [questionNumber, setQuestionNumber] = useState(position);
   const history = useHistory();
-  const clearQueryClient = useClearQueryClient();
 
   const buildOptionsArray = question =>
     Array.from({ length: 6 }, (_, i) => question[`option${i + 1}`]).filter(
@@ -75,7 +71,7 @@ const Builder = ({ position, isEdit = false }) => {
         payload.position = questionNumber - 1;
         await questionsApi.create(slug, payload);
       }
-      clearQueryClient(QUERY_KEYS.QUESTIONS);
+      setIsDirty(true);
       if (values.isSaveAndAddNew) {
         resetForm();
         history.push(`/dashboard/quizzes/${slug}/edit/add-question`);

@@ -1,16 +1,12 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React from "react";
 
 import questionsApi from "apis/questions";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { MenuHorizontal } from "neetoicons";
 import { Typography, Radio, Dropdown } from "neetoui";
 import { useHistory } from "react-router-dom";
 
-const Question = ({ question, slug }) => {
+const Question = ({ question, slug, setIsDirty }) => {
   const history = useHistory();
-  const clearQueryClient = useClearQueryClient();
 
   const options = [1, 2, 3, 4, 5, 6]
     .map(i => question[`option${i}`])
@@ -26,12 +22,12 @@ const Question = ({ question, slug }) => {
 
   const handleClone = async () => {
     await questionsApi.clone(slug, question.id);
-    clearQueryClient(QUERY_KEYS.QUESTIONS);
+    setIsDirty(true);
   };
 
   const handleDelete = async () => {
     await questionsApi.destroy(slug, question.id);
-    clearQueryClient(QUERY_KEYS.QUESTIONS);
+    setIsDirty(true);
   };
 
   return (
