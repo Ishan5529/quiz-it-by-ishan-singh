@@ -1,16 +1,38 @@
 import React from "react";
 
+import ButtonGroup from "@bigbinary/neeto-molecules/ButtonGroup";
 import classNames from "classnames";
 import { InlineInput } from "components/commons";
-import { LeftArrow } from "neetoicons";
+import { LeftArrow, Link } from "neetoicons";
+import { Typography } from "neetoui";
 import { NavLink, useLocation, useHistory } from "react-router-dom";
+import { showToastr, generateDraftInfoMessage } from "utils";
 
-const Header = ({ title, slug, handleTitleUpdate, handleInputBlur }) => {
+const Header = ({
+  title,
+  updatedAt,
+  slug,
+  handleTitleUpdate,
+  handleInputBlur,
+  isDraft,
+  handlePublish,
+  handlePreviewClick,
+}) => {
   const { pathname } = useLocation();
   const history = useHistory();
 
   const handleBackClick = () => {
     history.push(`/dashboard/quizzes`);
+  };
+
+  const handleLinkCopy = async () => {
+    const link = `dashboard/quizzes/${slug}/attempt`;
+    await navigator.clipboard.writeText(link);
+    showToastr({
+      message: "Link copied to clipboard",
+      type: "info",
+      autoClose: 2000,
+    });
   };
 
   return (
@@ -54,7 +76,35 @@ const Header = ({ title, slug, handleTitleUpdate, handleInputBlur }) => {
           </NavLink>
         </div>
       </div>
-      <div className="ml-auto flex flex-row items-center">Actions Here</div>
+      <div className="ml-auto flex flex-row items-center space-x-4">
+        {isDraft && (
+          <Typography className="italic text-gray-500" style="body2">
+            {generateDraftInfoMessage({ date: updatedAt })}
+          </Typography>
+        )}
+        <div className="h-full">
+          <ButtonGroup
+            size="small"
+            buttons={[
+              {
+                isActive: true,
+                key: "Publish",
+                label: "Publish",
+                onClick: handlePublish,
+              },
+              {
+                isActive: false,
+                key: "ExternalLink",
+                icon: "ri-arrow-right-up-line",
+                onClick: handlePreviewClick,
+              },
+            ]}
+          />
+        </div>
+        <div className="h-full cursor-pointer" onClick={handleLinkCopy}>
+          <Link />
+        </div>
+      </div>
     </div>
   );
 };
