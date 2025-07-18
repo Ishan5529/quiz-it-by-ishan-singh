@@ -6,7 +6,7 @@ import { isEmpty } from "ramda";
 
 import Question from "./Question";
 
-const Display = ({ questions, slug, isLoading, onAddClick }) => {
+const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty }) => {
   if (isLoading) {
     return <EmptyState title="Loading questions" />;
   }
@@ -30,7 +30,7 @@ const Display = ({ questions, slug, isLoading, onAddClick }) => {
         <h4 className="mb-2 w-3/4">{questions?.length} questions</h4>
         {questions &&
           questions.map(question => (
-            <Question key={question.id} {...{ question, slug }} />
+            <Question key={question.id} {...{ question, slug, setIsDirty }} />
           ))}
       </div>
     </div>
