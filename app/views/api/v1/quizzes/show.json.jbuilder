@@ -7,7 +7,8 @@ json.quiz do
     :created_at,
     :updated_at,
     :slug,
-    :status
+    :isDraft,
+    :isPublished
 
   json.category do
     json.extract! @quiz.category, :id, :name
