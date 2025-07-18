@@ -10,6 +10,7 @@ import { showToastr, generateDraftInfoMessage } from "utils";
 
 const Header = ({
   title,
+  originalTitle = "",
   updatedAt,
   slug,
   handleTitleUpdate,
@@ -42,6 +43,8 @@ const Header = ({
           <LeftArrow />
         </div>
         <InlineInput
+          allowCancel
+          originalValue={originalTitle}
           placeholder="Enter quiz title"
           value={title}
           onBlur={handleInputBlur}

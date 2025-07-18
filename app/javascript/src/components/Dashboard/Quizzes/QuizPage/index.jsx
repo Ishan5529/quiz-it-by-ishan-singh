@@ -50,6 +50,7 @@ const QuizPage = () => {
           {...{
             title,
             slug,
+            originalTitle: quiz?.title,
             handleTitleUpdate,
             handleInputBlur,
             isDraft: true,
