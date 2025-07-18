@@ -6,12 +6,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   before_action :load_question, only: %i[show update destroy]
 
   def index
-    questions = @quiz.questions.order(:position)
-    render_json({ questions: questions })
+    @questions = @quiz.questions.order(:position)
+    render
   end
 
   def show
-    render_json({ question: @question })
+    render
   end
 
   def create

@@ -22,11 +22,6 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
   const [questionNumber, setQuestionNumber] = useState(position);
   const history = useHistory();
 
-  const buildOptionsArray = question =>
-    Array.from({ length: 6 }, (_, i) => question[`option${i + 1}`]).filter(
-      option => typeof option === "string" && option.trim() !== ""
-    );
-
   useEffect(() => {
     if (!isEdit) {
       setQuestionNumber(position);
@@ -43,7 +38,7 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
       setQuestionNumber(question.position + 1);
       setInitialValues({
         title: question.title,
-        options: buildOptionsArray(question),
+        options: question.options,
         correctOption: question.correct_option - 1,
         isSaveAndAddNew: false,
       });
