@@ -8,9 +8,7 @@ import { useHistory } from "react-router-dom";
 const Question = ({ question, slug, setIsDirty }) => {
   const history = useHistory();
 
-  const options = [1, 2, 3, 4, 5, 6]
-    .map(i => question[`option${i}`])
-    .filter(option => option !== null);
+  const options = question.options.filter(option => option !== null);
 
   const { Menu, MenuItem, Divider } = Dropdown;
 
