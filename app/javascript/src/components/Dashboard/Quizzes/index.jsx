@@ -1,11 +1,15 @@
+import { QUERY_KEYS } from "constants/query";
+
 import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
+import quizzesApi from "apis/quizzes";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
 import { Delete, MenuHorizontal } from "neetoicons";
 import { Button, Tag, Dropdown } from "neetoui";
@@ -26,6 +30,8 @@ const Quizzes = () => {
 
   const history = useHistory();
 
+  const clearQueryClient = useClearQueryClient();
+
   const { Menu, MenuItem, Divider } = Dropdown;
   // const { searchKey = "", status = "", category = "" } = useQueryParams();
 
@@ -34,13 +40,18 @@ const Quizzes = () => {
   const { data: { data: { quizzes = [] } = {}, isLoading } = {} } =
     useQuizzesFetch();
 
+  const handlePublishClick = async slugs => {
+    await quizzesApi.update({
+      slugs,
+      quiet: true,
+      payload: { isPublished: true, isDraft: false },
+    });
+    clearQueryClient(QUERY_KEYS.QUIZZES);
+  };
+
   useEffect(() => {
     const handleTitleClick = slug => () => {
       history.push(`/dashboard/quizzes/${slug}/edit`);
-    };
-
-    const handlePublishClick = () => {
-      history.push(`/dashboard/quizzes/publish`);
     };
 
     const handleQuizClone = () => {
@@ -81,9 +92,15 @@ const Quizzes = () => {
         ),
         actions: (
           <div className="flex w-full items-center justify-between">
-            <Dropdown buttonStyle="text" icon={MenuHorizontal} strategy="fixed">
+            <Dropdown
+              buttonStyle="text"
+              icon={MenuHorizontal}
+              strategy="fixed"
+              onClick={() => setSelectedQuizSlugs([quiz.slug])}
+              onClose={() => setSelectedQuizSlugs([])}
+            >
               <Menu>
-                <MenuItem.Button onClick={handlePublishClick}>
+                <MenuItem.Button onClick={() => handlePublishClick(quiz.slug)}>
                   {quiz.isPublished ? "Unpublish" : "Publish"}
                 </MenuItem.Button>
                 <MenuItem.Button onClick={handleQuizClone}>
@@ -92,10 +109,7 @@ const Quizzes = () => {
                 <Divider />
                 <MenuItem.Button
                   style="danger"
-                  onClick={() => {
-                    setSelectedQuizSlugs([quiz.slug]);
-                    setShowDeleteAlert(true);
-                  }}
+                  onClick={() => setShowDeleteAlert(true)}
                 >
                   Delete
                 </MenuItem.Button>

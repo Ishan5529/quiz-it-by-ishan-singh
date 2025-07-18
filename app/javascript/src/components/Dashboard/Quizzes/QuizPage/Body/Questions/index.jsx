@@ -2,13 +2,14 @@ import { QUERY_KEYS } from "constants/query";
 
 import React, { useState, useEffect } from "react";
 
+import quizzesApi from "apis/quizzes";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuestionsFetch } from "hooks/reactQuery/useQuestionsApi";
 import { useParams, useHistory, Switch, Route } from "react-router-dom";
 import { routes } from "routes";
 
 import Builder from "./Builder";
-import Display from "./display";
+import Display from "./Display";
 
 const Questions = () => {
   const history = useHistory();
@@ -23,6 +24,11 @@ const Questions = () => {
 
     clearQueryClient(QUERY_KEYS.QUESTIONS);
     clearQueryClient(QUERY_KEYS.QUIZZES);
+    quizzesApi.update({
+      slugs: slug,
+      quiet: true,
+      payload: { isDraft: true },
+    });
     setIsQuestionDirty(false);
   }, [isQuestionDirty]);
 

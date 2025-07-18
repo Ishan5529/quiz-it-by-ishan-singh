@@ -18,7 +18,8 @@ namespace :api, defaults: { format: :json } do
         end
       end
       collection do
-        post "bulk_destroy"
+        post :bulk_destroy
+        put :bulk_update
       end
     end
 
