@@ -24,23 +24,41 @@ const QuizPage = () => {
     }
   }, [quiz]);
 
+  const handleQuizUpdate = async ({ quiet = false, payload }) => {
+    try {
+      await quizzesApi.update({
+        slugs: slug,
+        quiet,
+        payload,
+      });
+      clearQueryClient(QUERY_KEYS.QUIZZES);
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   const handleTitleUpdate = event => {
     setTitle(event.target.value);
   };
 
-  const handleInputBlur = async () => {
+  const handleInputBlur = () => {
     if (title.trim() === "" || title.trim() === quiz.title) {
       setTitle(quiz.title);
 
       return;
     }
 
-    try {
-      await quizzesApi.update(slug, { title, quiet: true });
-      clearQueryClient(QUERY_KEYS.QUIZZES);
-    } catch (error) {
-      logger.error(error);
-    }
+    handleQuizUpdate({
+      quiet: true,
+      payload: { title },
+    });
+  };
+
+  const handlePublish = () => {
+    handleQuizUpdate({
+      quiet: true,
+      payload: { isDraft: false, isPublished: true },
+    });
   };
 
   return (
@@ -53,9 +71,9 @@ const QuizPage = () => {
             originalTitle: quiz?.title,
             handleTitleUpdate,
             handleInputBlur,
-            isDraft: true,
+            isDraft: quiz?.isDraft,
             updatedAt: quiz?.updated_at,
-            handlePublish: () => {},
+            handlePublish,
             handlePreviewClick: () => {},
           }}
         />
