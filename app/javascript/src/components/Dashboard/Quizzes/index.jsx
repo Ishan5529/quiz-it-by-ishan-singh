@@ -114,15 +114,17 @@ const Quizzes = () => {
                   Clone
                 </MenuItem.Button>
                 <Divider />
-                <MenuItem.Button
-                  style="danger"
-                  onClick={() => {
-                    setShowDiscardAlert(true);
-                    setSelectedQuizSlugs([quiz.slug]);
-                  }}
-                >
-                  Discard draft
-                </MenuItem.Button>
+                {quiz.isDraft && (
+                  <MenuItem.Button
+                    style="danger"
+                    onClick={() => {
+                      setShowDiscardAlert(true);
+                      setSelectedQuizSlugs([quiz.slug]);
+                    }}
+                  >
+                    Discard draft
+                  </MenuItem.Button>
+                )}
                 <MenuItem.Button
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
