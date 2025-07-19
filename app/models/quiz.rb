@@ -4,12 +4,17 @@ class Quiz < ApplicationRecord
   belongs_to :user
   belongs_to :category, touch: true
   has_many :questions, dependent: :destroy
+  has_one :published_quiz, dependent: :destroy
 
   validates :title, :slug, presence: true
   validates :slug, uniqueness: true
   validate :slug_not_changed
 
   before_validation :set_slug, on: :create
+
+  def publish!
+    Quizzes::PublishService.new(self).publish!
+  end
 
   private
 

@@ -30,6 +30,12 @@ json.quizzes @quizzes do |quiz|
     ].compact_blank
   end
 
+  if quiz.published_quiz&.data.present?
+    json.published quiz.published_quiz.data
+  else
+    json.published nil
+  end
+
   json.user do
     json.extract! quiz.user,
       :id,

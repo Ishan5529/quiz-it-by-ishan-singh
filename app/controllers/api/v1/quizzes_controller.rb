@@ -26,7 +26,15 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   end
 
   def bulk_update
-    @quizzes.update_all(quiz_params.to_h)
+    # Only update quizzes if there are attributes to update
+    attrs = quiz_params.to_h
+    if attrs["isPublished"] == true || attrs[:isPublished] == true
+      @quizzes.each do |quiz|
+        quiz.publish! # You must define this method in your Quiz model
+      end
+    else
+      @quizzes.update_all(attrs)
+    end
     unless params.key?(:quiet)
       render_json(
         {

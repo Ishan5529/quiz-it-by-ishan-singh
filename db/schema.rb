@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_18_105221) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_19_042428) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -61,6 +61,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_105221) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "published_quizzes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "quiz_id", null: false
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_published_quizzes_on_quiz_id"
   end
 
   create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -116,6 +124,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_105221) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "published_quizzes", "quizzes"
   add_foreign_key "questions", "quizzes"
   add_foreign_key "quizzes", "categories"
 end
