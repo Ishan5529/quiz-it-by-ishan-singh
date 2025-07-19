@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Quiz < ApplicationRecord
-  enum :status, { draft: "Draft", published: "published" }, default: :draft
-
   belongs_to :user
   belongs_to :category, touch: true
   has_many :questions, dependent: :destroy

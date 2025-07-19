@@ -23,8 +23,8 @@ export const QUIZZES_TABLE_COLUMN_DATA = [
   },
   {
     title: "Created On",
-    dataIndex: "created_on",
-    key: "created_on",
+    dataIndex: "created_at",
+    key: "created_at",
     width: "14%",
   },
   {
@@ -40,9 +40,9 @@ export const QUIZZES_TABLE_COLUMN_DATA = [
     width: "19%",
   },
   {
-    title: "...",
-    dataIndex: "...",
-    key: "...",
+    title: "",
+    dataIndex: "actions",
+    key: "actions",
     width: "5%",
   },
 ];
