@@ -13,4 +13,13 @@ const generateDraftInfoMessage = ({ date }) => {
 
 const formatTableDate = date => dayjs(date).format("DD MMMM YYYY, hh:mm A");
 
-export { showToastr, isPresent, generateDraftInfoMessage, formatTableDate };
+const getAlertTitle = (action, count) =>
+  `${action} ${count} ${count > 1 ? "quizzes" : "quiz"}?`;
+
+export {
+  showToastr,
+  isPresent,
+  generateDraftInfoMessage,
+  formatTableDate,
+  getAlertTitle,
+};
