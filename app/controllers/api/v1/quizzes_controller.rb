@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::QuizzesController < Api::V1::BaseController
-  before_action :load_quiz!, only: %i[delete]
-  before_action :load_quizzes, only: %i[bulk_destroy bulk_update]
+  before_action :load_quiz!, only: %i[update delete]
+  before_action :load_quizzes, only: :bulk_destroy
 
   def index
     @quizzes = current_user.quizzes
@@ -25,23 +25,13 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
   end
 
-  def bulk_update
-    @quizzes.update_all(quiz_params.to_h)
-    unless params.key?(:quiet)
-      render_json(
-        {
-          notice: t(
-            "successfully_updated", count: @quizzes.size,
-            entity: @quizzes.size > 1 ? "Quizzes" : "Quiz")
-        })
+  def update
+    @quiz.update!(quiz_params)
+    if params.key?(:quiet)
+      render_json({ slug: @quiz.slug })
+      return
     end
-    # else
-    #   @quiz.update!(quiz_params)
-    #   if params.key?(:quiet)
-    #     render_json({ slug: @quiz.slug })
-    #     return
-    #   end
-    #   render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
+    render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
   end
 
   def bulk_destroy
@@ -56,7 +46,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   private
 
     def quiz_params
-      params.require(:quiz).permit(:title, :slug, :status, :category_id, :isDraft, :isPublished)
+      params.require(:quiz).permit(:title, :slug, :status, :category_id)
     end
 
     def load_quiz!
