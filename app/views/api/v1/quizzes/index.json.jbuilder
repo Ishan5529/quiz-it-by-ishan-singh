@@ -43,3 +43,10 @@ json.quizzes @quizzes do |quiz|
       :email
   end
 end
+
+json.meta do
+  json.current_page @quizzes.current_page
+  json.total_pages @quizzes.total_pages
+  json.total_count @quizzes.total_count
+  json.per_page @quizzes.limit_value
+end

@@ -4,18 +4,27 @@ import { Table as NeetoUITable } from "neetoui";
 
 import { QUIZZES_TABLE_COLUMN_DATA } from "./constants";
 
-const Table = ({ selectedQuizSlugs, setSelectedQuizSlugs, quizzes = [] }) => (
+const Table = ({
+  meta,
+  tablePage,
+  perPage,
+  handlePageChange,
+  selectedQuizSlugs,
+  setSelectedQuizSlugs,
+  quizzes = [],
+}) => (
   <div className="quizzes-table-height w-full">
     <NeetoUITable
       allowRowClick
       rowSelection
       columnData={QUIZZES_TABLE_COLUMN_DATA}
-      // defaultPageSize={2}
-      // currentPageNumber={page}
-      // handlePageChange={setPage}
+      currentPageNumber={tablePage}
+      defaultPageSize={perPage}
+      handlePageChange={handlePageChange}
       rowData={quizzes}
       rowKey="slug"
       selectedRowKeys={selectedQuizSlugs}
+      totalCount={meta.total_count}
       scroll={{
         x: "100%",
       }}

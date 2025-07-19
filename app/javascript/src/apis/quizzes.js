@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { BASE_QUIZZES_URL } from "./constants";
 
-const fetch = () => axios.get(BASE_QUIZZES_URL);
+const fetch = payload => axios.get(BASE_QUIZZES_URL, { params: payload });
 
 const show = slug => axios.get(`${BASE_QUIZZES_URL}/${slug}`);
 
