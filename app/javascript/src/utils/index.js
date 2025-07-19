@@ -11,6 +11,4 @@ const generateDraftInfoMessage = ({ date }) => {
   return `Draft saved at ${formattedDate}`;
 };
 
-const formatTableDate = date => dayjs(date).format("DD MMMM YYYY, hh:mm A");
-
-export { showToastr, isPresent, generateDraftInfoMessage, formatTableDate };
+export { showToastr, isPresent, generateDraftInfoMessage };
