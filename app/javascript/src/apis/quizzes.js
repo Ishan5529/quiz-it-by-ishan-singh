@@ -18,12 +18,16 @@ const update = ({ slugs, quiet = false, payload }) =>
 const destroy = payload =>
   axios.post(`${BASE_QUIZZES_URL}/bulk_destroy`, payload);
 
+const discardDraft = payload =>
+  axios.post(`${BASE_QUIZZES_URL}/draft/discard`, payload);
+
 const quizzesApi = {
   fetch,
   show,
   create,
   update,
   destroy,
+  discardDraft,
 };
 
 export default quizzesApi;

@@ -17,6 +17,11 @@ namespace :api, defaults: { format: :json } do
           post "bulk_destroy"
         end
       end
+
+      collection do
+        post "draft/discard", to: "quizzes/drafts#discard"
+      end
+
       collection do
         post :bulk_destroy
         put :bulk_update

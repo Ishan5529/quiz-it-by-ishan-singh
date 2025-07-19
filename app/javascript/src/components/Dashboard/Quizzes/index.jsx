@@ -12,11 +12,10 @@ import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
 import { Delete, MenuHorizontal } from "neetoicons";
-import { Button, Tag, Dropdown } from "neetoui";
+import { Alert, Button, Tag, Dropdown } from "neetoui";
 import { useHistory } from "react-router-dom";
-import { formatTableDate } from "utils";
+import { formatTableDate, getAlertTitle } from "utils";
 
-import DeleteAlert from "./DeleteAlert";
 import NewQuizPane from "./Pane/Create";
 import Table from "./Table";
 
@@ -26,6 +25,7 @@ const Quizzes = () => {
   const [quizzesData, setQuizzesData] = useState([]);
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [showDiscardAlert, setShowDiscardAlert] = useState(false);
   const [selectedQuizSlugs, setSelectedQuizSlugs] = useState([]);
 
   const history = useHistory();
@@ -97,16 +97,16 @@ const Quizzes = () => {
               icon={MenuHorizontal}
               strategy="fixed"
               onClick={() => setSelectedQuizSlugs([quiz.slug])}
-              onClose={() => setSelectedQuizSlugs([])}
             >
               <Menu>
                 <MenuItem.Button
-                  onClick={() =>
+                  onClick={() => {
                     handlePublishToggle({
                       slugs: quiz.slug,
                       publishedStatus: quiz.isPublished,
-                    })
-                  }
+                    });
+                    setSelectedQuizSlugs([]);
+                  }}
                 >
                   {quiz.isPublished ? "Unpublish" : "Publish"}
                 </MenuItem.Button>
@@ -114,6 +114,15 @@ const Quizzes = () => {
                   Clone
                 </MenuItem.Button>
                 <Divider />
+                <MenuItem.Button
+                  style="danger"
+                  onClick={() => {
+                    setShowDiscardAlert(true);
+                    setSelectedQuizSlugs([quiz.slug]);
+                  }}
+                >
+                  Discard draft
+                </MenuItem.Button>
                 <MenuItem.Button
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
@@ -128,6 +137,15 @@ const Quizzes = () => {
 
     setQuizzesData(updateRowData());
   }, [quizzes]);
+
+  const handleAlertSubmit = async action => {
+    await action();
+    clearQueryClient(QUERY_KEYS.QUIZZES);
+    clearQueryClient(QUERY_KEYS.QUESTIONS);
+    setSelectedQuizSlugs([]);
+    setShowDeleteAlert(false);
+    setShowDiscardAlert(false);
+  };
 
   if (isLoading) {
     return <PageLoader />;
@@ -182,11 +200,30 @@ const Quizzes = () => {
         setShowPane={setShowNewQuizPane}
         showPane={showNewQuizPane}
       />
+      {showDiscardAlert && (
+        <Alert
+          isOpen={showDiscardAlert}
+          message="Are you sure you want to continue? This cannot be undone."
+          title={getAlertTitle("Discard", selectedQuizSlugs.length)}
+          onClose={() => setShowDiscardAlert(false)}
+          onSubmit={() =>
+            handleAlertSubmit(() =>
+              quizzesApi.discardDraft({ slugs: selectedQuizSlugs })
+            )
+          }
+        />
+      )}
       {showDeleteAlert && (
-        <DeleteAlert
-          selectedQuizSlugs={selectedQuizSlugs}
-          setSelectedQuizSlugs={setSelectedQuizSlugs}
+        <Alert
+          isOpen={showDeleteAlert}
+          message="Are you sure you want to continue? This cannot be undone."
+          title={getAlertTitle("Delete", selectedQuizSlugs.length)}
           onClose={() => setShowDeleteAlert(false)}
+          onSubmit={() =>
+            handleAlertSubmit(() =>
+              quizzesApi.destroy({ slugs: selectedQuizSlugs })
+            )
+          }
         />
       )}
     </Container>
