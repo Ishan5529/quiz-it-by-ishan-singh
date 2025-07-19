@@ -11,6 +11,7 @@ import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
+import useQueryParams from "hooks/useQueryParams";
 import { Delete, MenuHorizontal } from "neetoicons";
 import { Alert, Button, Tag, Dropdown } from "neetoui";
 import { useHistory } from "react-router-dom";
@@ -22,29 +23,50 @@ import Table from "./Table";
 3;
 
 const Quizzes = () => {
+  const { page = 1, per_page = 12 } = useQueryParams();
   const [quizzesData, setQuizzesData] = useState([]);
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showDiscardAlert, setShowDiscardAlert] = useState(false);
   const [selectedQuizSlugs, setSelectedQuizSlugs] = useState([]);
+  const [tablePage, setTablePage] = useState(page);
+  const [perPage, setPerPage] = useState(per_page);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const history = useHistory();
 
   const clearQueryClient = useClearQueryClient();
 
+  useEffect(() => {
+    setTablePage(page);
+    setPerPage(per_page);
+  }, [page, per_page]);
+
   const { Menu, MenuItem, Divider } = Dropdown;
-  // const { searchKey = "", status = "", category = "" } = useQueryParams();
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const { data: { data: { quizzes = [], meta = [] } = {}, isLoading } = {} } =
+    useQuizzesFetch({
+      page,
+      per_page,
+    });
 
-  const { data: { data: { quizzes = [] } = {}, isLoading } = {} } =
-    useQuizzesFetch();
+  const handlePageChange = (page, perPage) => {
+    setTablePage(page);
+    setPerPage(perPage);
+    history.push({
+      pathname: "/dashboard/quizzes",
+      search: `?page=${page}&per_page=${perPage}&search=${searchTerm}`,
+    });
+  };
 
   const handlePublishToggle = async ({ slugs, publishedStatus }) => {
     await quizzesApi.update({
       slugs,
       quiet: true,
-      payload: { isPublished: !publishedStatus, isDraft: publishedStatus },
+      payload: {
+        isPublished: !publishedStatus,
+        isDraft: publishedStatus,
+      },
     });
     clearQueryClient(QUERY_KEYS.QUIZZES);
   };
@@ -184,9 +206,15 @@ const Quizzes = () => {
             }
           />
           <Table
-            quizzes={quizzesData}
-            selectedQuizSlugs={selectedQuizSlugs}
-            setSelectedQuizSlugs={setSelectedQuizSlugs}
+            {...{
+              quizzes: quizzesData,
+              meta,
+              perPage,
+              selectedQuizSlugs,
+              setSelectedQuizSlugs,
+              tablePage,
+              handlePageChange,
+            }}
           />
         </>
       ) : (

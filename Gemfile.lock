@@ -449,6 +449,7 @@ DEPENDENCIES
   ffi!
   honeybadger
   jbuilder (>= 2.7)
+  kaminari
   letter_opener
   mail_interceptor
   minitest

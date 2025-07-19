@@ -1,18 +1,22 @@
 # frozen_string_literal: true
 
 class Api::V1::QuizzesController < Api::V1::BaseController
+  include Pagy::Backend
+
   before_action :load_quiz!, only: %i[delete]
   before_action :load_quizzes, only: %i[bulk_destroy bulk_update]
 
   def index
     @quizzes = current_user.quizzes
-      .includes(:questions)
+      .includes(:category, :questions, :published_quiz)
       .order(updated_at: :desc)
+      .page(params[:page])
+      .per(params[:per_page] || 12)
     render
   end
 
   def show
-    @quiz = current_user.quizzes.includes(:questions).find_by!(slug: params[:slug])
+    @quiz = current_user.quizzes.find_by!(slug: params[:slug])
     render
   end
 
@@ -56,7 +60,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   private
 
     def quiz_params
-      params.require(:quiz).permit(:title, :slug, :status, :category_id, :isDraft, :isPublished)
+      params.require(:quiz).permit(:title, :slug, :status, :category_id, :isDraft, :isPublished, :page, :per_page)
     end
 
     def load_quiz!
