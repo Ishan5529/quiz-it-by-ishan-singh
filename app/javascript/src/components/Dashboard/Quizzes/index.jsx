@@ -40,11 +40,11 @@ const Quizzes = () => {
   const { data: { data: { quizzes = [] } = {}, isLoading } = {} } =
     useQuizzesFetch();
 
-  const handlePublishClick = async slugs => {
+  const handlePublishToggle = async ({ slugs, publishedStatus }) => {
     await quizzesApi.update({
       slugs,
       quiet: true,
-      payload: { isPublished: true, isDraft: false },
+      payload: { isPublished: !publishedStatus, isDraft: publishedStatus },
     });
     clearQueryClient(QUERY_KEYS.QUIZZES);
   };
@@ -100,7 +100,14 @@ const Quizzes = () => {
               onClose={() => setSelectedQuizSlugs([])}
             >
               <Menu>
-                <MenuItem.Button onClick={() => handlePublishClick(quiz.slug)}>
+                <MenuItem.Button
+                  onClick={() =>
+                    handlePublishToggle({
+                      slugs: quiz.slug,
+                      publishedStatus: quiz.isPublished,
+                    })
+                  }
+                >
                   {quiz.isPublished ? "Unpublish" : "Publish"}
                 </MenuItem.Button>
                 <MenuItem.Button onClick={handleQuizClone}>

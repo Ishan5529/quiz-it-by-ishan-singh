@@ -35,13 +35,6 @@ class Api::V1::QuizzesController < Api::V1::BaseController
             entity: @quizzes.size > 1 ? "Quizzes" : "Quiz")
         })
     end
-    # else
-    #   @quiz.update!(quiz_params)
-    #   if params.key?(:quiet)
-    #     render_json({ slug: @quiz.slug })
-    #     return
-    #   end
-    #   render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug })
   end
 
   def bulk_destroy
