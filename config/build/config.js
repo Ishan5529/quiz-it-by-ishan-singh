@@ -30,6 +30,7 @@ const alias = {
   neetocist: "@bigbinary/neeto-cist",
   utils: absolutePath("src/utils"),
   hooks: absolutePath("src/hooks"),
+  stores: absolutePath("src/stores"),
   routes: absolutePath("src/routes"),
   assets: absolutePath("../assets"),
 };

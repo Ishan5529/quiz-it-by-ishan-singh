@@ -12,9 +12,10 @@ import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, MenuHorizontal } from "neetoicons";
-import { Alert, Button, Tag, Dropdown } from "neetoui";
+import { Delete, MenuHorizontal, Filter, Column } from "neetoicons";
+import { Alert, Button, Tag, Dropdown, Checkbox } from "neetoui";
 import { useHistory } from "react-router-dom";
+import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
 import { formatTableDate, getAlertTitle } from "utils";
 
 import NewQuizPane from "./Pane/Create";
@@ -32,6 +33,16 @@ const Quizzes = () => {
   const [tablePage, setTablePage] = useState(page);
   const [perPage, setPerPage] = useState(per_page);
   const [searchTerm, setSearchTerm] = useState("");
+  const {
+    showSubmissionCount,
+    showCreatedOn,
+    showStatus,
+    showCategory,
+    setShowSubmissionCount,
+    setShowCreatedOn,
+    setShowStatus,
+    setShowCategory,
+  } = useQuizTableActiveColumnsStore();
 
   const history = useHistory();
 
@@ -195,7 +206,7 @@ const Quizzes = () => {
       {quizzesData.length ? (
         <>
           <SubHeader
-            rightActionBlock={
+            leftActionBlock={
               <Button
                 disabled={!selectedQuizSlugs.length}
                 icon={Delete}
@@ -203,6 +214,51 @@ const Quizzes = () => {
                 size="small"
                 onClick={() => setShowDeleteAlert(true)}
               />
+            }
+            rightActionBlock={
+              <div className="flex flex-row items-center space-x-4">
+                <Dropdown
+                  buttonStyle="text"
+                  closeOnSelect={false}
+                  icon={Column}
+                  strategy="fixed"
+                  onClick={() => setSelectedQuizSlugs([])}
+                >
+                  <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
+                    <Checkbox
+                      checked
+                      disabled
+                      className="w-full"
+                      label="Title"
+                    />
+                    <Checkbox
+                      checked={showSubmissionCount}
+                      className="w-full"
+                      label="Submissions Count"
+                      onChange={e => setShowSubmissionCount(e.target.checked)}
+                    />
+                    <Checkbox
+                      checked={showCreatedOn}
+                      className="w-full"
+                      label="Created On"
+                      onChange={e => setShowCreatedOn(e.target.checked)}
+                    />
+                    <Checkbox
+                      checked={showStatus}
+                      className="w-full"
+                      label="Status"
+                      onChange={e => setShowStatus(e.target.checked)}
+                    />
+                    <Checkbox
+                      checked={showCategory}
+                      className="w-full"
+                      label="Category"
+                      onChange={e => setShowCategory(e.target.checked)}
+                    />
+                  </div>
+                </Dropdown>
+                <Filter />
+              </div>
             }
           />
           <Table

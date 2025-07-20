@@ -13,7 +13,7 @@ export const QUIZZES_TABLE_COLUMN_DATA = [
     title: "Title",
     dataIndex: "title",
     key: "title",
-    width: "29%",
+    width: "auto",
   },
   {
     title: "Submission Count",
