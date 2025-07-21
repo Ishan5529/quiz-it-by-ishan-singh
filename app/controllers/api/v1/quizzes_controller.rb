@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::QuizzesController < Api::V1::BaseController
-  include Pagy::Backend
+  include QuizFilterable
 
   before_action :load_quiz!, only: %i[delete]
   before_action :load_quizzes, only: %i[bulk_destroy bulk_update]
@@ -10,8 +10,10 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     @quizzes = current_user.quizzes
       .includes(:category, :questions, :published_quiz)
       .order(updated_at: :desc)
-      .page(params[:page])
-      .per(params[:per_page] || 12)
+
+    @quizzes = filter_quizzes(@quizzes)
+
+    @quizzes = @quizzes.page(params[:page]).per(params[:per_page] || 12)
     render
   end
 
@@ -60,7 +62,9 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   private
 
     def quiz_params
-      params.require(:quiz).permit(:title, :slug, :status, :category_id, :isDraft, :isPublished, :page, :per_page)
+      params.require(:quiz).permit(
+        :title, :slug, :status, :category_id, :category, :isDraft, :isPublished, :page,
+        :per_page)
     end
 
     def load_quiz!

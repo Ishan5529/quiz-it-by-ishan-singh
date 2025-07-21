@@ -1,5 +1,6 @@
 import { QUIZZES_TABLE_COLUMN_DATA } from "components/Dashboard/Quizzes/constants";
 import dayjs from "dayjs";
+import { filterNonNull } from "neetocist";
 import * as R from "ramda";
 import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
 
@@ -18,7 +19,7 @@ const formatTableDate = date => dayjs(date).format("DD MMMM YYYY, hh:mm A");
 const getAlertTitle = (action, count) =>
   `${action} ${count} ${count > 1 ? "quizzes" : "quiz"}?`;
 
-export const useFilteredQuizTableColumns = () => {
+const useFilteredQuizTableColumns = () => {
   const { showSubmissionCount, showCreatedOn, showStatus, showCategory } =
     useQuizTableActiveColumnsStore();
 
@@ -37,10 +38,20 @@ export const useFilteredQuizTableColumns = () => {
   });
 };
 
+const filterNonNullAndEmpty = params => {
+  const nonNullParams = filterNonNull(params);
+
+  return Object.fromEntries(
+    Object.entries(nonNullParams).filter(([_, value]) => !R.isEmpty(value))
+  );
+};
+
 export {
   showToastr,
   isPresent,
   generateDraftInfoMessage,
+  filterNonNullAndEmpty,
   formatTableDate,
   getAlertTitle,
+  useFilteredQuizTableColumns,
 };
