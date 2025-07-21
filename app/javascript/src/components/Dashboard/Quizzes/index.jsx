@@ -15,10 +15,17 @@ import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
 import { Delete, MenuHorizontal, Filter, Column } from "neetoicons";
 import { Alert, Button, Tag, Dropdown, Checkbox } from "neetoui";
+import { Typography } from "neetoui/index";
+import { isEmpty } from "ramda";
 import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
-import { formatTableDate, getAlertTitle, filterNonNullAndEmpty } from "utils";
+import {
+  formatTableDate,
+  getAlertTitle,
+  filterNonNullAndEmpty,
+  capitalize,
+} from "utils";
 import { buildUrl } from "utils/url";
 
 import NewQuizPane from "./Pane/Create";
@@ -230,6 +237,26 @@ const Quizzes = () => {
     setShowDiscardAlert(false);
   };
 
+  const subHeaderText = () => {
+    if (!isEmpty(selectedQuizSlugs)) {
+      return (
+        <Typography className="flex flex-row text-gray-400" style="h4">
+          <Typography className="mr-1 text-gray-600" style="h4">
+            {selectedQuizSlugs.length}{" "}
+            {selectedQuizSlugs.length === 1 ? "Quiz" : "Quizzes"}
+          </Typography>
+          {`selected of ${meta.total_count}`}
+        </Typography>
+      );
+    }
+
+    return (
+      <Typography className="text-gray-600" style="h4">
+        {meta.total_count} {meta.total_count === 1 ? "Quiz" : "Quizzes"}
+      </Typography>
+    );
+  };
+
   if (isLoading) {
     return <PageLoader />;
   }
@@ -254,13 +281,53 @@ const Quizzes = () => {
       />
       <SubHeader
         leftActionBlock={
-          <Button
-            disabled={!selectedQuizSlugs.length}
-            icon={Delete}
-            label="Delete"
-            size="small"
-            onClick={() => setShowDeleteAlert(true)}
-          />
+          <div className="flex flex-row items-center space-x-4">
+            <Typography className="text-gray-600" style="h4">
+              {subHeaderText()}
+            </Typography>
+            {!isEmpty(selectedQuizSlugs) && (
+              <div className="flex flex-row items-center space-x-2">
+                <Dropdown
+                  buttonStyle="secondary"
+                  label="Change Status"
+                  strategy="fixed"
+                >
+                  <Menu>
+                    <MenuItem.Button
+                      onClick={() => {
+                        handlePublishToggle({
+                          slugs: selectedQuizSlugs,
+                          publishedStatus: true,
+                        });
+                        setSelectedQuizSlugs([]);
+                      }}
+                    >
+                      Draft
+                    </MenuItem.Button>
+                    <MenuItem.Button
+                      onClick={() => {
+                        handlePublishToggle({
+                          slugs: selectedQuizSlugs,
+                          publishedStatus: false,
+                        });
+                        setSelectedQuizSlugs([]);
+                      }}
+                    >
+                      Publish
+                    </MenuItem.Button>
+                  </Menu>
+                </Dropdown>
+                <Button
+                  disabled={!selectedQuizSlugs.length}
+                  icon={Delete}
+                  label="Delete"
+                  size="small"
+                  style="danger"
+                  onClick={() => setShowDeleteAlert(true)}
+                />
+              </div>
+            )}
+          </div>
         }
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
@@ -304,6 +371,32 @@ const Quizzes = () => {
               style="text"
               onClick={() => setShowFilterPane(true)}
             />
+          </div>
+        }
+      />
+      <SubHeader
+        leftActionBlock={
+          <div className="flex flex-row space-x-4">
+            {!isEmpty(category) && (
+              <Typography className="flex flex-row space-x-1" style="h4">
+                <Typography className="text-gray-700" style="h4">
+                  Category:
+                </Typography>
+                <Typography className="text-gray-400" style="h4">
+                  {category.join(", ")}
+                </Typography>
+              </Typography>
+            )}
+            {status && (
+              <Typography className="flex flex-row space-x-1" style="h4">
+                <Typography className="text-gray-700" style="h4">
+                  Status:
+                </Typography>
+                <Typography className="text-gray-400" style="h4">
+                  {capitalize(status)}
+                </Typography>
+              </Typography>
+            )}
           </div>
         }
       />
