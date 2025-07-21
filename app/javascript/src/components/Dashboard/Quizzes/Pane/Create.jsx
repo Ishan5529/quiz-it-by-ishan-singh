@@ -28,7 +28,7 @@ const Create = ({ showPane, setShowPane }) => {
         </Typography>
       </Pane.Header>
       <Form
-        isEdit={false}
+        isFilter={false}
         quiz={QUIZZES_FORM_INITIAL_FORM_VALUES}
         onClose={onClose}
         onSuccess={handleSuccess}

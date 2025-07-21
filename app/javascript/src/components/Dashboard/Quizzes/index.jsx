@@ -11,52 +11,111 @@ import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
+import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, MenuHorizontal } from "neetoicons";
-import { Alert, Button, Tag, Dropdown } from "neetoui";
+import { Delete, MenuHorizontal, Filter, Column } from "neetoicons";
+import { Alert, Button, Tag, Dropdown, Checkbox } from "neetoui";
 import { useHistory } from "react-router-dom";
-import { formatTableDate, getAlertTitle } from "utils";
+import { routes } from "routes";
+import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
+import { formatTableDate, getAlertTitle, filterNonNullAndEmpty } from "utils";
+import { buildUrl } from "utils/url";
 
 import NewQuizPane from "./Pane/Create";
+import FilterPane from "./Pane/Filter";
 import Table from "./Table";
 
 3;
 
 const Quizzes = () => {
-  const { page = 1, per_page = 12 } = useQueryParams();
+  const {
+    searchTerm: querySearchTerm,
+    page: queryPage,
+    perPage: queryPerPage,
+    status: queryStatus,
+    category: queryCategory,
+  } = useQueryParams();
+
+  const safePage = queryPage ? Number(queryPage) : 1;
+  const safePerPage = queryPerPage ? Number(queryPerPage) : 12;
+  let safeCategory = [];
+  if (Array.isArray(queryCategory)) {
+    safeCategory = queryCategory;
+  } else if (queryCategory) {
+    safeCategory = [queryCategory];
+  }
+
   const [quizzesData, setQuizzesData] = useState([]);
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
+  const [showFilterPane, setShowFilterPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showDiscardAlert, setShowDiscardAlert] = useState(false);
   const [selectedQuizSlugs, setSelectedQuizSlugs] = useState([]);
-  const [tablePage, setTablePage] = useState(page);
-  const [perPage, setPerPage] = useState(per_page);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [tablePage, setTablePage] = useState(safePage);
+  const [perPage, setPerPage] = useState(safePerPage);
+  const [searchTerm, setSearchTerm] = useState(querySearchTerm);
+  const [status, setStatus] = useState(queryStatus);
+  const [category, setCategory] = useState(safeCategory);
+
+  const {
+    showSubmissionCount,
+    showCreatedOn,
+    showStatus,
+    showCategory,
+    setShowSubmissionCount,
+    setShowCreatedOn,
+    setShowStatus,
+    setShowCategory,
+  } = useQuizTableActiveColumnsStore();
 
   const history = useHistory();
 
   const clearQueryClient = useClearQueryClient();
 
-  useEffect(() => {
-    setTablePage(page);
-    setPerPage(per_page);
-  }, [page, per_page]);
+  const params = {
+    page: tablePage,
+    searchTerm,
+    perPage,
+    status,
+    category,
+  };
 
   const { Menu, MenuItem, Divider } = Dropdown;
 
   const { data: { data: { quizzes = [], meta = [] } = {}, isLoading } = {} } =
     useQuizzesFetch({
-      page,
-      per_page,
+      page: queryPage,
+      per_page: queryPerPage,
+      title: querySearchTerm,
+      status: queryStatus,
+      category: queryCategory,
     });
+
+  const updateQueryParams = useFuncDebounce(updatedValue => {
+    const updatedParam = {
+      ...params,
+      ...updatedValue,
+      page: 1,
+    };
+
+    history.push(
+      buildUrl(
+        routes.dashboard.quizzes.index,
+        filterNonNullAndEmpty(updatedParam)
+      )
+    );
+  });
 
   const handlePageChange = (page, perPage) => {
     setTablePage(page);
     setPerPage(perPage);
-    history.push({
-      pathname: "/dashboard/quizzes",
-      search: `?page=${page}&per_page=${perPage}&search=${searchTerm}`,
-    });
+    const updatedParam = { ...params, page, perPage };
+    history.push(
+      buildUrl(
+        routes.dashboard.quizzes.index,
+        filterNonNullAndEmpty(updatedParam)
+      )
+    );
   };
 
   const handlePublishToggle = async ({ slugs, publishedStatus }) => {
@@ -189,46 +248,102 @@ const Quizzes = () => {
         }
         searchProps={{
           value: searchTerm,
+          placeholder: "Search quizzes",
           onChange: e => setSearchTerm(e.target.value),
         }}
       />
+      <SubHeader
+        leftActionBlock={
+          <Button
+            disabled={!selectedQuizSlugs.length}
+            icon={Delete}
+            label="Delete"
+            size="small"
+            onClick={() => setShowDeleteAlert(true)}
+          />
+        }
+        rightActionBlock={
+          <div className="flex flex-row items-center space-x-4">
+            <Dropdown
+              buttonStyle="text"
+              closeOnSelect={false}
+              icon={Column}
+              strategy="fixed"
+              onClick={() => setSelectedQuizSlugs([])}
+            >
+              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
+                <Checkbox checked disabled className="w-full" label="Title" />
+                <Checkbox
+                  checked={showSubmissionCount}
+                  className="w-full"
+                  label="Submissions Count"
+                  onChange={e => setShowSubmissionCount(e.target.checked)}
+                />
+                <Checkbox
+                  checked={showCreatedOn}
+                  className="w-full"
+                  label="Created On"
+                  onChange={e => setShowCreatedOn(e.target.checked)}
+                />
+                <Checkbox
+                  checked={showStatus}
+                  className="w-full"
+                  label="Status"
+                  onChange={e => setShowStatus(e.target.checked)}
+                />
+                <Checkbox
+                  checked={showCategory}
+                  className="w-full"
+                  label="Category"
+                  onChange={e => setShowCategory(e.target.checked)}
+                />
+              </div>
+            </Dropdown>
+            <Button
+              icon={Filter}
+              style="text"
+              onClick={() => setShowFilterPane(true)}
+            />
+          </div>
+        }
+      />
       {quizzesData.length ? (
-        <>
-          <SubHeader
-            rightActionBlock={
-              <Button
-                disabled={!selectedQuizSlugs.length}
-                icon={Delete}
-                label="Delete"
-                size="small"
-                onClick={() => setShowDeleteAlert(true)}
-              />
-            }
-          />
-          <Table
-            {...{
-              quizzes: quizzesData,
-              meta,
-              perPage,
-              selectedQuizSlugs,
-              setSelectedQuizSlugs,
-              tablePage,
-              handlePageChange,
-            }}
-          />
-        </>
+        <Table
+          {...{
+            quizzes: quizzesData,
+            meta,
+            perPage,
+            selectedQuizSlugs,
+            setSelectedQuizSlugs,
+            tablePage,
+            handlePageChange,
+          }}
+        />
       ) : (
         <EmptyState
           image={<EmptyQuizzesListImage />}
           primaryAction={() => setShowNewQuizPane(true)}
           primaryActionLabel="Add new quiz"
-          subtitle="Create your first quiz to get started."
+          subtitle="Create a quiz to get started."
           title="Looks like you don't have any quizzes!"
         />
       )}
       <NewQuizPane
         setShowPane={setShowNewQuizPane}
         showPane={showNewQuizPane}
+      />
+      <FilterPane
+        {...{
+          setShowPane: setShowFilterPane,
+          showPane: showFilterPane,
+          searchTerm,
+          status,
+          category,
+          setSearchTerm,
+          setStatus,
+          setCategory,
+          updateQueryParams,
+        }}
       />
       {showDiscardAlert && (
         <Alert

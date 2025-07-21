@@ -8,12 +8,18 @@ export const QUIZZES_FORM_VALIDATION_SCHEMA = yup.object().shape({
   title: yup.string().required("Title is required"),
 });
 
+export const QUIZZES_FILTER_FORM_VALIDATION_SCHEMA = yup.object().shape({
+  filterTitle: yup.string(),
+  status: yup.object().nullable(),
+  category: yup.object().nullable(),
+});
+
 export const QUIZZES_TABLE_COLUMN_DATA = [
   {
     title: "Title",
     dataIndex: "title",
     key: "title",
-    width: "29%",
+    width: "auto",
   },
   {
     title: "Submission Count",
