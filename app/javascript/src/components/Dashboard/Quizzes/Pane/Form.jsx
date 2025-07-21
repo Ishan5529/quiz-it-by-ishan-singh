@@ -90,7 +90,7 @@ const Form = ({
           <ActionBlock
             cancelButtonProps={{
               onClick: isFilter ? clearFilter : onClose,
-              label: isFilter ? "Clear" : "Cancel",
+              label: isFilter ? "Clear filters" : "Cancel",
             }}
             submitButtonProps={{
               className: "mr-3",
