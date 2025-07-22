@@ -34,11 +34,11 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
     end
 
     attempt_attrs = attempt_params.merge(
-      # user: current_user,
+      user: current_user,
       # user_id: "db0e8ad9-a99c-4736-b453-c2ad8e7ae609",
-      # user_name: current_user.name,
+      user_name: current_user.name,
       # user_name: "Oliver Smith",
-      # user_email: current_user.email,
+      user_email: current_user.email,
       # user_email: "oliver@example.com",
       quiz: @quiz,
       submission_time: Time.current,
