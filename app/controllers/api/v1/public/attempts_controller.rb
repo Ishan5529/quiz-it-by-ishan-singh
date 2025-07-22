@@ -18,15 +18,24 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
   def create
     questions = attempt_params[:questions] || []
+    published_questions = @quiz.published_quiz&.data&.dig("questions") || []
+
     correct = 0
     wrong = 0
     unanswered = 0
 
     questions.each do |q|
-      question = Question.find_by(id: q["question_id"])
+      published_question = published_questions.find { |pq| pq["id"].to_s == q["question_id"].to_s }
+
+      options = published_question ? published_question["options"] || [] : []
+
+      q["options"] = options
+
+      selected_option_index = options.index(q["selected_option"])&.+(1)
+
       if q["selected_option"].blank?
         unanswered += 1
-      elsif question && q["selected_option"].to_s == question.correct_option.to_s
+      elsif published_question && selected_option_index.to_s == published_question["correct_option"].to_s
         correct += 1
       else
         wrong += 1
@@ -35,24 +44,22 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
     attempt_attrs = attempt_params.merge(
       user: current_user,
-      # user_id: "db0e8ad9-a99c-4736-b453-c2ad8e7ae609",
       user_name: current_user.name,
-      # user_name: "Oliver Smith",
       user_email: current_user.email,
-      # user_email: "oliver@example.com",
       quiz: @quiz,
       submission_time: Time.current,
       correct_answers: correct,
       wrong_answers: wrong,
-      unanswered: unanswered
+      unanswered: unanswered,
+      questions: questions
     )
 
     if params[:preview].to_s == "true"
       attempt = Attempt.new(attempt_attrs)
-      render json: { notice: "Preview attempt (not saved)", attempt: attempt.as_json }, status: :ok
+      render_json(attempt:)
     else
       attempt = Attempt.create!(attempt_attrs)
-      render json: { notice: "Attempt saved", attempt: attempt.as_json }, status: :created
+      render_json(attempt:)
     end
   end
 
@@ -64,7 +71,7 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
     def attempt_params
       params.require(:attempt).permit(
-        :user_name, :user_email, :status, questions: [:question_id, :selected_option]
+        :status, questions: [:question_id, :selected_option]
       )
     end
 end

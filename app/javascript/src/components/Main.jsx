@@ -20,7 +20,8 @@ import {
   getFromLocalStorage,
 } from "utils/storage";
 
-import UserRegistration from "./Public/Attempts/UserRegistration";
+// import UserRegistration from "./Public/Attempts/UserRegistration";
+import Quizzes from "./Public/Quizzes";
 
 const Main = props => {
   const [loading, setLoading] = useState(true);
@@ -69,11 +70,7 @@ const Main = props => {
             />
           ))}
           <Route exact component={Public} path={routes.public.index} />
-          <Route
-            exact
-            component={UserRegistration}
-            path={routes.public.quizzes.registration}
-          />
+          <Route component={Quizzes} path={routes.public.quizzes.index} />
           {PRIVATE_ROUTES.map(route => (
             <PrivateRoute
               component={route.component}
