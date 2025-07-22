@@ -24,13 +24,12 @@ import UserRegistration from "./Public/Attempts/UserRegistration";
 
 const Main = props => {
   const [loading, setLoading] = useState(true);
-  const { authToken } = useAuthState();
+  const { authToken, isAdmin } = useAuthState();
   const { user: userContextState } = useUserState();
   const userDispatch = useUserDispatch();
   const authDispatch = useAuthDispatch();
   const currentUser = userContextState || props?.user;
   const isLoggedIn = isPresent(authToken) && isPresent(currentUser);
-  const isAdmin = isPresent(currentUser) && currentUser.is_admin;
 
   useEffect(() => {
     userDispatch({ type: "SET_USER", payload: { user: props?.user } });
