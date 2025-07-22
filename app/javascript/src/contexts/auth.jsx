@@ -12,7 +12,7 @@ const email = getFromLocalStorage("authEmail");
 const isAdmin = getFromLocalStorage("isAdmin");
 const initialState = {
   isLoggedIn: !!token,
-  isAdmin: isAdmin === "true",
+  isAdmin: isAdmin || false,
   authToken: token || null,
   authEmail: email || null,
 };

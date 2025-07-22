@@ -11,6 +11,7 @@ const signup = ({
   password,
   passwordConfirmation: password_confirmation,
   role = "standard",
+  quiet = false,
 }) =>
   axios.post("api/v1/users", {
     user: {
@@ -21,6 +22,7 @@ const signup = ({
       password_confirmation,
       role,
     },
+    quiet,
   });
 
 const authenticationApi = {

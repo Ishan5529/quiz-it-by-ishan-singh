@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export const QUIZ_LIST = [
   "Create quizzes with multiple question types",
   "Share quizzes with others",
@@ -19,3 +21,15 @@ export const QUIZ_LIST = [
   "Create quizzes in multiple languages",
   "Access detailed reports and insights on quiz performance",
 ];
+
+export const REGISTRATION_FORM_INITIAL_VALUES = {
+  email: "",
+  firstName: "",
+  lastName: "",
+};
+
+export const REGISTRATION_FORM_VALIDATION_SCHEMA = yup.object().shape({
+  email: yup.string().email("Invalid email address").required("Required"),
+  firstName: yup.string().required("Required"),
+  lastName: yup.string().required("Required"),
+});
