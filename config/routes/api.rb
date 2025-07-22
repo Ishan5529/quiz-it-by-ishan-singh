@@ -8,6 +8,7 @@ namespace :api, defaults: { format: :json } do
     end
 
     resources :users, only: [:show, :create, :update, :destroy], constraints: { id: /.*/ }
+
     resources :quizzes, only: [:index, :show, :create, :update], param: :slug do
       resources :questions, only: [:index, :show, :create, :update] do
         member do
@@ -25,6 +26,12 @@ namespace :api, defaults: { format: :json } do
       collection do
         post :bulk_destroy
         put :bulk_update
+      end
+    end
+
+    namespace :public do
+      resources :quizzes, param: :slug, only: [] do
+        resources :attempts, only: [:index, :show, :create]
       end
     end
 
