@@ -1,6 +1,5 @@
+import { BASE_QUIZZES_URL } from "apis/constants";
 import axios from "axios";
-
-import { BASE_QUIZZES_URL } from "./constants";
 
 const BASE_QUESTIONS_URL = quizSlug =>
   `${BASE_QUIZZES_URL}/${quizSlug}/questions`;

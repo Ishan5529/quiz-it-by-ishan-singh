@@ -7,7 +7,7 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
   before_action :set_quiz
 
   def index
-    @attempts = current_user.attempts.where(quiz: @quiz)
+    @attempts = Attempt.where(quiz: @quiz)
     render json: @attempts
   end
 
@@ -35,12 +35,12 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
     attempt_attrs = attempt_params.merge(
       # user: current_user,
-      user_id: "db0e8ad9-a99c-4736-b453-c2ad8e7ae609",
-      quiz: @quiz,
+      # user_id: "db0e8ad9-a99c-4736-b453-c2ad8e7ae609",
       # user_name: current_user.name,
-      user_name: "Oliver Smith",
+      # user_name: "Oliver Smith",
       # user_email: current_user.email,
-      user_email: "oliver@example.com",
+      # user_email: "oliver@example.com",
+      quiz: @quiz,
       submission_time: Time.current,
       correct_answers: correct,
       wrong_answers: wrong,
@@ -64,7 +64,7 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
     def attempt_params
       params.require(:attempt).permit(
-        :status, questions: [:question_id, :selected_option]
+        :user_name, :user_email, :status, questions: [:question_id, :selected_option]
       )
     end
 end

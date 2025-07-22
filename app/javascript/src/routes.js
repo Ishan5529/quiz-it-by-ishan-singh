@@ -33,5 +33,17 @@ export const routes = {
       changePassword: "/dashboard/settings?tab=password",
     },
   },
-  public: "/public",
+  public: {
+    index: "/public",
+    quizzes: {
+      index: "/public/quizzes",
+      quizPage: "/public/quizzes/:slug",
+      registration: "/public/quizzes/:slug/registration",
+      attempts: {
+        index: "/public/quizzes/:slug/attempts",
+        show: "/public/quizzes/:slug/attempts/:id",
+        create: "/public/quizzes/:slug/attempts/create",
+      },
+    },
+  },
 };

@@ -20,6 +20,8 @@ import {
   getFromLocalStorage,
 } from "utils/storage";
 
+import UserRegistration from "./Public/Attempts/UserRegistration";
+
 const Main = props => {
   const [loading, setLoading] = useState(true);
   const { authToken } = useAuthState();
@@ -28,6 +30,7 @@ const Main = props => {
   const authDispatch = useAuthDispatch();
   const currentUser = userContextState || props?.user;
   const isLoggedIn = isPresent(authToken) && isPresent(currentUser);
+  const isAdmin = isPresent(currentUser) && currentUser.is_admin;
 
   useEffect(() => {
     userDispatch({ type: "SET_USER", payload: { user: props?.user } });
@@ -66,14 +69,19 @@ const Main = props => {
               path={route.path}
             />
           ))}
-          <Route exact component={Public} path={routes.public} />
+          <Route exact component={Public} path={routes.public.index} />
+          <Route
+            exact
+            component={UserRegistration}
+            path={routes.public.quizzes.registration}
+          />
           {PRIVATE_ROUTES.map(route => (
             <PrivateRoute
               component={route.component}
-              condition={isLoggedIn}
+              condition={isLoggedIn && isAdmin}
               key={route.path}
               path={route.path}
-              redirectRoute={routes.public}
+              redirectRoute={routes.public.index}
             />
           ))}
         </Switch>

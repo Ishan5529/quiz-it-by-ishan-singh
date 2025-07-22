@@ -35,7 +35,7 @@ export const SIDENAV_LINKS = [
   },
   {
     label: "Public page",
-    to: routes.public,
+    to: routes.public.index,
     icon: Community,
     target: "_blank",
     icon_size: 24,
