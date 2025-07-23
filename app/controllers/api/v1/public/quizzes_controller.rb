@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::Public::QuizzesController < Api::V1::BaseController
+  include QuizFilterable
+
   skip_before_action :authenticate_user_using_x_auth_token
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
@@ -11,6 +13,8 @@ class Api::V1::Public::QuizzesController < Api::V1::BaseController
     @quizzes = Quiz.includes(:category, :published_quiz)
                    .where(isPublished: true)
                    .where.not(published_quiz: { data: nil })
+                    .order(updated_at: :desc)
+    @quizzes = filter_quizzes(@quizzes)
   end
 
   def show
