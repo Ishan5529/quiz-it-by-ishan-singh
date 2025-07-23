@@ -63,8 +63,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
 
     def quiz_params
       params.require(:quiz).permit(
-        :title, :slug, :status, :category_id, :category, :isDraft, :isPublished, :page,
-        :per_page)
+        :title, :slug, :status, :category_id, :category, :isDraft, :isPublished)
     end
 
     def load_quiz!

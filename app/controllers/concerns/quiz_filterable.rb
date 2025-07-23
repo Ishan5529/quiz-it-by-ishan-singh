@@ -18,6 +18,10 @@ module QuizFilterable
             quizzes = quizzes.where(isDraft: true)
           when "published"
             quizzes = quizzes.where(isPublished: true)
+          when "completed"
+            quizzes = quizzes.where(status: completed)
+          when "incomplete"
+            quizzes = quizzes.where(isPublished: incomplete)
           end
         end
 

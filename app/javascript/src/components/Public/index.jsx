@@ -1,38 +1,83 @@
-import React from "react";
+import { routes } from "routes";
+import React, { useState } from "react";
 
 import { Button } from "neetoui";
+import Container from "@bigbinary/neeto-molecules/Container";
+import Header from "@bigbinary/neeto-molecules/Header";
+import Scrollable from "@bigbinary/neeto-molecules/Scrollable";
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import { usePublicQuizzesFetch } from "hooks/reactQuery/usePublicQuizzesApi";
+import useQueryParams from "hooks/useQueryParams";
+import useFuncDebounce from "hooks/useFuncDebounce";
+import { useAuthState } from "contexts/auth";
+import { filterNonNullAndEmpty } from "utils";
+import { buildUrl } from "utils/url";
+import { useHistory } from "react-router-dom";
 
-import { QUIZ_LIST } from "./constants";
+import Filter from "./Filter";
+import QuizCard from "./QuizCard";
 
-const Features = ({ features }) => (
-  <ul className="list-disc">
-    {features.map((feature, index) => (
-      <li
-        className="neeto-ui-border-gray-100 border-b py-3 last:border-0"
-        key={index}
-      >
-        {feature}
-      </li>
-    ))}
-  </ul>
-);
+const Public = () => {
+  const { searchTerm: querySearchTerm = "" } = useQueryParams();
 
-const Public = () => (
-  <div className="flex h-screen flex-row items-center justify-center">
-    <div className="m-auto flex max-w-3xl flex-col items-center justify-center p-8">
-      <h1 className="mb-3 text-4xl font-bold">QuizIt</h1>
-      <p className="neeto-ui-text-gray-800 mx-auto mb-6 text-center text-lg">
-        This is the public page of QuizIt, a platform for creating and sharing
-        quizzes.
-        <br />
-        Please login to access your quizzes and manage your account.
-      </p>
-      <Features features={QUIZ_LIST} />
-      <div className="mt-6 flex items-center justify-center">
-        <Button label="Login" to="/login" type="primary" />
+  const [searchTerm, setSearchTerm] = useState(querySearchTerm);
+
+  const params = {
+    searchTerm,
+  };
+
+  const { isAdmin } = useAuthState();
+  const history = useHistory();
+
+  const { data: { data: { quizzes } = {} } = {}, isLoading } =
+    usePublicQuizzesFetch({
+      title: querySearchTerm,
+    });
+
+  const updateQueryParams = useFuncDebounce(updatedValue => {
+    const updatedParam = {
+      ...params,
+      ...updatedValue,
+    };
+
+    history.push(
+      buildUrl(routes.public.index, filterNonNullAndEmpty(updatedParam))
+    );
+  });
+
+  const buttonDestination = isAdmin
+    ? routes.dashboard.quizzes.index
+    : routes.auth.login;
+  const buttonLabel = isAdmin ? "Go to dashboard" : "Login as admin";
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen">
+        <PageLoader />
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+
+  return (
+    <Container>
+      <Header
+        title="BigBinary Academy"
+        actionBlock={
+          <Button label={buttonLabel} to={buttonDestination} type="primary" />
+        }
+      />
+      <div className="mb-12 mt-12 flex w-full items-center justify-center">
+        <Filter {...{ searchTerm, setSearchTerm, updateQueryParams }} />
+      </div>
+      <Scrollable className="w-full gap-6 py-6">
+        <div className="flex w-full flex-row flex-wrap justify-center gap-8">
+          {quizzes.map((quiz, idx) => (
+            <QuizCard key={idx} {...quiz} />
+          ))}
+        </div>
+      </Scrollable>
+    </Container>
+  );
+};
 
 export default Public;

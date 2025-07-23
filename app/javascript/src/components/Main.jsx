@@ -20,7 +20,6 @@ import {
   getFromLocalStorage,
 } from "utils/storage";
 
-// import UserRegistration from "./Public/Attempts/UserRegistration";
 import Quizzes from "./Public/Quizzes";
 
 const Main = props => {
