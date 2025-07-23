@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Question from "./Question";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { usePublicQuizzesShow } from "hooks/reactQuery/usePublicQuizzesApi";
 import { isEmpty } from "ramda";
 import attemptsApi from "apis/attempts";
@@ -11,6 +11,7 @@ const Attempt = () => {
   const { isPreview } = useQueryParams();
   const [attemptData, setAttemptData] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
+  const history = useHistory();
 
   const { data: { data: quiz = {} } = {}, isLoading } =
     usePublicQuizzesShow(slug);
@@ -74,8 +75,16 @@ const Attempt = () => {
     };
 
     try {
-      await attemptsApi.create(slug, payload, isPreview);
-      console.log("Attempt submitted successfully");
+      const { data: { attempt: { id } = {} } = {} } = await attemptsApi.create(
+        slug,
+        payload,
+        isPreview
+      );
+      history.push(
+        `/public/quizzes/${slug}/result/${id}${
+          isPreview ? "?isPreview=true" : ""
+        }`
+      );
     } catch (error) {
       logger.error("Error submitting attempt:", error);
     }

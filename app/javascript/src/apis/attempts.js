@@ -4,8 +4,10 @@ import axios from "axios";
 const fetch = (slug, payload) =>
   axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts`, { params: payload });
 
-const show = ({ slug, id }) =>
-  axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/${id}`);
+const show = ({ slug, id, preview = false }) =>
+  axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/${id}`, {
+    params: { preview },
+  });
 
 const create = (slug, payload, preview = false) =>
   axios.post(

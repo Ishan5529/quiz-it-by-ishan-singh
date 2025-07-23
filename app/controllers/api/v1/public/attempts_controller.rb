@@ -8,12 +8,19 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
   def index
     @attempts = Attempt.where(quiz: @quiz)
-    render json: @attempts
+    render_(@attempts)
   end
 
   def show
-    @attempt = Attempt.find(params[:id])
-    render json: @attempt
+    if params[:preview].to_s == "true"
+      @attempt = Attempt.find_by(id: params[:id])
+    else
+      @attempt = Attempt.find(params[:id])
+    end
+    render_json(attempt: @attempt)
+    if params[:preview].to_s == "true"
+      @attempt.destroy if @attempt.present?
+    end
   end
 
   def create
@@ -28,14 +35,17 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
       published_question = published_questions.find { |pq| pq["id"].to_s == q["question_id"].to_s }
 
       options = published_question ? published_question["options"] || [] : []
+      correct_option = published_question["correct_option"].to_s
 
       q["options"] = options
+      q["correct_option"] = correct_option
 
       selected_option_index = options.index(q["selected_option"])&.+(1)
 
+
       if q["selected_option"].blank?
         unanswered += 1
-      elsif published_question && selected_option_index.to_s == published_question["correct_option"].to_s
+      elsif published_question && selected_option_index.to_s == correct_option
         correct += 1
       else
         wrong += 1
@@ -54,13 +64,8 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
       questions: questions
     )
 
-    if params[:preview].to_s == "true"
-      attempt = Attempt.new(attempt_attrs)
-      render_json(attempt:)
-    else
-      attempt = Attempt.create!(attempt_attrs)
-      render_json(attempt:)
-    end
+    attempt = Attempt.create!(attempt_attrs)
+    render_json(attempt:)
   end
 
   private

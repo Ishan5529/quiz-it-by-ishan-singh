@@ -39,6 +39,7 @@ export const routes = {
       index: "/public/quizzes",
       quizPage: "/public/quizzes/:slug",
       registration: "/public/quizzes/:slug/registration",
+      result: "/public/quizzes/:slug/result/:attemptId",
       attempts: {
         index: "/public/quizzes/:slug/attempts",
         new: "/public/quizzes/:slug/attempts/new",

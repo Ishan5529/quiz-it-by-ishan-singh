@@ -17,7 +17,6 @@ const Header = ({
   handleInputBlur,
   isDraft,
   handlePublish,
-  handlePreviewClick,
 }) => {
   const { pathname } = useLocation();
   const history = useHistory();
@@ -27,13 +26,18 @@ const Header = ({
   };
 
   const handleLinkCopy = async () => {
-    const link = `dashboard/quizzes/${slug}/attempt`;
+    const link = `http://localhost:3000/public/quizzes/${slug}/registration`;
     await navigator.clipboard.writeText(link);
     showToastr({
       message: "Link copied to clipboard",
       type: "info",
       autoClose: 2000,
     });
+  };
+
+  const handlePreviewClick = async () => {
+    const link = `/public/quizzes/${slug}/registration?isPreview=true`;
+    history.push(link);
   };
 
   return (
