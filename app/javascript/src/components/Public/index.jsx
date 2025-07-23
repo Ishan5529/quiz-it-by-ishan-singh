@@ -23,7 +23,7 @@ const Public = () => {
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
 
   const params = {
-    title: searchTerm,
+    searchTerm,
   };
 
   const { isAdmin } = useAuthState();
