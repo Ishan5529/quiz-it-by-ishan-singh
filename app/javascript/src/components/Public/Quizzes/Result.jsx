@@ -2,7 +2,9 @@ import React from "react";
 import { useAttemptsShow } from "hooks/reactQuery/useAttemptsApi";
 import { useParams, useHistory } from "react-router-dom";
 import useQueryParams from "hooks/useQueryParams";
-import { isEmpty } from "ramda";
+import { Button, Typography } from "neetoui";
+import { Left } from "neetoicons";
+import classNames from "classnames";
 
 const Result = () => {
   const history = useHistory();
@@ -35,69 +37,79 @@ const Result = () => {
   const incorrect = attempt.wrong_answers;
   const unanswered = attempt.unanswered;
 
+  const summaryStats = [
+    {
+      label: "Score",
+      value: `${score} / ${totalQuestions}`,
+      bg: "bg-gray-100",
+      text: "text-gray-700",
+    },
+    {
+      label: "Correct",
+      value: attempt.correct_answers,
+      bg: "bg-green-100",
+      text: "text-green-700",
+    },
+    {
+      label: "Incorrect",
+      value: incorrect,
+      bg: "bg-red-100",
+      text: "text-red-700",
+    },
+    {
+      label: "Unanswered",
+      value: unanswered,
+      bg: "bg-gray-200",
+      text: "text-gray-700",
+    },
+  ];
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-50 py-10">
-      <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow">
-        <button
-          className="mb-6 flex items-center rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-          onClick={handleBack}
-        >
-          <svg
-            className="mr-2"
-            width="20"
-            height="20"
-            fill="none"
-            viewBox="0 0 24 24"
+      <div className="w-full max-w-6xl rounded-lg bg-white p-8 shadow-md">
+        <Typography className="mb-16 text-center text-4xl font-bold" style="h1">
+          Your result
+        </Typography>
+        <div className="mb-16 flex w-full items-center justify-between border-b-2 pb-10">
+          <Button
+            className="bg-blue-600 text-white hover:bg-blue-700"
+            onClick={handleBack}
           >
-            <path
-              d="M15 19l-7-7 7-7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Back to home
-        </button>
-        <h1 className="mb-2 text-center text-3xl font-bold">Your result</h1>
-        <div className="mb-6 text-right text-gray-500">
-          Total questions: {totalQuestions}
+            <div className="flex flex-row space-x-2">
+              <Left />
+              <Typography style="body1">Back to home</Typography>
+            </div>
+          </Button>
+          <Typography style="body1">
+            Total questions: {totalQuestions}
+          </Typography>
         </div>
-        <div className="mb-8 flex justify-center gap-6">
-          <div className="rounded-lg bg-gray-100 px-8 py-4 text-center">
-            <div className="text-lg font-semibold text-gray-700">Score</div>
-            <div className="text-2xl font-bold">
-              {score}/{totalQuestions}
+        <div className="mb-16 flex justify-center gap-6">
+          {summaryStats.map(stat => (
+            <div
+              key={stat.label}
+              className={`flex w-64 flex-col items-center space-y-6 rounded-lg ${stat.bg} px-8 py-4`}
+            >
+              <Typography style="h3" className={stat.text}>
+                {stat.label}
+              </Typography>
+              <Typography style="h1" className="pb-4 text-5xl text-black">
+                {stat.value}
+              </Typography>
             </div>
-          </div>
-          <div className="rounded-lg bg-green-50 px-8 py-4 text-center">
-            <div className="text-lg font-semibold text-green-700">Correct</div>
-            <div className="text-2xl font-bold text-green-700">
-              {attempt.correct_answers}
-            </div>
-          </div>
-          <div className="rounded-lg bg-red-50 px-8 py-4 text-center">
-            <div className="text-lg font-semibold text-red-700">Incorrect</div>
-            <div className="text-2xl font-bold text-red-700">{incorrect}</div>
-          </div>
-          <div className="rounded-lg bg-gray-100 px-8 py-4 text-center">
-            <div className="text-lg font-semibold text-gray-500">
-              Unanswered
-            </div>
-            <div className="text-2xl font-bold text-gray-500">{unanswered}</div>
-          </div>
+          ))}
         </div>
         {attempt.questions.map((q, idx) => {
           const isCorrect = q.selected_option === q.correct_option;
           const isUnanswered = !q.selected_option;
           return (
-            <div key={q.question_id} className="mb-8">
+            <div key={q.question_id} className="mb-12">
               <div className="mb-2 font-medium text-gray-600">
                 Question {idx + 1}
               </div>
-              <div className="mb-4 text-xl font-bold">
+              <Typography style="h2" className="mb-4">
                 {q.title || `Question ${idx + 1}`}
-              </div>
+              </Typography>
               <div className="flex flex-col gap-2">
                 {q.options.map((option, i) => {
                   const optionIndex = (i + 1).toString();
@@ -106,23 +118,19 @@ const Result = () => {
                   return (
                     <div
                       key={option}
-                      className={`flex items-center justify-between rounded-lg border px-4 py-3
-                        ${
-                          isUserAnswer && isCorrectAnswer
-                            ? "border-green-600 bg-green-50"
-                            : ""
+                      className={classNames(
+                        "flex items-center justify-between rounded-lg border px-4 py-3",
+                        {
+                          "border-green-600 bg-green-50":
+                            isUserAnswer && isCorrectAnswer,
+                          "border-green-600 bg-white":
+                            !isUserAnswer && isCorrectAnswer,
+                          "border-red-600 bg-red-50":
+                            isUserAnswer && !isCorrectAnswer,
+                          "border-gray-200 bg-white":
+                            !isUserAnswer && !isCorrectAnswer,
                         }
-                        ${
-                          isUserAnswer && !isCorrectAnswer
-                            ? "border-red-600 bg-red-50"
-                            : ""
-                        }
-                        ${
-                          isCorrectAnswer && !isUserAnswer
-                            ? "border-green-600 bg-white"
-                            : "border-gray-200 bg-white"
-                        }
-                      `}
+                      )}
                     >
                       <div className="flex items-center">
                         {isUserAnswer ? (

@@ -31,7 +31,7 @@ namespace :api, defaults: { format: :json } do
 
     namespace :public do
       resources :quizzes, param: :slug, only: [:index, :show] do
-        resources :attempts, only: [:index, :show, :create]
+        resources :attempts, only: [:index, :show, :create, :update]
       end
     end
 

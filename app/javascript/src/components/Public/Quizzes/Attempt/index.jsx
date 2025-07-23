@@ -7,7 +7,7 @@ import attemptsApi from "apis/attempts";
 import useQueryParams from "hooks/useQueryParams";
 
 const Attempt = () => {
-  const { slug } = useParams();
+  const { slug, attemptId } = useParams();
   const { isPreview } = useQueryParams();
   const [attemptData, setAttemptData] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -51,42 +51,41 @@ const Attempt = () => {
     );
   };
 
-  const handleNext = () => {
-    if (questionIndex < totalQuestions - 1) {
-      setQuestionIndex(questionIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (questionIndex > 0) {
-      setQuestionIndex(questionIndex - 1);
-    }
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (isComplete = true) => {
     const questions = attemptData.map(({ questionId, selectedOption }) => ({
       question_id: questionId,
       selected_option: selectedOption,
     }));
 
     const payload = {
-      status: "completed",
+      status: isComplete ? "completed" : "incomplete",
       questions,
     };
 
     try {
-      const { data: { attempt: { id } = {} } = {} } = await attemptsApi.create(
-        slug,
-        payload,
-        isPreview
-      );
-      history.push(
-        `/public/quizzes/${slug}/result/${id}${
-          isPreview ? "?isPreview=true" : ""
-        }`
-      );
+      await attemptsApi.update(slug, attemptId, payload, isPreview);
+      if (isComplete) {
+        history.push(
+          `/public/quizzes/${slug}/result/${attemptId}${
+            isPreview ? "?isPreview=true" : ""
+          }`
+        );
+      }
     } catch (error) {
       logger.error("Error submitting attempt:", error);
+    }
+  };
+
+  const handleNext = () => {
+    if (questionIndex < totalQuestions - 1) {
+      setQuestionIndex(questionIndex + 1);
+    }
+    handleSubmit(false);
+  };
+
+  const handlePrevious = () => {
+    if (questionIndex > 0) {
+      setQuestionIndex(questionIndex - 1);
     }
   };
 

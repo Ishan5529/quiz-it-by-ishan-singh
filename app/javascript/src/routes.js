@@ -20,11 +20,6 @@ export const routes = {
       },
       submissions: "/dashboard/quizzes/:slug/submissions",
       show: "/dashboard/quizzes/:slug",
-      // question: {
-      //   index: "/dashboard/quizzes/:slug/questions",
-      //   add: "/dashboard/quizzes/:slug/add-question",
-      //   edit: "/dashboard/quizzes/:slug/edit-question/:id",
-      // },
     },
     settings: {
       index: "/dashboard/settings",
@@ -42,8 +37,7 @@ export const routes = {
       result: "/public/quizzes/:slug/result/:attemptId",
       attempts: {
         index: "/public/quizzes/:slug/attempts",
-        new: "/public/quizzes/:slug/attempts/new",
-        show: "/public/quizzes/:slug/attempts/:id",
+        new: "/public/quizzes/:slug/attempts/:attemptId",
         create: "/public/quizzes/:slug/attempts/create",
       },
     },

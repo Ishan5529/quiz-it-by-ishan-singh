@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import UserRegistrationForm from "./Form";
 import { Button } from "neetoui/index";
 import useQueryParams from "hooks/useQueryParams";
+import attemptsApi from "apis/attempts";
 
 const UserRegistration = ({ history }) => {
   const { slug } = useParams();
@@ -21,12 +22,25 @@ const UserRegistration = ({ history }) => {
 
   const { data: { data: quiz = {} } = {} } = usePublicQuizzesShow(slug);
 
-  const handleQuizStart = () => {
-    history.push(
-      `${routes.public.quizzes.attempts.new.replace(":slug", slug)}${
-        isPreview ? "?isPreview=true" : ""
-      }`
+  const handleQuizStart = async () => {
+    const payload = {
+      status: "incomplete",
+      questions: quiz.questions.map(question => ({
+        question_id: question.id,
+        selected_option: null,
+      })),
+    };
+    const { data: { attempt: { id } = {} } = {} } = await attemptsApi.create(
+      slug,
+      payload,
+      isPreview
     );
+
+    const link = `${routes.public.quizzes.attempts.new
+      .replace(":slug", slug)
+      .replace(":attemptId", id)}${isPreview ? "?isPreview=true" : ""}`;
+
+    history.push(link);
   };
 
   const handleLogin = async ({ email }) => {

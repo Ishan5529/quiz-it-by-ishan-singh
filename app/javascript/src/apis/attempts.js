@@ -17,10 +17,19 @@ const create = (slug, payload, preview = false) =>
     { attempt: payload }
   );
 
+const update = (slug, attemptId, payload, preview = false) =>
+  axios.put(
+    `${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/${attemptId}${
+      preview ? "?preview=true" : ""
+    }`,
+    { attempt: payload }
+  );
+
 const attemptsApi = {
   fetch,
   show,
   create,
+  update,
 };
 
 export default attemptsApi;
