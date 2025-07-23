@@ -1,6 +1,5 @@
 import axios from "axios";
-import { Toastr } from "neetoui";
-
+import { showToastr } from "utils";
 import { getFromLocalStorage } from "utils/storage";
 
 axios.defaults.baseURL = "/";
@@ -31,7 +30,10 @@ const handleSuccessResponse = response => {
   if (response) {
     response.success = response.status === 200;
     if (response.data.notice) {
-      Toastr.success(response.data.notice);
+      showToastr({
+        message: response.data.notice,
+        type: "success",
+      });
     }
   }
 
@@ -41,9 +43,15 @@ const handleSuccessResponse = response => {
 const handleErrorResponse = (error, authDispatch) => {
   if (error.response?.status === 401) {
     authDispatch({ type: "LOGOUT" });
-    Toastr.error(error.response?.data?.error);
+    showToastr({
+      message: error.response?.data?.error,
+      type: "error",
+    });
   } else {
-    Toastr.error(error.response?.data?.error || error.message);
+    showToastr({
+      message: error.response?.data?.error || error.message,
+      type: "error",
+    });
   }
 
   return Promise.reject(error);

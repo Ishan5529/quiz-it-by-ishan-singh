@@ -20,9 +20,12 @@ import {
   getFromLocalStorage,
 } from "utils/storage";
 
+// import UserRegistration from "./Public/Attempts/UserRegistration";
+import Quizzes from "./Public/Quizzes";
+
 const Main = props => {
   const [loading, setLoading] = useState(true);
-  const { authToken } = useAuthState();
+  const { authToken, isAdmin } = useAuthState();
   const { user: userContextState } = useUserState();
   const userDispatch = useUserDispatch();
   const authDispatch = useAuthDispatch();
@@ -66,14 +69,15 @@ const Main = props => {
               path={route.path}
             />
           ))}
-          <Route exact component={Public} path={routes.public} />
+          <Route exact component={Public} path={routes.public.index} />
+          <Route component={Quizzes} path={routes.public.quizzes.index} />
           {PRIVATE_ROUTES.map(route => (
             <PrivateRoute
               component={route.component}
-              condition={isLoggedIn}
+              condition={isLoggedIn && isAdmin}
               key={route.path}
               path={route.path}
-              redirectRoute={routes.public}
+              redirectRoute={routes.public.index}
             />
           ))}
         </Switch>

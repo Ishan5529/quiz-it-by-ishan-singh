@@ -15,7 +15,7 @@ import {
 const Signup = ({ history }) => {
   const handleSubmit = async formData => {
     try {
-      await authenticationApi.signup(formData);
+      await authenticationApi.signup({ ...formData, role: "super_admin" });
       history.push(routes.auth.login);
     } catch (error) {
       logger.error(error);

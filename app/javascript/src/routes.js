@@ -20,11 +20,6 @@ export const routes = {
       },
       submissions: "/dashboard/quizzes/:slug/submissions",
       show: "/dashboard/quizzes/:slug",
-      // question: {
-      //   index: "/dashboard/quizzes/:slug/questions",
-      //   add: "/dashboard/quizzes/:slug/add-question",
-      //   edit: "/dashboard/quizzes/:slug/edit-question/:id",
-      // },
     },
     settings: {
       index: "/dashboard/settings",
@@ -33,5 +28,18 @@ export const routes = {
       changePassword: "/dashboard/settings?tab=password",
     },
   },
-  public: "/public",
+  public: {
+    index: "/public",
+    quizzes: {
+      index: "/public/quizzes",
+      quizPage: "/public/quizzes/:slug",
+      registration: "/public/quizzes/:slug/registration",
+      result: "/public/quizzes/:slug/result/:attemptId",
+      attempts: {
+        index: "/public/quizzes/:slug/attempts",
+        new: "/public/quizzes/:slug/attempts/:attemptId",
+        create: "/public/quizzes/:slug/attempts/create",
+      },
+    },
+  },
 };

@@ -6,10 +6,12 @@ const authReducer = (_, { type, payload }) => {
     case "LOGIN": {
       setToLocalStorage("authToken", payload.auth_token);
       setToLocalStorage("authEmail", payload.email);
+      setToLocalStorage("isAdmin", payload.is_admin);
       setAuthHeaders();
 
       return {
         isLoggedIn: true,
+        isAdmin: payload.is_admin,
         authToken: payload.auth_token,
         authEmail: payload.email,
       };
@@ -17,9 +19,15 @@ const authReducer = (_, { type, payload }) => {
     case "LOGOUT": {
       setToLocalStorage("authToken", null);
       setToLocalStorage("authEmail", null);
+      setToLocalStorage("isAdmin", null);
       resetAuthTokens();
 
-      return { isLoggedIn: false, authToken: null, authEmail: null };
+      return {
+        isLoggedIn: false,
+        authToken: null,
+        authEmail: null,
+        isAdmin: null,
+      };
     }
     default: {
       throw new Error(`Unhandled action type: ${type}`);

@@ -74,7 +74,6 @@ const QuizPage = () => {
             isDraft: quiz?.isDraft,
             updatedAt: quiz?.updated_at,
             handlePublish,
-            handlePreviewClick: () => {},
           }}
         />
       </div>

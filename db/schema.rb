@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_19_042428) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_21_124159) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -55,6 +55,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_042428) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "user_name", null: false
+    t.string "user_email", null: false
+    t.datetime "submission_time", null: false
+    t.integer "correct_answers", default: 0, null: false
+    t.integer "wrong_answers", default: 0, null: false
+    t.integer "unanswered", default: 0, null: false
+    t.jsonb "questions", default: [], null: false
+    t.string "status", default: "incomplete", null: false
+    t.uuid "user_id", null: false
+    t.uuid "quiz_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["questions"], name: "index_attempts_on_questions", using: :gin
+    t.index ["quiz_id"], name: "index_attempts_on_quiz_id"
+    t.index ["user_id"], name: "index_attempts_on_user_id"
   end
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -124,6 +142,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_042428) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attempts", "quizzes"
+  add_foreign_key "attempts", "users"
   add_foreign_key "published_quizzes", "quizzes"
   add_foreign_key "questions", "quizzes"
   add_foreign_key "quizzes", "categories"
