@@ -10,6 +10,8 @@ json.quizzes @quizzes do |quiz|
     :isDraft,
     :isPublished
 
+  json.submission_count quiz.attempts.size
+
   json.category do
     json.extract! quiz.category, :id, :name
   end
