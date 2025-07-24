@@ -9,7 +9,6 @@ import { NeetoQuiz } from "neetoicons/logos";
 import { useLocation, Link } from "react-router-dom";
 import { routes } from "src/routes";
 
-import { PROFILE_IMAGE_URL } from "./constants";
 import Profile from "./Profile";
 import SideNavLinks from "./SideNavLinks";
 
@@ -80,7 +79,7 @@ const SideBar = () => {
         }}
       >
         <div className="flex flex-row items-center space-x-2 border-b-2 p-3">
-          <Profile profile_img_url={PROFILE_IMAGE_URL} />
+          <Profile name={`${user.first_name} ${user.last_name}`} />
           {isSidebarExpanded && (
             <div className="flex flex-col">
               <p className="text-lg font-bold text-gray-800">{`${user.first_name} ${user.last_name}`}</p>
