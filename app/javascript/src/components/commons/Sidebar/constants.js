@@ -1,5 +1,5 @@
 import { Bulb, Settings, Community } from "neetoicons";
-import { routes } from "src/routes";
+import { routes } from "routes";
 
 export const APP_NAME = "QuizIt";
 
@@ -13,17 +13,17 @@ export const SIDENAV_LINKS = [
       {
         label: "All",
         to: routes.dashboard.quizzes.index,
-        count: 30,
+        count: 0,
       },
       {
         label: "Published",
         to: `${routes.dashboard.quizzes.index}?status=published`,
-        count: 20,
+        count: 0,
       },
       {
         label: "Draft",
         to: `${routes.dashboard.quizzes.index}?status=draft`,
-        count: 10,
+        count: 0,
       },
     ],
   },
