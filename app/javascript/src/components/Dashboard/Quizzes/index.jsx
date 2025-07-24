@@ -13,44 +13,23 @@ import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
-import useQueryParams from "hooks/useQueryParams";
-import { Delete, MenuHorizontal, Filter, Column } from "neetoicons";
-import { Alert, Button, Tag, Dropdown, Checkbox } from "neetoui";
-import { Typography } from "neetoui/index";
+import { useQuizFilters } from "hooks/useQuizFilters";
+import { Delete, Filter, Column } from "neetoicons";
+import { Alert, Button, Dropdown, Checkbox, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
-import {
-  formatTableDate,
-  getAlertTitle,
-  filterNonNullAndEmpty,
-  capitalize,
-} from "utils";
+import { filterNonNullAndEmpty, capitalize, getAlertTitle } from "utils";
+import { getQuizTableRowData } from "utils/getQuizTableRowData";
 import { buildUrl } from "utils/url";
 
 import NewQuizPane from "./Pane/Create";
 import FilterPane from "./Pane/Filter";
 
-3;
-
 const Quizzes = () => {
-  const {
-    searchTerm: querySearchTerm,
-    page: queryPage,
-    perPage: queryPerPage,
-    status: queryStatus,
-    category: queryCategory,
-  } = useQueryParams();
-
-  const safePage = queryPage ? Number(queryPage) : 1;
-  const safePerPage = queryPerPage ? Number(queryPerPage) : 12;
-  let safeCategory = [];
-  if (Array.isArray(queryCategory)) {
-    safeCategory = queryCategory;
-  } else if (queryCategory) {
-    safeCategory = [queryCategory];
-  }
+  const { querySearchTerm, safePage, safePerPage, queryStatus, safeCategory } =
+    useQuizFilters();
 
   const [quizzesData, setQuizzesData] = useState([]);
   const [showNewQuizPane, setShowNewQuizPane] = useState(false);
@@ -76,7 +55,6 @@ const Quizzes = () => {
   } = useQuizTableActiveColumnsStore();
 
   const history = useHistory();
-
   const clearQueryClient = useClearQueryClient();
 
   const params = {
@@ -87,15 +65,15 @@ const Quizzes = () => {
     category,
   };
 
-  const { Menu, MenuItem, Divider } = Dropdown;
+  const { Menu, MenuItem } = Dropdown;
 
   const { data: { data: { quizzes = [], meta = [] } = {}, isLoading } = {} } =
     useQuizzesFetch({
-      page: queryPage,
-      per_page: queryPerPage,
+      page: tablePage,
+      per_page: perPage,
       title: querySearchTerm,
-      status: queryStatus,
-      category: queryCategory,
+      status,
+      category,
     });
 
   const updateQueryParams = useFuncDebounce(updatedValue => {
@@ -147,84 +125,17 @@ const Quizzes = () => {
       history.push(`/dashboard/quizzes/${slug}/edit`);
     };
 
-    const updateRowData = () =>
-      quizzes.map(quiz => ({
-        ...quiz,
-        created_at: formatTableDate(quiz.created_at),
-        category: quiz.category.name,
-        submissions_count: quiz.submission_count,
-        title: (
-          <div className="cursor-pointer" onClick={handleTitleClick(quiz.slug)}>
-            {quiz.title}
-          </div>
-        ),
-        status: (
-          <div className="flex flex-row items-center space-x-2">
-            {quiz.isDraft && (
-              <Tag
-                disabled
-                label="Draft"
-                size="large"
-                style="warning"
-                type="outline"
-              />
-            )}
-            {quiz.isPublished && (
-              <Tag
-                disabled
-                label="Published"
-                size="large"
-                style="info"
-                type="outline"
-              />
-            )}
-          </div>
-        ),
-        actions: (
-          <div className="flex w-full items-center justify-between">
-            <Dropdown buttonStyle="text" icon={MenuHorizontal} strategy="fixed">
-              <Menu>
-                <MenuItem.Button
-                  onClick={() => {
-                    handlePublishToggle({
-                      slugs: quiz.slug,
-                      publishedStatus: quiz.isPublished,
-                    });
-                  }}
-                >
-                  {quiz.isPublished ? "Unpublish" : "Publish"}
-                </MenuItem.Button>
-                <MenuItem.Button onClick={() => handleQuizClone(quiz.slug)}>
-                  Clone
-                </MenuItem.Button>
-                <Divider />
-                {quiz.isDraft && (
-                  <MenuItem.Button
-                    style="danger"
-                    onClick={() => {
-                      setShowDiscardAlert(true);
-                      setSelectedQuizSlugs([quiz.slug]);
-                    }}
-                  >
-                    Discard draft
-                  </MenuItem.Button>
-                )}
-                <MenuItem.Button
-                  style="danger"
-                  onClick={() => {
-                    setShowDeleteAlert(true);
-                    setSelectedQuizSlugs([quiz.slug]);
-                  }}
-                >
-                  Delete
-                </MenuItem.Button>
-              </Menu>
-            </Dropdown>
-          </div>
-        ),
-      }));
-
-    setQuizzesData(updateRowData());
+    setQuizzesData(
+      getQuizTableRowData({
+        quizzes,
+        handleTitleClick,
+        handlePublishToggle,
+        handleQuizClone,
+        setShowDiscardAlert,
+        setShowDeleteAlert,
+        setSelectedQuizSlugs,
+      })
+    );
   }, [quizzes]);
 
   const handleAlertSubmit = async action => {
@@ -275,7 +186,7 @@ const Quizzes = () => {
         searchProps={{
           value: searchTerm,
           placeholder: "Search quizzes",
-          onChange: e => setSearchTerm(e.target.value),
+          onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
       />
       <SubHeader
