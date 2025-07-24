@@ -6,7 +6,7 @@ const useFilteredQuizTableColumns = () => {
     useQuizTableActiveColumnsStore();
 
   return QUIZZES_TABLE_COLUMN_DATA.filter(col => {
-    if (col.dataIndex === "submision_count" && !showSubmissionCount) {
+    if (col.dataIndex === "submission_count" && !showSubmissionCount) {
       return false;
     }
 

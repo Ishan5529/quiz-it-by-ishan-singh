@@ -137,13 +137,14 @@ const Quizzes = () => {
     clearQueryClient(QUERY_KEYS.QUIZZES);
   };
 
+  const handleQuizClone = slug => {
+    quizzesApi.clone(slug);
+    clearQueryClient(QUERY_KEYS.QUIZZES);
+  };
+
   useEffect(() => {
     const handleTitleClick = slug => () => {
       history.push(`/dashboard/quizzes/${slug}/edit`);
-    };
-
-    const handleQuizClone = () => {
-      history.push(`/dashboard/quizzes/clone`);
     };
 
     const updateRowData = () =>
@@ -181,12 +182,7 @@ const Quizzes = () => {
         ),
         actions: (
           <div className="flex w-full items-center justify-between">
-            <Dropdown
-              buttonStyle="text"
-              icon={MenuHorizontal}
-              strategy="fixed"
-              onClick={() => setSelectedQuizSlugs([quiz.slug])}
-            >
+            <Dropdown buttonStyle="text" icon={MenuHorizontal} strategy="fixed">
               <Menu>
                 <MenuItem.Button
                   onClick={() => {
@@ -194,12 +190,11 @@ const Quizzes = () => {
                       slugs: quiz.slug,
                       publishedStatus: quiz.isPublished,
                     });
-                    setSelectedQuizSlugs([]);
                   }}
                 >
                   {quiz.isPublished ? "Unpublish" : "Publish"}
                 </MenuItem.Button>
-                <MenuItem.Button onClick={handleQuizClone}>
+                <MenuItem.Button onClick={() => handleQuizClone(quiz.slug)}>
                   Clone
                 </MenuItem.Button>
                 <Divider />
@@ -216,7 +211,10 @@ const Quizzes = () => {
                 )}
                 <MenuItem.Button
                   style="danger"
-                  onClick={() => setShowDeleteAlert(true)}
+                  onClick={() => {
+                    setShowDeleteAlert(true);
+                    setSelectedQuizSlugs([quiz.slug]);
+                  }}
                 >
                   Delete
                 </MenuItem.Button>

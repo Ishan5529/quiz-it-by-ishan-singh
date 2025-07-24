@@ -45,7 +45,7 @@ const SideBar = () => {
       >
         <div
           className={classNames(
-            "mb-6 flex w-full items-center space-x-4 rounded-xl bg-gray-800 p-2",
+            "mb-6 flex w-full items-center rounded-2xl bg-gray-800 p-4",
             "transition-all duration-200 hover:bg-gray-700",
             {
               "justify-start": isSidebarExpanded,
@@ -55,8 +55,8 @@ const SideBar = () => {
         >
           <NeetoQuiz />
           {isSidebarExpanded && (
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-bold">
-              Quiz It
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-4xl font-bold">
+              uiz It
             </p>
           )}
         </div>

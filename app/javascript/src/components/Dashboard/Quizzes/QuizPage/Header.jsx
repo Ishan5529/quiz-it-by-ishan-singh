@@ -108,7 +108,10 @@ const Header = ({
             ]}
           />
         </div>
-        <div className="h-full cursor-pointer" onClick={handleLinkCopy}>
+        <div
+          className="h-full cursor-pointer hover:text-blue-500"
+          onClick={handleLinkCopy}
+        >
           <Link />
         </div>
       </div>
