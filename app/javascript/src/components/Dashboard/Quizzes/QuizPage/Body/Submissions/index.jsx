@@ -1,12 +1,391 @@
-import React from "react";
+import { QUERY_KEYS } from "constants/query";
 
-const Submissions = () => (
-  <div className="submissions-container">
-    <h2 className="mb-4 text-2xl font-semibold">Quiz Submissions</h2>
-    <p className="text-gray-600">
-      This is where the list of quiz submissions will be displayed.
-    </p>
-  </div>
-);
+import React, { useState, useEffect } from "react";
+
+import Container from "@bigbinary/neeto-molecules/Container";
+import Header from "@bigbinary/neeto-molecules/Header";
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
+import attemptsApi from "apis/attempts";
+import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
+import { Table } from "components/commons";
+import EmptyState from "components/commons/EmptyState";
+import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
+import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import useFuncDebounce from "hooks/useFuncDebounce";
+import useQueryParams from "hooks/useQueryParams";
+import { Delete, Filter, Column } from "neetoicons";
+import { Alert, Button, Tag, Dropdown, Checkbox, Typography } from "neetoui";
+import { isEmpty } from "ramda";
+import { useHistory, useParams } from "react-router-dom";
+import { routes } from "routes";
+import { useSubmissionTableActiveColumnsStore } from "stores/useSubmissionTableActiveColumnsStore";
+import {
+  formatTableDate,
+  getAlertTitle,
+  filterNonNullAndEmpty,
+  capitalize,
+} from "utils";
+import { buildUrl } from "utils/url";
+
+const Submissions = () => {
+  const {
+    searchTerm: querySearchTerm,
+    page: queryPage,
+    perPage: queryPerPage,
+    status: queryStatus = "",
+  } = useQueryParams();
+
+  const { slug } = useParams();
+
+  const safePage = queryPage ? Number(queryPage) : 1;
+  const safePerPage = queryPerPage ? Number(queryPerPage) : 12;
+
+  const [attemptsData, setAttemptsData] = useState([]);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [selectedAttemptIds, setSelectedAttemptIds] = useState([]);
+  const [tablePage, setTablePage] = useState(safePage);
+  const [perPage, setPerPage] = useState(safePerPage);
+  const [searchTerm, setSearchTerm] = useState(querySearchTerm);
+  const [status, setStatus] = useState(queryStatus);
+
+  const {
+    showEmail,
+    showSubmissionDate,
+    showCorrectAnswers,
+    showWrongAnswers,
+    showUnanswered,
+    showQuestions,
+    showStatus,
+    setShowEmail,
+    setShowSubmissionDate,
+    setShowCorrectAnswers,
+    setShowWrongAnswers,
+    setShowUnanswered,
+    setShowQuestions,
+    setShowStatus,
+  } = useSubmissionTableActiveColumnsStore();
+
+  const history = useHistory();
+
+  const clearQueryClient = useClearQueryClient();
+
+  const params = {
+    page: tablePage,
+    searchTerm,
+    perPage,
+    status,
+  };
+
+  const { data: { data: { attempts = [], meta = {} } = {} } = {}, isLoading } =
+    useAttemptsFetch({
+      slug,
+      page: queryPage,
+      per_page: queryPerPage,
+      user_name: querySearchTerm,
+      status: queryStatus,
+    });
+
+  const updateQueryParams = useFuncDebounce(updatedValue => {
+    const updatedParam = {
+      ...params,
+      ...updatedValue,
+      page: 1,
+    };
+
+    history.push(
+      buildUrl(
+        routes.dashboard.quizzes.submissions.replace(":slug", slug),
+        filterNonNullAndEmpty(updatedParam)
+      )
+    );
+  });
+
+  const handlePageChange = (page, perPage) => {
+    setTablePage(page);
+    setPerPage(perPage);
+    const updatedParam = { ...params, page, perPage };
+    history.push(
+      buildUrl(
+        routes.dashboard.quizzes.submissions.replace(":slug", slug),
+        filterNonNullAndEmpty(updatedParam)
+      )
+    );
+  };
+
+  useEffect(() => {
+    const handleTitleClick = attemptId => () => {
+      history.push(`/public/quizzes/${slug}/result/${attemptId}`);
+    };
+
+    const updateRowData = () =>
+      attempts.map(attempt => ({
+        ...attempt,
+        submission_date: formatTableDate(attempt.submission_time),
+        name: (
+          <div
+            className="cursor-pointer"
+            onClick={handleTitleClick(attempt.id)}
+          >
+            {attempt.user_name}
+          </div>
+        ),
+        status: (
+          <div className="flex w-full flex-row items-center justify-center">
+            <Tag
+              disabled
+              label={capitalize(attempt.status)}
+              size="large"
+              style={attempt.status === "completed" ? "success" : "warning"}
+              type="outline"
+            />
+          </div>
+        ),
+        email: attempt.user_email,
+        correct_answers: attempt.correct_answers,
+        wrong_answers: attempt.wrong_answers,
+        unanswered: attempt.unanswered,
+        questions: attempt.questions,
+      }));
+
+    setAttemptsData(updateRowData());
+  }, [attempts]);
+
+  const handleAlertSubmit = async action => {
+    await action();
+    clearQueryClient(QUERY_KEYS.SUBMISSIONS);
+    setSelectedAttemptIds([]);
+    setShowDeleteAlert(false);
+  };
+
+  const subHeaderText = () => {
+    if (!isEmpty(selectedAttemptIds)) {
+      return (
+        <Typography className="flex flex-row text-gray-400" style="h4">
+          <Typography className="mr-1 text-gray-600" style="h4">
+            {selectedAttemptIds.length}{" "}
+            {selectedAttemptIds.length === 1 ? "Submission" : "Submissions"}
+          </Typography>
+          {`selected of ${meta.total_count}`}
+        </Typography>
+      );
+    }
+
+    return (
+      <Typography className="text-gray-600" style="h4">
+        {meta.total_count}{" "}
+        {meta.total_count === 1 ? "Submission" : "Submissions"}
+      </Typography>
+    );
+  };
+
+  const determineStatus = action => {
+    if (!isEmpty(status)) return "";
+
+    if (action === "completed") {
+      return "incomplete";
+    }
+
+    return "completed";
+  };
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  return (
+    <Container className="h-full">
+      <Header
+        title="All submissions"
+        searchProps={{
+          value: searchTerm,
+          placeholder: "Search names",
+          onChange: ({ target: { value } }) => setSearchTerm(value),
+        }}
+      />
+      <SubHeader
+        leftActionBlock={
+          <div className="flex flex-row items-center space-x-4">
+            <Typography className="text-gray-600" style="h4">
+              {subHeaderText()}
+            </Typography>
+            {!isEmpty(selectedAttemptIds) && (
+              <div className="flex flex-row items-center space-x-2">
+                <Button
+                  disabled={!selectedAttemptIds.length}
+                  icon={Delete}
+                  label="Delete"
+                  size="small"
+                  style="danger"
+                  onClick={() => setShowDeleteAlert(true)}
+                />
+              </div>
+            )}
+          </div>
+        }
+        rightActionBlock={
+          <div className="flex flex-row items-center space-x-4">
+            <Dropdown
+              buttonStyle="text"
+              closeOnSelect={false}
+              icon={Column}
+              strategy="fixed"
+              onClick={() => setSelectedAttemptIds([])}
+            >
+              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
+                <Checkbox checked disabled className="w-full" label="Name" />
+                <Checkbox
+                  checked={showEmail}
+                  className="w-full"
+                  label="Email"
+                  onChange={({ target: { checked } }) => setShowEmail(checked)}
+                />
+                <Checkbox
+                  checked={showSubmissionDate}
+                  className="w-full"
+                  label="Submission Date"
+                  onChange={({ target: { checked } }) =>
+                    setShowSubmissionDate(checked)
+                  }
+                />
+                <Checkbox
+                  checked={showCorrectAnswers}
+                  className="w-full"
+                  label="Correct Answers"
+                  onChange={({ target: { checked } }) =>
+                    setShowCorrectAnswers(checked)
+                  }
+                />
+                <Checkbox
+                  checked={showWrongAnswers}
+                  className="w-full"
+                  label="Wrong Answers"
+                  onChange={({ target: { checked } }) =>
+                    setShowWrongAnswers(checked)
+                  }
+                />
+                <Checkbox
+                  checked={showUnanswered}
+                  className="w-full"
+                  label="Unanswered"
+                  onChange={({ target: { checked } }) =>
+                    setShowUnanswered(checked)
+                  }
+                />
+                <Checkbox
+                  checked={showQuestions}
+                  className="w-full"
+                  label="Questions"
+                  onChange={({ target: { checked } }) =>
+                    setShowQuestions(checked)
+                  }
+                />
+                <Checkbox
+                  checked={showStatus}
+                  className="w-full"
+                  label="Status"
+                  onChange={({ target: { checked } }) => setShowStatus(checked)}
+                />
+              </div>
+            </Dropdown>
+            <Dropdown
+              buttonStyle="text"
+              closeOnSelect={false}
+              icon={Filter}
+              strategy="fixed"
+              onClick={() => setSelectedAttemptIds([])}
+            >
+              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
+                <div className="w-full text-left text-gray-700">
+                  <Typography style="h4">Select status:</Typography>
+                </div>
+                <div className="flex w-full flex-row space-x-4 pb-2">
+                  <Checkbox
+                    checked={status === "completed" || isEmpty(status)}
+                    className="w-full"
+                    label="Completed"
+                    onChange={() => {
+                      const newStatus = determineStatus("completed");
+                      setStatus(newStatus);
+                      updateQueryParams({ status: newStatus });
+                    }}
+                  />
+                  <Checkbox
+                    checked={status === "incomplete" || isEmpty(status)}
+                    className="w-full"
+                    label="Incomplete"
+                    onChange={() => {
+                      const newStatus = determineStatus("incomplete");
+                      setStatus(newStatus);
+                      updateQueryParams({ status: newStatus });
+                    }}
+                  />
+                </div>
+              </div>
+            </Dropdown>
+          </div>
+        }
+      />
+      <SubHeader
+        leftActionBlock={
+          <div className="flex flex-row space-x-4">
+            {status && (
+              <Typography className="flex flex-row space-x-1" style="h4">
+                <Typography className="text-gray-700" style="h4">
+                  Status:
+                </Typography>
+                <Typography className="text-gray-400" style="h4">
+                  {capitalize(status)}
+                </Typography>
+              </Typography>
+            )}
+          </div>
+        }
+      />
+      {attemptsData.length ? (
+        <Table
+          {...{
+            isSubmissions: true,
+            data: attemptsData,
+            meta,
+            perPage,
+            selectedKeys: selectedAttemptIds,
+            setSelectedKeys: setSelectedAttemptIds,
+            tablePage,
+            handlePageChange,
+          }}
+        />
+      ) : (
+        <EmptyState
+          image={<EmptyQuizzesListImage />}
+          subtitle="There are no submissions yet."
+          title="No submissions found"
+        />
+      )}
+      {showDeleteAlert && (
+        <Alert
+          isOpen={showDeleteAlert}
+          message="Are you sure you want to continue? This cannot be undone."
+          title={getAlertTitle(
+            "Delete",
+            selectedAttemptIds.length,
+            "submission",
+            "submissions"
+          )}
+          onClose={() => setShowDeleteAlert(false)}
+          onSubmit={() =>
+            handleAlertSubmit(() =>
+              attemptsApi.destroy({
+                slug,
+                attemptIds: selectedAttemptIds,
+                quiet: true,
+              })
+            )
+          }
+        />
+      )}
+    </Container>
+  );
+};
 
 export default Submissions;

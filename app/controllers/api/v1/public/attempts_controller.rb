@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 class Api::V1::Public::AttemptsController < Api::V1::BaseController
+  include QuizFilterable
+
   skip_before_action :authenticate_user_using_x_auth_token
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
-  before_action :set_quiz
+  before_action :set_quiz, only: %i[index create show update]
 
   def index
     @attempts = Attempt.where(quiz: @quiz)
-    render_json(attempts: @attempts)
+    @attempts = filter_quizzes(@attempts)
+
+    @attempts = @attempts.page(params[:page]).per(params[:per_page] || 12)
   end
 
   def show
@@ -24,8 +28,17 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
   end
 
   def create
-    questions = attempt_params[:questions] || []
+    questions = []
     published_questions = @quiz.published_quiz&.data&.dig("questions") || []
+    published_questions.each do |pq|
+      questions << {
+        question_id: pq["id"],
+        selected_option: nil,
+        options: pq["options"] || [],
+        title: pq["title"],
+        correct_option: pq["correct_option"].to_s
+      }
+    end
 
     unanswered = published_questions.count
     correct = 0
@@ -89,6 +102,13 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
     attempt = Attempt.find(params[:id])
     attempt = attempt.update!(attempt_attrs)
     render_json(attempt:)
+  end
+
+  def bulk_destroy
+    attempt_ids = params[:attempt_ids] || []
+    attempts = Attempt.where(id: attempt_ids)
+    attempts.destroy_all
+    render_json(message: "Submissions deleted successfully") unless params[:quiet] == "true"
   end
 
   private

@@ -23,7 +23,7 @@ export const QUIZZES_TABLE_COLUMN_DATA = [
   },
   {
     title: "Submission Count",
-    dataIndex: "submision_count",
+    dataIndex: "submission_count",
     key: "submission_count",
     width: "19%",
   },
@@ -86,3 +86,54 @@ export const QUESTIONS_FORM_VALIDATION_SCHEMA = yup.object().shape({
     )
     .nullable(),
 });
+
+export const SUBMISSIONS_TABLE_COLUMN_DATA = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    width: "auto",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    width: "20%",
+  },
+  {
+    title: "Submmission Date",
+    dataIndex: "submission_date",
+    key: "submission_date",
+    width: "13%",
+  },
+  {
+    title: "Correct Answers",
+    dataIndex: "correct_answers",
+    key: "correct_answers",
+    width: "10%",
+  },
+  {
+    title: "Wrong Answers",
+    dataIndex: "wrong_answers",
+    key: "wrong_answers",
+    width: "10%",
+  },
+  {
+    title: "Unanswered",
+    dataIndex: "unanswered",
+    key: "unanswered",
+    width: "10%",
+  },
+  {
+    title: "Questions",
+    dataIndex: "questions",
+    key: "questions",
+    width: "10%",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    width: "7%",
+  },
+];

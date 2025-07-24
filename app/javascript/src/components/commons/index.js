@@ -1,3 +1,4 @@
 import InlineInput from "./InlineInput";
+import Table from "./Table";
 
-export { InlineInput };
+export { InlineInput, Table };

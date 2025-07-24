@@ -31,7 +31,11 @@ namespace :api, defaults: { format: :json } do
 
     namespace :public do
       resources :quizzes, param: :slug, only: [:index, :show] do
-        resources :attempts, only: [:index, :show, :create, :update]
+        resources :attempts, only: [:index, :show, :create, :update] do
+          collection do
+            post :bulk_destroy
+          end
+        end
       end
     end
 

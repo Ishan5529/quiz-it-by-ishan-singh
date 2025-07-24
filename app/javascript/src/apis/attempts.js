@@ -1,8 +1,10 @@
 import { BASE_PUBLIC_QUIZZES_URL } from "apis/constants";
 import axios from "axios";
 
-const fetch = (slug, payload) =>
-  axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts`, { params: payload });
+const fetch = payload =>
+  axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${payload.slug}/attempts`, {
+    params: payload,
+  });
 
 const show = ({ slug, id, preview = false }) =>
   axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/${id}`, {
@@ -25,11 +27,19 @@ const update = (slug, attemptId, payload, preview = false) =>
     { attempt: payload }
   );
 
+const destroy = ({ slug, attemptIds, quiet = false }) =>
+  axios.post(
+    `${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/bulk_destroy`,
+    { attempt_ids: attemptIds },
+    { params: { quiet } }
+  );
+
 const attemptsApi = {
   fetch,
   show,
   create,
   update,
+  destroy,
 };
 
 export default attemptsApi;

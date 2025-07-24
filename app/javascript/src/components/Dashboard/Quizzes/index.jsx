@@ -8,6 +8,7 @@ import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
 import quizzesApi from "apis/quizzes";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
+import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
@@ -30,7 +31,6 @@ import { buildUrl } from "utils/url";
 
 import NewQuizPane from "./Pane/Create";
 import FilterPane from "./Pane/Filter";
-import Table from "./Table";
 
 3;
 
@@ -151,6 +151,7 @@ const Quizzes = () => {
         ...quiz,
         created_at: formatTableDate(quiz.created_at),
         category: quiz.category.name,
+        submissions_count: quiz.submission_count,
         title: (
           <div className="cursor-pointer" onClick={handleTitleClick(quiz.slug)}>
             {quiz.title}
@@ -403,11 +404,11 @@ const Quizzes = () => {
       {quizzesData.length ? (
         <Table
           {...{
-            quizzes: quizzesData,
+            data: quizzesData,
             meta,
             perPage,
-            selectedQuizSlugs,
-            setSelectedQuizSlugs,
+            selectedKeys: selectedQuizSlugs,
+            setSelectedKeys: setSelectedQuizSlugs,
             tablePage,
             handlePageChange,
           }}
