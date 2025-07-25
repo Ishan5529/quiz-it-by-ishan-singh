@@ -54,7 +54,7 @@ const Filter = ({
     setStatus("");
     setCategory([]);
     updateQueryParams({
-      search_term: "",
+      searchTerm: "",
       status: "",
       category: [],
     });

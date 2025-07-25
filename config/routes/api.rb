@@ -27,6 +27,10 @@ namespace :api, defaults: { format: :json } do
         post :bulk_destroy
         put :bulk_update
       end
+
+      member do
+        post "clone", to: "quizzes/clone#create"
+      end
     end
 
     namespace :public do

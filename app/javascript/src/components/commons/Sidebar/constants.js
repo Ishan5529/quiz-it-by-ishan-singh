@@ -1,5 +1,5 @@
 import { Bulb, Settings, Community } from "neetoicons";
-import { routes } from "src/routes";
+import { routes } from "routes";
 
 export const APP_NAME = "QuizIt";
 
@@ -13,17 +13,17 @@ export const SIDENAV_LINKS = [
       {
         label: "All",
         to: routes.dashboard.quizzes.index,
-        count: 30,
+        count: 0,
       },
       {
         label: "Published",
         to: `${routes.dashboard.quizzes.index}?status=published`,
-        count: 20,
+        count: 0,
       },
       {
         label: "Draft",
         to: `${routes.dashboard.quizzes.index}?status=draft`,
-        count: 10,
+        count: 0,
       },
     ],
   },
@@ -41,6 +41,3 @@ export const SIDENAV_LINKS = [
     icon_size: 24,
   },
 ];
-
-export const PROFILE_IMAGE_URL =
-  "https://cdn.prod.website-files.com/62d84e447b4f9e7263d31e94/6399a4d27711a5ad2c9bf5cd_ben-sweet-2LowviVHZ-E-unsplash-1.jpeg";

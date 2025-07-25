@@ -20,6 +20,8 @@ const destroy = payload =>
 const discardDraft = payload =>
   axios.post(`${BASE_QUIZZES_URL}/draft/discard`, payload);
 
+const clone = slug => axios.post(`${BASE_QUIZZES_URL}/${slug}/clone`);
+
 const quizzesApi = {
   fetch,
   show,
@@ -27,6 +29,7 @@ const quizzesApi = {
   update,
   destroy,
   discardDraft,
+  clone,
 };
 
 export default quizzesApi;

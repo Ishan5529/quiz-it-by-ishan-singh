@@ -51,6 +51,9 @@ gem "sidekiq", "<8"
 # Pagination
 gem "kaminari"
 
+# Clone
+gem "deep_cloneable"
+
 group :development, :test do
   # Rails integration for factory-bot
   gem "factory_bot_rails"

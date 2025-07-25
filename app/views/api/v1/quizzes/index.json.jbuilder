@@ -50,5 +50,7 @@ json.meta do
   json.current_page @quizzes.current_page
   json.total_pages @quizzes.total_pages
   json.total_count @quizzes.total_count
+  json.published_count @quizzes.where(isPublished: true).count
+  json.draft_count @quizzes.where(isDraft: true).count
   json.per_page @quizzes.limit_value
 end
