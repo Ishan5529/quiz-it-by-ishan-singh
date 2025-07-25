@@ -29,6 +29,7 @@ const alias = {
   neetoicons: "@bigbinary/neeto-icons",
   neetocist: "@bigbinary/neeto-cist",
   utils: absolutePath("src/utils"),
+  channels: absolutePath("src/channels"),
   hooks: absolutePath("src/hooks"),
   stores: absolutePath("src/stores"),
   routes: absolutePath("src/routes"),
