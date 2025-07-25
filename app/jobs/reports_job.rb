@@ -9,12 +9,16 @@ class ReportsJob
     quiz = Quiz.find_by(slug: quiz_slug)
     return unless quiz
 
+    @published_quiz = PublishedQuiz.find_by(quiz_id: quiz.id)
+    return unless @published_quiz
+
     ActionCable.server.broadcast(user_id, { message: "Generating report.", progress: 50 })
 
-    @attempts = Attempt.belonging_to(quiz.id)
+    @attempts = Attempt.belonging_to(quiz.id).order(submission_time: :desc)
     html_report = ApplicationController.render(
       assigns: {
-        attempts: @attempts
+        attempts: @attempts,
+        quiz: @published_quiz
       },
       template: "api/v1/public/quizzes/report/download",
       layout: "pdf"
