@@ -9,7 +9,7 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
   before_action :set_quiz, only: %i[index create show update]
 
   def index
-    @attempts = Attempt.where(quiz: @quiz)
+    @attempts = Attempt.where(quiz: @quiz).order(submission_time: :desc)
     @attempts = filter_quizzes(@attempts)
 
     @attempts = @attempts.page(params[:page]).per(params[:per_page] || 12)

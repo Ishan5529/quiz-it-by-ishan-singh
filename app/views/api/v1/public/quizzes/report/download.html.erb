@@ -1,14 +1,89 @@
-<div class="mb-4 font-bold">Your attempts:</div>
-<div class="p-4 mb-8 bg-white neeto-ui-shadow-s rounded">
-  <% @attempts.each do |attempt| %>
-    <div class="flexrow w-full mb-4">
-      <div class="ml-4">
-        <div class="mb-1">
-          <% attempt.attributes.each do |key, value| %>
-            <div><strong><%= key %>:</strong> <%= value %></div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
+<style>
+  .quiz-report-title {
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .quiz-report-header {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .quiz-report-stats {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  .quiz-report-stats span {
+    margin-right: 40px;
+  }
+  .quiz-report-hr {
+    border-top: 2px solid #a0aec0;
+    margin: 1.5rem 0;
+  }
+  .quiz-report-table {
+    width: 100%;
+    margin-bottom: 2rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    border: 1px solid #a0aec0;
+    border-collapse: collapse;
+  }
+  .quiz-report-table th,
+  .quiz-report-table td {
+    padding: 12px;
+    border: 1px solid #a0aec0;
+    text-align: left;
+  }
+  .quiz-report-table th {
+    background: #f7fafc;
+    font-weight: bold;
+  }
+</style>
+
+<div class="quiz-report-title">QUIZ REPORT</div>
+
+<div class="quiz-report-header">
+  <strong>Quiz name:</strong> <%= @quiz.data["title"] %>
 </div>
+<div class="quiz-report-stats">
+  <span><strong>Total Questions:</strong> <%= @quiz.data["questions"].count %></span>
+  <span><strong>Total Submissions:</strong> <%= @attempts.count %></span>
+</div>
+
+<hr class="quiz-report-hr">
+
+<table class="quiz-report-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Submission Time</th>
+      <th>Correct Answers</th>
+      <th>Wrong Answers</th>
+      <th>Unanswered</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @attempts.each do |attempt| %>
+      <tr>
+        <td><%= attempt.user_name %></td>
+        <td><%= attempt.user_email %></td>
+        <td>
+          <%= attempt.submission_time.in_time_zone.strftime("%B %d %Y, %I:%M %p") %>
+          <%= attempt.submission_time.in_time_zone.strftime("%Z") %>
+        </td>
+        <td><%= attempt.correct_answers %></td>
+        <td><%= attempt.wrong_answers %></td>
+        <td><%= attempt.unanswered %></td>
+        <td>
+          <% if attempt.status.to_s.downcase == "completed" %>
+            <span style="color: #16a34a; font-weight: bold;"><%= attempt.status %></span>
+          <% else %>
+            <span style="color: #b45309; font-weight: bold;"><%= attempt.status %></span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
