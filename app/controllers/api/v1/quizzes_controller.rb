@@ -45,7 +45,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
         {
           notice: t(
             "successfully_updated", count: @quizzes.size,
-            entity: @quizzes.size > 1 ? "Quizzes" : "Quiz")
+            entity: "Quiz")
         })
     end
   end
