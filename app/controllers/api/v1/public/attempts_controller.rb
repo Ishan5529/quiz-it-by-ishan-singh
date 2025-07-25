@@ -83,10 +83,13 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
       if q["selected_option"].blank?
         unanswered += 1
+        q["selected_option"] = nil
       elsif published_question && selected_option_index.to_s == correct_option
         correct += 1
+        q["selected_option"] = selected_option_index.to_s
       else
         wrong += 1
+        q["selected_option"] = selected_option_index.to_s
       end
     end
 

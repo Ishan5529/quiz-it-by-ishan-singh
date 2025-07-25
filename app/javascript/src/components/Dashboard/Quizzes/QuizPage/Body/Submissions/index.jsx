@@ -28,6 +28,8 @@ import {
 } from "utils";
 import { buildUrl } from "utils/url";
 
+import DownloadReport from "./DownloadReport";
+
 const Submissions = () => {
   const {
     searchTerm: querySearchTerm,
@@ -48,6 +50,7 @@ const Submissions = () => {
   const [perPage, setPerPage] = useState(safePerPage);
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
   const [status, setStatus] = useState(queryStatus);
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     showEmail,
@@ -190,9 +193,7 @@ const Submissions = () => {
   };
 
   const handleDownload = () => {
-    history.push(
-      routes.dashboard.quizzes.downloadReport.replace(":slug", slug)
-    );
+    setIsOpen(true);
   };
 
   if (isLoading) {
@@ -205,6 +206,7 @@ const Submissions = () => {
         title="All submissions"
         searchProps={{
           value: searchTerm,
+          className: "w-72",
           placeholder: "Search names",
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
@@ -391,6 +393,7 @@ const Submissions = () => {
           }
         />
       )}
+      {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
     </Container>
   );
 };

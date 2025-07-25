@@ -4,7 +4,6 @@ import { Switch, Route } from "react-router-dom";
 
 import Questions from "./Questions";
 import Submissions from "./Submissions";
-import DownloadReport from "./Submissions/DownloadReport";
 
 const Body = () => (
   <div className="quiz-body-container h-full w-full">
@@ -14,11 +13,6 @@ const Body = () => (
         exact
         component={Submissions}
         path="/dashboard/quizzes/:slug/submissions"
-      />
-      <Route
-        exact
-        component={DownloadReport}
-        path="/dashboard/quizzes/:slug/submissions/report"
       />
     </Switch>
   </div>

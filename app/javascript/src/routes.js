@@ -12,7 +12,6 @@ export const routes = {
     quizzes: {
       index: "/dashboard/quizzes",
       create: "/dashboard/quizzes/create",
-      downloadReport: "/dashboard/quizzes/:slug/submissions/report",
       quizPage: "/dashboard/quizzes/:slug",
       edit: {
         index: "/dashboard/quizzes/:slug/edit",
