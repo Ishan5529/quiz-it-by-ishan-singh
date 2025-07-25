@@ -54,6 +54,12 @@ gem "kaminari"
 # Clone
 gem "deep_cloneable"
 
+# PDF generation gem
+gem "wicked_pdf"
+
+# wicked_pdf uses the following binary
+gem "wkhtmltopdf-binary"
+
 group :development, :test do
   # Rails integration for factory-bot
   gem "factory_bot_rails"

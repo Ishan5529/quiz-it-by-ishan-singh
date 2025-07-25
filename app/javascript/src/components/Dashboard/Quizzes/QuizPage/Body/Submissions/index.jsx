@@ -14,7 +14,7 @@ import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Filter, Column } from "neetoicons";
+import { Delete, Filter, Column, Download } from "neetoicons";
 import { Alert, Button, Tag, Dropdown, Checkbox, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useHistory, useParams } from "react-router-dom";
@@ -189,6 +189,12 @@ const Submissions = () => {
     return "completed";
   };
 
+  const handleDownload = () => {
+    history.push(
+      routes.dashboard.quizzes.downloadReport.replace(":slug", slug)
+    );
+  };
+
   if (isLoading) {
     return <PageLoader />;
   }
@@ -225,6 +231,7 @@ const Submissions = () => {
         }
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
+            <Button icon={Download} style="text" onClick={handleDownload} />
             <Dropdown
               buttonStyle="text"
               closeOnSelect={false}

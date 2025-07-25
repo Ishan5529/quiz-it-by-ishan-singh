@@ -1,0 +1,14 @@
+<div class="mb-4 font-bold">Your attempts:</div>
+<div class="p-4 mb-8 bg-white neeto-ui-shadow-s rounded">
+  <% @attempts.each do |attempt| %>
+    <div class="flexrow w-full mb-4">
+      <div class="ml-4">
+        <div class="mb-1">
+          <% attempt.attributes.each do |key, value| %>
+            <div><strong><%= key %>:</strong> <%= value %></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

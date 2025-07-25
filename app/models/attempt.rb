@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Attempt < ApplicationRecord
+  scope :belonging_to, ->(quiz_id) { where(quiz_id: Quiz.find(quiz_id)) }
+
   enum status: { incomplete: "Incomplete", completed: "Completed" }
 
   belongs_to :user
