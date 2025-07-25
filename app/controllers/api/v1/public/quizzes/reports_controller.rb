@@ -4,8 +4,7 @@ class Api::V1::Public::Quizzes::ReportsController < Api::V1::BaseController
 
   def create
     quiz_slug = params[:quiz_slug]
-    ReportsJob.perform_async(quiz_slug, report_path.to_s)
-    render_json("in_progress")
+    ReportsJob.perform_async(current_user.id, quiz_slug, report_path.to_s)
   end
 
   def download
