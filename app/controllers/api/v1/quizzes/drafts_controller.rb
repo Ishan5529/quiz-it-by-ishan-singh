@@ -23,6 +23,6 @@ class Api::V1::Quizzes::DraftsController < Api::V1::BaseController
         quiz.update!(isDraft: false)
       end
     end
-    render_json({ notice: "draft discarded" })
+    render_message(t("successfully_deleted", entity: "Draft", count: quizzes.size))
   end
 end

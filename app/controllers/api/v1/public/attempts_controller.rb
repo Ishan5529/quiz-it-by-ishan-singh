@@ -111,7 +111,7 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
     attempt_ids = params[:attempt_ids] || []
     attempts = Attempt.where(id: attempt_ids)
     attempts.destroy_all
-    render_json(message: "Submissions deleted successfully") unless params[:quiet] == "true"
+    render_json(message: t("successfully_deleted", entity: "Submission", count: attempts.size)) unless params[:quiet] == "true"
   end
 
   private

@@ -64,9 +64,9 @@ class Api::V1::QuestionsController < Api::V1::BaseController
       positions.sort.reverse.each do |pos|
         @quiz.questions.where("position > ?", pos).update_all("position = position - 1")
       end
-      render_message(t("successfully_deleted", count: count, entity: count > 1 ? "Questions" : "Question"))
+      render_message(t("successfully_deleted", count: count, entity: "Question"))
     else
-      render_error(t("Something went wrong!"))
+      render_error(t("something_went_wrong"))
     end
   end
 

@@ -9,7 +9,7 @@ class Api::V1::Public::Quizzes::ReportsController < Api::V1::BaseController
 
   def download
     unless @quiz.report.attached?
-      render_error("not_found") and return
+      render_error(t("not_found", entity: "Report"), :not_found) and return
     end
 
     send_data @quiz.report.download, filename: pdf_file_name, content_type: "application/pdf"
@@ -19,7 +19,7 @@ class Api::V1::Public::Quizzes::ReportsController < Api::V1::BaseController
 
     def set_quiz
       @quiz = Quiz.find_by(slug: params[:quiz_slug])
-      render_error("not_found") unless @quiz
+      render_error(t("not_found", entity: "Quiz"), :not_found) unless @quiz
     end
 
     def report_path
