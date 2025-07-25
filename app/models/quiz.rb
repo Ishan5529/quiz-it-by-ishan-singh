@@ -6,6 +6,7 @@ class Quiz < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :attempts, dependent: :destroy
   has_one :published_quiz, dependent: :destroy
+  has_one_attached :report
 
   validates :title, :slug, presence: true
   validates :slug, uniqueness: true

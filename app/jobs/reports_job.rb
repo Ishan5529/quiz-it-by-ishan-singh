@@ -8,17 +8,20 @@ class ReportsJob
     return unless quiz
 
     @attempts = Attempt.belonging_to(quiz.id)
-    puts @attempts.inspect
-    content = ApplicationController.render(
+    html_report = ApplicationController.render(
       assigns: {
         attempts: @attempts
       },
       template: "api/v1/public/quizzes/report/download",
       layout: "pdf"
     )
-    pdf_blob = WickedPdf.new.pdf_from_string content
-    File.open(report_path, "wb") do |f|
-      f.write(pdf_blob)
+    pdf_report = WickedPdf.new.pdf_from_string html_report
+    if quiz.report.attached?
+      quiz.report.purge_later
     end
+    quiz.report.attach(
+      io: StringIO.new(pdf_report), filename: "submissions_report.pdf",
+      content_type: "application/pdf")
+    quiz.save
   end
 end
