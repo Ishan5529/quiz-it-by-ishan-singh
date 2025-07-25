@@ -1,32 +1,47 @@
 import React from "react";
 
-import { Typography } from "neetoui";
+import { Typography, Button } from "neetoui";
 import { isEmpty } from "ramda";
+import { useHistory } from "react-router-dom";
+import { routes } from "routes";
 import { capitalize } from "utils";
 
-const FilterChips = ({ category, status }) => (
-  <div className="flex flex-row space-x-4">
-    {!isEmpty(category) && (
-      <Typography className="flex flex-row space-x-1" style="h4">
-        <Typography className="text-gray-700" style="h4">
-          Category:
+const FilterChips = ({ category, status }) => {
+  const history = useHistory();
+
+  const handleClear = () => {
+    history.push(routes.dashboard.quizzes.index);
+  };
+
+  return (
+    <div className="flex flex-row items-center justify-center space-x-6">
+      {!isEmpty(category) && (
+        <Typography className="flex flex-row space-x-1" style="h4">
+          <Typography className="text-gray-700" style="h4">
+            Category:
+          </Typography>
+          <Typography className="text-gray-400" style="h4">
+            {category.join(", ")}
+          </Typography>
         </Typography>
-        <Typography className="text-gray-400" style="h4">
-          {category.join(", ")}
+      )}
+      {status && (
+        <Typography className="flex flex-row space-x-1" style="h4">
+          <Typography className="text-gray-700" style="h4">
+            Status:
+          </Typography>
+          <Typography className="text-gray-400" style="h4">
+            {capitalize(status)}
+          </Typography>
         </Typography>
-      </Typography>
-    )}
-    {status && (
-      <Typography className="flex flex-row space-x-1" style="h4">
-        <Typography className="text-gray-700" style="h4">
-          Status:
-        </Typography>
-        <Typography className="text-gray-400" style="h4">
-          {capitalize(status)}
-        </Typography>
-      </Typography>
-    )}
-  </div>
-);
+      )}
+      {(status || !isEmpty(category)) && (
+        <Button style="secondary" onClick={handleClear}>
+          Clear filters
+        </Button>
+      )}
+    </div>
+  );
+};
 
 export default FilterChips;
