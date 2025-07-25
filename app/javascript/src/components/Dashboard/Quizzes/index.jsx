@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from "constants/query";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
@@ -46,6 +46,13 @@ const Quizzes = () => {
 
   const history = useHistory();
   const clearQueryClient = useClearQueryClient();
+
+  useEffect(() => {
+    setTablePage(safePage);
+    setPerPage(safePerPage);
+    setStatus(queryStatus);
+    setCategory(safeCategory);
+  }, [safePage, safePerPage, queryStatus, safeCategory]);
 
   const params = {
     page: tablePage,
