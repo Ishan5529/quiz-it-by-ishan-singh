@@ -14,7 +14,7 @@ import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Filter, Column } from "neetoicons";
+import { Delete, Filter, Column, Download } from "neetoicons";
 import { Alert, Button, Tag, Dropdown, Checkbox, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useHistory, useParams } from "react-router-dom";
@@ -27,6 +27,8 @@ import {
   capitalize,
 } from "utils";
 import { buildUrl } from "utils/url";
+
+import DownloadReport from "./DownloadReport";
 
 const Submissions = () => {
   const {
@@ -48,6 +50,7 @@ const Submissions = () => {
   const [perPage, setPerPage] = useState(safePerPage);
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
   const [status, setStatus] = useState(queryStatus);
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     showEmail,
@@ -189,6 +192,10 @@ const Submissions = () => {
     return "completed";
   };
 
+  const handleDownload = () => {
+    setIsOpen(true);
+  };
+
   if (isLoading) {
     return <PageLoader />;
   }
@@ -199,6 +206,7 @@ const Submissions = () => {
         title="All submissions"
         searchProps={{
           value: searchTerm,
+          className: "w-72",
           placeholder: "Search names",
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
@@ -225,6 +233,7 @@ const Submissions = () => {
         }
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
+            <Button icon={Download} style="text" onClick={handleDownload} />
             <Dropdown
               buttonStyle="text"
               closeOnSelect={false}
@@ -384,6 +393,7 @@ const Submissions = () => {
           }
         />
       )}
+      {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
     </Container>
   );
 };

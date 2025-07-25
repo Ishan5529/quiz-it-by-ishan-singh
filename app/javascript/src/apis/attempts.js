@@ -34,12 +34,22 @@ const destroy = ({ slug, attemptIds, quiet = false }) =>
     { params: { quiet } }
   );
 
+const generatePdf = slug =>
+  axios.post(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/report`, {});
+
+const download = slug =>
+  axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/report/download`, {
+    responseType: "blob",
+  });
+
 const attemptsApi = {
   fetch,
   show,
   create,
   update,
   destroy,
+  generatePdf,
+  download,
 };
 
 export default attemptsApi;
