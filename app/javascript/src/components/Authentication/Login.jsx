@@ -4,7 +4,7 @@ import authenticationApi from "apis/authentication";
 import { useAuthDispatch } from "contexts/auth";
 import { useUserDispatch } from "contexts/user";
 import { Form, Formik } from "formik";
-import { Button } from "neetoui";
+import { Button, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
@@ -37,9 +37,12 @@ const Login = ({ history }) => {
   return (
     <div className="neeto-ui-bg-gray-100 flex h-screen w-screen flex-row items-center justify-center overflow-y-auto overflow-x-hidden p-6">
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
-        <h2 className="neeto-ui-text-gray-800 mb-5 text-center text-3xl font-extrabold">
+        <Typography
+          className="neeto-ui-text-gray-800 mb-5 text-center text-3xl font-extrabold"
+          style="h2"
+        >
           {t("authentication.signIn")}
-        </h2>
+        </Typography>
         <Formik
           initialValues={LOGIN_FORM_INITIAL_VALUES}
           validationSchema={LOGIN_FORM_VALIDATION_SCHEMA}
@@ -78,9 +81,12 @@ const Login = ({ history }) => {
         </Formik>
         <div className="mt-4 flex flex-col items-center justify-center space-y-2">
           <div className="flex flex-row items-center justify-start space-x-1">
-            <p className="neeto-ui-text-gray-600 font-normal">
+            <Typography
+              className="neeto-ui-text-gray-600 font-normal"
+              style="body2"
+            >
               {t("authentication.noAccount")}
-            </p>
+            </Typography>
             <Button
               data-cy="sign-up-link"
               label={t("labels.signUp")}

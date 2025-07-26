@@ -6,6 +6,7 @@ import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
 import { LeftArrow } from "neetoicons";
 import { NeetoQuiz } from "neetoicons/logos";
+import { Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useLocation, Link } from "react-router-dom";
 import { routes } from "src/routes";
@@ -58,9 +59,12 @@ const SideBar = () => {
         >
           <NeetoQuiz />
           {isSidebarExpanded && (
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-4xl font-bold">
+            <Typography
+              className="overflow-hidden text-ellipsis whitespace-nowrap text-4xl font-bold"
+              style="body2"
+            >
               uiz It
-            </p>
+            </Typography>
           )}
         </div>
         <SideNavLinks
@@ -83,8 +87,13 @@ const SideBar = () => {
           <Profile name={`${user.first_name} ${user.last_name}`} />
           {isSidebarExpanded && (
             <div className="flex flex-col">
-              <p className="text-lg font-bold text-gray-800">{`${user.first_name} ${user.last_name}`}</p>
-              <p className="text-gray-800">{user.email}</p>
+              <Typography
+                className="text-lg font-bold text-gray-800"
+                style="body2"
+              >{`${user.first_name} ${user.last_name}`}</Typography>
+              <Typography className="text-gray-800" style="body2">
+                {user.email}
+              </Typography>
             </div>
           )}
         </div>
