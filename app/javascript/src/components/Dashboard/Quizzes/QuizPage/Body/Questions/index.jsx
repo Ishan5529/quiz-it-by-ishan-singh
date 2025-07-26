@@ -36,7 +36,11 @@ const Questions = () => {
     useQuestionsFetch(slug);
 
   const handleQuestionAddClick = () => {
-    history.push(`/dashboard/quizzes/${slug}/edit/add-question`);
+    const link = routes.dashboard.quizzes.edit.addQuestion.replace(
+      ":slug",
+      slug
+    );
+    history.push(link);
   };
 
   return (

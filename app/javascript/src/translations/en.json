@@ -40,7 +40,12 @@
     "clearFilters": "Clear filters",
     "cancel": "Cancel",
     "done": "Done",
-    "save": "Save"
+    "save": "Save",
+    "saveAndAddNewQuestion": "Save & add new question",
+    "addOption": "Add new option +",
+    "edit": "Edit",
+    "clone": "Clone",
+    "delete": "Delete"
   },
   "placeholders": {
     "title": "Enter title",
@@ -50,10 +55,23 @@
     "authPassword": "******",
     "authPasswordConfirmation": "******",
     "status": "Select status",
-    "category": "Select category"
+    "category": "Select category",
+    "questionTitle": "Enter question title"
+  },
+  "tooltip": {
+    "minOptions": "Minimum {{count}} options required.",
+    "deleteOption": "Delete option"
   },
   "quizzes": {
     "add": "Add new quiz",
-    "filters": "Filters"
+    "filters": "Filters",
+    "questions": {
+      "index": "Question",
+      "add": "Add new question",
+      "emptyTitle": "There are no questions to show.",
+      "all": "All Questions",
+      "loading": "Loading questions",
+      "empty": "No questions found"
+    }
   }
 }

@@ -10,7 +10,9 @@ import { Formik, Form as FormikForm, FieldArray } from "formik";
 import { useQuestionsShow } from "hooks/reactQuery/useQuestionsApi";
 import { Right } from "neetoicons";
 import { Typography, Button } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
+import { routes } from "routes";
 
 import OptionField from "./OptionField";
 
@@ -21,6 +23,8 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
   );
   const [questionNumber, setQuestionNumber] = useState(position);
   const history = useHistory();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isEdit) {
@@ -46,7 +50,8 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
   }, [question]);
 
   const handleAllQuestionsClick = () => {
-    history.push(`/dashboard/quizzes/${slug}/edit`);
+    const link = routes.dashboard.quizzes.edit.index.replace(":slug", slug);
+    history.push(link);
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -69,9 +74,14 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
       setIsDirty(true);
       if (values.isSaveAndAddNew) {
         resetForm();
-        history.push(`/dashboard/quizzes/${slug}/edit/add-question`);
+        const link = routes.dashboard.quizzes.edit.addQuestion.replace(
+          ":slug",
+          slug
+        );
+        history.push(link);
       } else {
-        history.push(`/dashboard/quizzes/${slug}/edit`);
+        const link = routes.dashboard.quizzes.edit.index.replace(":slug", slug);
+        history.push(link);
       }
     } finally {
       setSubmitting(false);
@@ -86,11 +96,11 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
           style="h4"
         >
           <div className="cursor-pointer" onClick={handleAllQuestionsClick}>
-            All Questions
+            {t("quizzes.questions.all")}
           </div>
           <Right size={20} />{" "}
           <Typography className="text-gray-500" style="h4">
-            Question {questionNumber}
+            {t("quizzes.questions.index")} {questionNumber}
           </Typography>
         </Typography>
         <Formik
@@ -116,7 +126,7 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
                     disableHover
                     error={touched.title && errors.title}
                     name="title"
-                    placeholder="Enter question title"
+                    placeholder={t("placeholders.questionTitle")}
                     value={values.title}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -172,7 +182,7 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
                         <Button
                           className="mt-4"
                           disabled={values.options.length >= 6}
-                          label="Add new option +"
+                          label={t("labels.addOption")}
                           style="link"
                           onClick={() => push("")}
                         />
@@ -195,7 +205,7 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
                   <Button
                     className="mt-6"
                     disabled={isSubmitting || !dirty}
-                    label="Save"
+                    label={t("labels.save")}
                     style="primary"
                     type="submit"
                     onClick={() => setFieldValue("isSaveAndAddNew", false)}
@@ -203,7 +213,7 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
                   <Button
                     className="mt-6"
                     disabled={isSubmitting || !dirty}
-                    label="Save & add new question"
+                    label={t("labels.saveAndAddNewQuestion")}
                     style="secondary"
                     type="submit"
                     onClick={() => setFieldValue("isSaveAndAddNew", true)}

@@ -1,22 +1,23 @@
 import React from "react";
 
 import EmptyState from "components/commons/EmptyState";
-import { Button } from "neetoui";
+import { Button, Typography } from "neetoui";
 import { isEmpty } from "ramda";
+import withT from "utils/withT";
 
 import Question from "./Question";
 
-const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty }) => {
+const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty, t }) => {
   if (isLoading) {
-    return <EmptyState title="Loading questions" />;
+    return <EmptyState title={t("quizzes.questions.loading")} />;
   }
 
   if (isEmpty(questions)) {
     return (
       <EmptyState
         primaryAction={onAddClick}
-        primaryActionLabel="Add new question"
-        title="There are no questions to show."
+        primaryActionLabel={t("quizzes.questions.add")}
+        title={t("quizzes.questions.emptyTitle")}
       />
     );
   }
@@ -24,10 +25,12 @@ const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty }) => {
   return (
     <div className="flex h-full w-full flex-col space-y-4 overflow-hidden bg-gray-100 p-12">
       <div className="flex justify-end">
-        <Button label="Add new question" onClick={onAddClick} />
+        <Button label={t("quizzes.questions.add")} onClick={onAddClick} />
       </div>
       <div className="questions-list flex h-full w-full flex-col items-center overflow-y-auto">
-        <h4 className="mb-2 w-3/4">{questions?.length} questions</h4>
+        <Typography className="mb-2 w-3/4" style="h4">
+          {questions?.length} questions
+        </Typography>
         {questions &&
           questions.map(question => (
             <Question key={question.id} {...{ question, slug, setIsDirty }} />
@@ -37,4 +40,4 @@ const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty }) => {
   );
 };
 
-export default Display;
+export default withT(Display);
