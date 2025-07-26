@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import MenuBar from "@bigbinary/neeto-molecules/MenuBar";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
 
 import { SETTINGS_NAVLINKS } from "./navLinks";
 import { getActiveNavLink } from "./utils";
 
 const Settings = ({ history, location }) => {
+  const { t } = useTranslation();
+
   const { tab } = queryString.parse(location.search);
   const [activeNavlink, setActiveNavlink] = useState(
     () => getActiveNavLink(tab) || SETTINGS_NAVLINKS[0]
@@ -21,7 +24,7 @@ const Settings = ({ history, location }) => {
 
   return (
     <>
-      <MenuBar showMenu title="Settings">
+      <MenuBar showMenu title={t("labels.settings")}>
         {SETTINGS_NAVLINKS.map(navlink => (
           <MenuBar.Item
             active={tab === navlink.key}

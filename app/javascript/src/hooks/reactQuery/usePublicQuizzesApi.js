@@ -9,12 +9,10 @@ export const usePublicQuizzesFetch = params =>
     queryKey: [QUERY_KEYS.PUBLIC_QUIZZES, params],
     queryFn: () => publicQuizzesApi.fetch(params),
     enabled: true,
-    // enabled: !!params.s,
   });
 
 export const usePublicQuizzesShow = params =>
   useQuery({
     queryKey: [QUERY_KEYS.PUBLIC_QUIZZES, params],
     queryFn: () => publicQuizzesApi.show(params),
-    // enabled: !!params.i,
   });

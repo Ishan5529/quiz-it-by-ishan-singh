@@ -13,6 +13,9 @@
   "yup": {
     "string": {
       "email": "Invalid email address",
+      "currentPassword": "Current password is required",
+      "newPassword": "New password is required",
+      "confirmPassword": "Password confirmation is required",
       "passwordConfirmation": "Passwords must match",
       "title": "Title is required",
       "option": "Option cannot be empty",
@@ -23,9 +26,14 @@
     "required": "Required"
   },
   "labels": {
+    "organization": "BigBinary Academy",
     "email": "Email",
+    "emailAddress": "Email address",
+    "emailDescription": "Manage email",
     "password": "Password",
+    "passwordDescription": "Manage password",
     "name": "Name",
+    "fullName": "Full Name",
     "firstName": "First Name",
     "lastName": "Last Name",
     "passwordConfirmation": "Confirm Password",
@@ -38,9 +46,11 @@
     "all": "All",
     "published": "Published",
     "publish": "Publish",
+    "unpublish": "Unpublish",
     "draft": "Draft",
     "settings": "Settings",
     "profile": "Profile",
+    "profileDescription": "Manage user",
     "publicPage": "Public Page",
     "title": "Title",
     "status": "Status",
@@ -52,8 +62,10 @@
     "wrongAnswers": "Wrong Answers",
     "unanswered": "Unanswered",
     "questions": "Questions",
+    "question": "Question",
     "clearFilters": "Clear filters",
     "cancel": "Cancel",
+    "continue": "Continue",
     "done": "Done",
     "save": "Save",
     "saveAndAddNewQuestion": "Save & add new question",
@@ -61,9 +73,32 @@
     "edit": "Edit",
     "clone": "Clone",
     "delete": "Delete",
+    "discard": "Discard",
+    "update": "Update",
     "completed": "Completed",
     "incomplete": "Incomplete",
-    "changeStatus": "Change status"
+    "changeStatus": "Change status",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "updateEmail": "Update email",
+    "myProfile": "My profile",
+    "discardDraft": "Discard draft",
+    "previous": "Previous",
+    "next": "Next",
+    "saveAndSubmit": "Save and submit the quiz",
+    "startQuiz": "Start quiz",
+    "score": "Score",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "yourResult": "Your result",
+    "backHome": "Back to home",
+    "totalQuestions": "Total questions",
+    "yourAnswer": "Your Answer",
+    "correctAnswer": "Correct Answer",
+    "goToDashboard": "Go to Dashboard",
+    "loginAsAdmin": "Login as Admin"
   },
   "placeholders": {
     "title": "Enter title",
@@ -89,11 +124,17 @@
     "filters": "Filters",
     "submissions": "Submissions",
     "allSubmissions": "All submissions",
+    "preview": "This is a preview of the {{title}} quiz. It will not be saved or submitted.",
+    "correct": "Your answer is correct",
+    "incorrect": "Your answer is incorrect",
     "empty": {
       "submissionsDescription": "There are no submissions yet.",
       "submissionsTitle": "No submissions found",
       "quizzesDescription": "Create a quiz to get started.",
-      "quizzesTitle": "Looks like you don't have any quizzes!"
+      "quizzesTitle": "Looks like you don't have any quizzes!",
+      "questions": "No questions found for this quiz.",
+      "description": "No quiz description provided.",
+      "answer": "You did not answer this question"
     },
     "questions": {
       "index": "Question",
@@ -108,7 +149,10 @@
   "alert": {
     "irreversibleWarning": "Are you sure you want to continue? This cannot be undone.",
     "submission": "submission",
-    "submissions": "submissions"
+    "submissions": "submissions",
+    "emailUpdateWarning": "You will be logged out upon updating your email! Please enter your password to continue.",
+    "emailUpdateTitle": "Are you sure you want to update your email?",
+    "passwordConfirmation": "Please enter your password to continue."
   },
   "filter": {
     "select": {
@@ -118,6 +162,9 @@
   "misc": {
     "reportDownloadChannelConnected": "Connected the cables...",
     "downloading": "Downloading report!",
-    "linkCopied": "Link copied to clipboard"
+    "linkCopied": "Link copied to clipboard",
+    "stringExpected": "Expected a string",
+    "draftSaved": "Draft saved at",
+    "emptyFilter": "No filters yet."
   }
 }

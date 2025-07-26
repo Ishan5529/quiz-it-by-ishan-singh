@@ -1,3 +1,5 @@
+import { QUIZZES_TABLE_COLUMN_KEY } from "constants";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -14,7 +16,7 @@ export const useQuizTableActiveColumnsStore = create(
       setShowCategory: value => set({ showCategory: value }),
     }),
     {
-      name: "quiz-table-columns",
+      name: QUIZZES_TABLE_COLUMN_KEY,
     }
   )
 );

@@ -8,7 +8,8 @@ import { useUserState } from "contexts/user";
 import { Form, Formik } from "formik";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
-import { routes } from "src/routes";
+import { useTranslation } from "react-i18next";
+import { routes } from "routes";
 
 import ConfirmPasswordFormModal from "./ConfirmPasswordFormModal";
 import { EMAIL_FORM_VALIDATION_SCHEMA } from "./constants";
@@ -18,6 +19,8 @@ import { buildEmailFormInitialValues } from "./utils";
 const Email = () => {
   const formikPasswordContext = useFormikPasswordConfirmationModal();
   const { user } = useUserState();
+
+  const { t } = useTranslation();
 
   const authDispatch = useAuthDispatch();
   const initialFormValues = useMemo(
@@ -50,7 +53,7 @@ const Email = () => {
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title="Update email"
+        title={t("labels.updateEmail")}
       />
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
         <Formik
@@ -61,12 +64,17 @@ const Email = () => {
         >
           {({ dirty, isSubmitting, validateForm }) => (
             <Form className="neeto-ui-rounded-lg neeto-ui-bg-white neeto-ui-shadow-s w-full space-y-6 border p-8">
-              <Input required label="Email" name="email" type="email" />
+              <Input
+                required
+                label={t("labels.email")}
+                name="email"
+                type="email"
+              />
               <Button
                 fullWidth
                 className="h-8"
                 disabled={!dirty || isSubmitting}
-                label="Update"
+                label={t("labels.update")}
                 loading={isSubmitting}
                 size="small"
                 type="submit"
@@ -76,8 +84,8 @@ const Email = () => {
           )}
         </Formik>
         <ConfirmPasswordFormModal
-          alertMessage="You will be logged out upon updating your email! Please enter your password to continue."
-          header="Are you sure you want to update your email?"
+          alertMessage={t("alert.emailUpdateWarning")}
+          header={t("alert.emailUpdateTitle")}
           isOpen={formikPasswordContext.showPasswordModal}
           onClose={formikPasswordContext.closeModal}
           onSubmit={formikPasswordContext.handlePasswordConfirmation}

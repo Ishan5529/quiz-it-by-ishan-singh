@@ -1,3 +1,5 @@
+import { SUBMISSIONS_TABLE_COLUMN_KEY } from "constants";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -21,7 +23,7 @@ export const useSubmissionTableActiveColumnsStore = create(
       setShowStatus: value => set({ showStatus: value }),
     }),
     {
-      name: "submission-table-columns",
+      name: SUBMISSIONS_TABLE_COLUMN_KEY,
     }
   )
 );

@@ -19,7 +19,12 @@ const QuizAlerts = ({
       <Alert
         isOpen={showDiscardAlert}
         message={t("alert.irreversibleWarning")}
-        title={getAlertTitle(t("labels.discard"), selectedQuizSlugs.length)}
+        title={getAlertTitle(
+          t("labels.discard"),
+          selectedQuizSlugs.length,
+          t("labels.quiz"),
+          t("labels.quizzes")
+        )}
         onClose={() => setShowDiscardAlert(false)}
         onSubmit={() =>
           handleAlertSubmit(() =>
@@ -32,7 +37,12 @@ const QuizAlerts = ({
       <Alert
         isOpen={showDeleteAlert}
         message={t("alert.irreversibleWarning")}
-        title={getAlertTitle(t("labels.delete"), selectedQuizSlugs.length)}
+        title={getAlertTitle(
+          t("labels.delete"),
+          selectedQuizSlugs.length,
+          t("labels.quiz"),
+          t("labels.quizzes")
+        )}
         onClose={() => setShowDeleteAlert(false)}
         onSubmit={() =>
           handleAlertSubmit(() =>

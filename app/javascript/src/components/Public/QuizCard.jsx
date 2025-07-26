@@ -2,9 +2,11 @@ import { routes } from "routes";
 import React from "react";
 import { Button, Typography, Tag } from "neetoui";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const QuizCard = ({ title, slug, category, total_questions }) => {
   const history = useHistory();
+  const { t } = useTranslation();
 
   const handleStartClick = () => {
     const link = routes.public.quizzes.registration.replace(":slug", slug);
@@ -23,10 +25,13 @@ const QuizCard = ({ title, slug, category, total_questions }) => {
       <div className="mt-2 flex-1">
         <Tag label={category} size="large" type="solid" />
       </div>
-      <Typography style="h4">{total_questions} Questions</Typography>
+      <Typography style="h4">
+        {total_questions}{" "}
+        {total_questions === 1 ? t("labels.question") : t("labels.questions")}
+      </Typography>
       <Button
         fullWidth
-        label="Start Quiz"
+        label={t("labels.startQuiz")}
         size="large"
         className="mt-4"
         onClick={handleStartClick}

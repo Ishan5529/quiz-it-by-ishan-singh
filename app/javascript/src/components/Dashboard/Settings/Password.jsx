@@ -6,6 +6,7 @@ import profilesApi from "apis/profiles";
 import { Form, Formik } from "formik";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
+import withT from "utils/withT";
 
 import {
   CHANGE_PASSWORD_FORM_INITIAL_VALUES,
@@ -13,7 +14,7 @@ import {
   CHANGE_PASSWORD_FORM_INPUT_ATTRIBUTES,
 } from "./constants";
 
-const Password = () => {
+const Password = ({ t }) => {
   const handleSubmit = async (data, { resetForm }) => {
     try {
       await profilesApi.updatePassword(data);
@@ -27,7 +28,7 @@ const Password = () => {
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title="Change password"
+        title={t("labels.changePassword")}
       />
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
         <Formik
@@ -39,24 +40,24 @@ const Password = () => {
             <Form className="neeto-ui-rounded-lg neeto-ui-bg-white neeto-ui-shadow-s w-full space-y-6 border p-8">
               <Input
                 {...CHANGE_PASSWORD_FORM_INPUT_ATTRIBUTES}
-                label="Current password"
+                label={t("labels.currentPassword")}
                 name="currentPassword"
               />
               <Input
                 {...CHANGE_PASSWORD_FORM_INPUT_ATTRIBUTES}
-                label="New password"
+                label={t("labels.newPassword")}
                 name="password"
               />
               <Input
                 {...CHANGE_PASSWORD_FORM_INPUT_ATTRIBUTES}
-                label="Confirm password"
+                label={t("labels.confirmPassword")}
                 name="passwordConfirmation"
               />
               <Button
                 fullWidth
                 className="h-8"
                 disabled={!dirty || isSubmitting}
-                label="Update"
+                label={t("labels.update")}
                 loading={isSubmitting}
                 name="submit"
                 size="small"
@@ -70,4 +71,4 @@ const Password = () => {
   );
 };
 
-export default Password;
+export default withT(Password);

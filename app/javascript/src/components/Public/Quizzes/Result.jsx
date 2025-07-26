@@ -5,11 +5,17 @@ import useQueryParams from "hooks/useQueryParams";
 import { Button, Typography } from "neetoui";
 import { Left } from "neetoicons";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
+import { routes } from "routes";
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 
 const Result = () => {
   const history = useHistory();
   const { slug, attemptId } = useParams();
   const { isPreview } = useQueryParams();
+
+  const { t } = useTranslation();
+
   const { data: { data: { attempt } = {} } = {}, isLoading } = useAttemptsShow({
     slug,
     id: attemptId,
@@ -17,15 +23,14 @@ const Result = () => {
   });
 
   const handleBack = () => {
-    if (isPreview) {
-      history.push(`/dashboard/quizzes/${slug}/edit`);
-    } else {
-      history.push("/public");
-    }
+    const link = isPreview
+      ? routes.dashboard.quizzes.edit.index.replace(":slug", slug)
+      : routes.public.index;
+    history.push(link);
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageLoader />;
   }
 
   if (!attempt) {
@@ -39,25 +44,25 @@ const Result = () => {
 
   const summaryStats = [
     {
-      label: "Score",
+      label: t("labels.score"),
       value: `${score} / ${totalQuestions}`,
       bg: "bg-gray-100",
       text: "text-gray-700",
     },
     {
-      label: "Correct",
+      label: t("labels.correct"),
       value: attempt.correct_answers,
       bg: "bg-green-100",
       text: "text-green-700",
     },
     {
-      label: "Incorrect",
+      label: t("labels.incorrect"),
       value: incorrect,
       bg: "bg-red-100",
       text: "text-red-700",
     },
     {
-      label: "Unanswered",
+      label: t("labels.unanswered"),
       value: unanswered,
       bg: "bg-gray-200",
       text: "text-gray-700",
@@ -68,7 +73,7 @@ const Result = () => {
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-50 py-10">
       <div className="w-full max-w-6xl rounded-lg bg-white p-8 shadow-md">
         <Typography className="mb-16 text-center text-4xl font-bold" style="h1">
-          Your result
+          {t("labels.yourResult")}
         </Typography>
         <div className="mb-16 flex w-full items-center justify-between border-b-2 pb-10">
           <Button
@@ -77,11 +82,11 @@ const Result = () => {
           >
             <div className="flex flex-row space-x-2">
               <Left />
-              <Typography style="body1">Back to home</Typography>
+              <Typography style="body1">{t("labels.backHome")}</Typography>
             </div>
           </Button>
           <Typography style="body1">
-            Total questions: {totalQuestions}
+            {t("labels.totalQuestions")}: {totalQuestions}
           </Typography>
         </div>
         <div className="mb-16 flex justify-center gap-6">
@@ -105,10 +110,10 @@ const Result = () => {
           return (
             <div key={q.question_id} className="mb-12">
               <div className="mb-2 font-medium text-gray-600">
-                Question {idx + 1}
+                {t("labels.question")} {idx + 1}
               </div>
               <Typography style="h2" className="mb-4">
-                {q.title || `Question ${idx + 1}`}
+                {q.title || `${t("labels.question")} ${idx + 1}`}
               </Typography>
               <div className="flex flex-col gap-2">
                 {q.options.map((option, i) => {
@@ -217,9 +222,9 @@ const Result = () => {
                       </div>
                       <div className="text-sm font-medium">
                         {isUserAnswer
-                          ? "Your Answer"
+                          ? t("labels.yourAnswer")
                           : isCorrectAnswer
-                          ? "Correct Answer"
+                          ? t("labels.correctAnswer")
                           : ""}
                       </div>
                     </div>
@@ -229,15 +234,15 @@ const Result = () => {
               <div className="mt-2">
                 {isUnanswered ? (
                   <div className="inline-block rounded bg-gray-100 px-4 py-2 text-gray-500">
-                    You did not answer this question
+                    {t("quizzes.empty.answer")}
                   </div>
                 ) : isCorrect ? (
                   <div className="inline-block rounded bg-green-50 px-4 py-2 text-green-700">
-                    Your answer is correct
+                    {t("quizzes.correct")}
                   </div>
                 ) : (
                   <div className="inline-block rounded bg-red-50 px-4 py-2 text-red-700">
-                    Your answer is incorrect
+                    {t("quizzes.incorrect")}
                   </div>
                 )}
               </div>

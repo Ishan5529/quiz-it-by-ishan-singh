@@ -12,6 +12,7 @@ import UserRegistrationForm from "./Form";
 import { Button } from "neetoui/index";
 import useQueryParams from "hooks/useQueryParams";
 import attemptsApi from "apis/attempts";
+import { useTranslation } from "react-i18next";
 
 const UserRegistration = ({ history }) => {
   const { slug } = useParams();
@@ -19,6 +20,7 @@ const UserRegistration = ({ history }) => {
   const authDispatch = useAuthDispatch();
   const userDispatch = useUserDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const { data: { data: quiz = {} } = {} } = usePublicQuizzesShow(slug);
 
@@ -92,25 +94,24 @@ const UserRegistration = ({ history }) => {
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-xl">
         <div className="neeto-ui-bg-white neeto-ui-shadow-s w-full rounded-lg p-10">
           <h2 className="neeto-ui-text-gray-800 mb-2 text-left text-3xl font-extrabold">
-            {capitalize(quiz?.title)} quiz
+            {capitalize(quiz?.title)} {t("labels.quiz").toLowerCase()}
           </h2>
           <p className="mb-2 text-left text-base text-gray-600">
-            {quiz?.description || "No quiz description provided."}
+            {quiz?.description || t("quizzes.empty.description")}
           </p>
           {isPreview ? (
             <div className="flex flex-col">
               <p className="mb-12 text-left text-base text-gray-600">
-                This is a preview of the {quiz?.title} quiz. It will not be
-                saved or submitted.
+                {t("quizzes.preview", { title: quiz?.title })}
               </p>
               <div className="flex flex-row justify-end space-x-2">
                 <Button
-                  label="Start quiz"
+                  label={t("labels.startQuiz")}
                   style="primary"
                   onClick={handleQuizStart}
                 />
                 <Button
-                  label="Back"
+                  label={t("labels.back")}
                   style="secondary"
                   onClick={() => history.goBack()}
                 />

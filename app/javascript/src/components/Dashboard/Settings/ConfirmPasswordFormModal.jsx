@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Form, Formik } from "formik";
 import { Button, Modal, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
+import { useTranslation } from "react-i18next";
 
 import {
   PASSWORD_CONFIRMATION_FORM_INITIAL_VALUES,
@@ -17,6 +18,8 @@ const ConfirmPasswordFormModal = ({
   alertMessage = "",
 }) => {
   const innerRef = useRef();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     innerRef.current?.resetForm?.();
@@ -41,7 +44,7 @@ const ConfirmPasswordFormModal = ({
                 autoFocus
                 required
                 className="my-2"
-                label="Current password"
+                label={t("labels.currentPassword")}
                 name="password"
                 type="password"
               />
@@ -49,14 +52,14 @@ const ConfirmPasswordFormModal = ({
             <Modal.Footer className="space-x-2">
               <Button
                 disabled={isSubmitting || !values.password}
-                label="Continue"
+                label={t("labels.continue")}
                 loading={isSubmitting}
                 type="submit"
                 onClick={handleSubmit}
               />
               <Button
                 disabled={isSubmitting}
-                label="Cancel"
+                label={t("labels.cancel")}
                 style="text"
                 type="reset"
                 onClick={onClose}

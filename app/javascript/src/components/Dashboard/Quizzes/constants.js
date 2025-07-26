@@ -142,3 +142,62 @@ export const SUBMISSIONS_TABLE_COLUMN_DATA = [
 ];
 
 export const REPORT_PDF_NAME = "quiz_submission_report.pdf";
+
+export const STATUS_TAGS = {
+  draft: {
+    condition: quiz => quiz.isDraft,
+    label: t("labels.draft"),
+    style: "warning",
+  },
+  published: {
+    condition: quiz => quiz.isPublished,
+    label: t("labels.published"),
+    style: "info",
+  },
+};
+
+export const getQuizMenuItems =
+  ({
+    handlePublishToggle,
+    handleQuizClone,
+    setShowDiscardAlert,
+    setShowDeleteAlert,
+    setSelectedQuizSlugs,
+  }) =>
+  quiz =>
+    [
+      {
+        label: quiz.isPublished ? t("labels.unpublish") : t("labels.publish"),
+        onClick: () => {
+          handlePublishToggle({
+            slugs: quiz.slug,
+            publishedStatus: quiz.isPublished,
+          });
+        },
+      },
+      {
+        label: t("labels.clone"),
+        onClick: () => handleQuizClone(quiz.slug),
+      },
+      { type: "divider" },
+      ...(quiz.isDraft
+        ? [
+            {
+              label: t("labels.discardDraft"),
+              style: "danger",
+              onClick: () => {
+                setShowDiscardAlert(true);
+                setSelectedQuizSlugs([quiz.slug]);
+              },
+            },
+          ]
+        : []),
+      {
+        label: t("labels.delete"),
+        style: "danger",
+        onClick: () => {
+          setShowDeleteAlert(true);
+          setSelectedQuizSlugs([quiz.slug]);
+        },
+      },
+    ];
