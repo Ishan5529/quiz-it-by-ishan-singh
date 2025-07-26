@@ -15,6 +15,7 @@ import { useQuizFilters } from "hooks/useQuizFilters";
 import { useQuizTableData } from "hooks/useQuizTableData";
 import { Filter } from "neetoicons";
 import { Button, Dropdown } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { filterNonNullAndEmpty } from "utils";
@@ -46,6 +47,7 @@ const Quizzes = () => {
 
   const history = useHistory();
   const clearQueryClient = useClearQueryClient();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setTablePage(safePage);
@@ -140,25 +142,30 @@ const Quizzes = () => {
   return (
     <Container>
       <Header
-        title="All Quizzes"
+        title={t("quizzes.all")}
         actionBlock={
           <Button
             icon="ri-add-line"
-            label="Add new quiz"
+            label={t("quizzes.add")}
             size="small"
             onClick={() => setShowNewQuizPane(true)}
           />
         }
         searchProps={{
           value: searchTerm,
-          placeholder: "Search quizzes",
+          placeholder: t("placeholders.quizSearch"),
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
       />
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row items-center space-x-4">
-            <SubHeaderText meta={meta} selectedQuizSlugs={selectedQuizSlugs} />
+            <SubHeaderText
+              meta={meta}
+              plural={t("labels.quizzes")}
+              selectedItems={selectedQuizSlugs}
+              singular={t("labels.quiz")}
+            />
             <BulkActions
               Menu={Menu}
               MenuItem={MenuItem}
@@ -213,7 +220,6 @@ const Quizzes = () => {
       />
       <QuizAlerts
         handleAlertSubmit={handleAlertSubmit}
-        quizzesApi={quizzesApi}
         selectedQuizSlugs={selectedQuizSlugs}
         setShowDeleteAlert={setShowDeleteAlert}
         setShowDiscardAlert={setShowDiscardAlert}

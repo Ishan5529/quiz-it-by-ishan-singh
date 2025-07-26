@@ -3,8 +3,9 @@ import React from "react";
 import { Column } from "neetoicons";
 import { Dropdown, Checkbox } from "neetoui";
 import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
+import withT from "utils/withT";
 
-const TableColumnControls = ({ setSelectedQuizSlugs }) => {
+const TableColumnControls = ({ setSelectedQuizSlugs, t }) => {
   const {
     showSubmissionCount,
     showCreatedOn,
@@ -25,34 +26,39 @@ const TableColumnControls = ({ setSelectedQuizSlugs }) => {
       onClick={() => setSelectedQuizSlugs([])}
     >
       <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-        <Checkbox checked disabled className="w-full" label="Title" />
+        <Checkbox
+          checked
+          disabled
+          className="w-full"
+          label={t("labels.title")}
+        />
         <Checkbox
           checked={showSubmissionCount}
           className="w-full"
-          label="Submissions Count"
-          onChange={e => setShowSubmissionCount(e.target.checked)}
+          label={t("labels.submissionCount")}
+          onClick={() => setShowSubmissionCount(!showSubmissionCount)}
         />
         <Checkbox
           checked={showCreatedOn}
           className="w-full"
-          label="Created On"
-          onChange={e => setShowCreatedOn(e.target.checked)}
+          label={t("labels.createdOn")}
+          onClick={() => setShowCreatedOn(!showCreatedOn)}
         />
         <Checkbox
           checked={showStatus}
           className="w-full"
-          label="Status"
-          onChange={e => setShowStatus(e.target.checked)}
+          label={t("labels.status")}
+          onClick={() => setShowStatus(!showStatus)}
         />
         <Checkbox
           checked={showCategory}
           className="w-full"
-          label="Category"
-          onChange={e => setShowCategory(e.target.checked)}
+          label={t("labels.category")}
+          onClick={() => setShowCategory(!showCategory)}
         />
       </div>
     </Dropdown>
   );
 };
 
-export default TableColumnControls;
+export default withT(TableColumnControls);

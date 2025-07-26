@@ -6,8 +6,8 @@ import { isEmpty } from "ramda";
 const SubHeaderText = ({
   selectedItems = [],
   meta,
-  singular = "Quiz",
-  plural = "Quizzes",
+  singular = "item",
+  plural = "items",
 }) => {
   if (!isEmpty(selectedItems)) {
     return (

@@ -2,12 +2,15 @@ import React from "react";
 
 import { Typography, Button } from "neetoui";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { capitalize } from "utils";
 
 const FilterChips = ({ category, status }) => {
   const history = useHistory();
+
+  const { t } = useTranslation();
 
   const handleClear = () => {
     history.push(routes.dashboard.quizzes.index);
@@ -18,7 +21,7 @@ const FilterChips = ({ category, status }) => {
       {!isEmpty(category) && (
         <Typography className="flex flex-row space-x-1" style="h4">
           <Typography className="text-gray-700" style="h4">
-            Category:
+            {t("labels.category")}:
           </Typography>
           <Typography className="text-gray-400" style="h4">
             {category.join(", ")}
@@ -28,7 +31,7 @@ const FilterChips = ({ category, status }) => {
       {status && (
         <Typography className="flex flex-row space-x-1" style="h4">
           <Typography className="text-gray-700" style="h4">
-            Status:
+            {t("labels.status")}:
           </Typography>
           <Typography className="text-gray-400" style="h4">
             {capitalize(status)}
@@ -36,9 +39,11 @@ const FilterChips = ({ category, status }) => {
         </Typography>
       )}
       {(status || !isEmpty(category)) && (
-        <Button style="secondary" onClick={handleClear}>
-          Clear filters
-        </Button>
+        <Button
+          label={t("labels.clearFilters")}
+          style="secondary"
+          onClick={handleClear}
+        />
       )}
     </div>
   );

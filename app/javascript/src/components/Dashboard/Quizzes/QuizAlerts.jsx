@@ -1,7 +1,9 @@
 import React from "react";
 
+import quizzesApi from "apis/quizzes";
 import { Alert } from "neetoui";
 import { getAlertTitle } from "utils";
+import withT from "utils/withT";
 
 const QuizAlerts = ({
   showDiscardAlert,
@@ -10,14 +12,14 @@ const QuizAlerts = ({
   setShowDeleteAlert,
   selectedQuizSlugs,
   handleAlertSubmit,
-  quizzesApi,
+  t,
 }) => (
   <>
     {showDiscardAlert && (
       <Alert
         isOpen={showDiscardAlert}
-        message="Are you sure you want to continue? This cannot be undone."
-        title={getAlertTitle("Discard", selectedQuizSlugs.length)}
+        message={t("alert.irreversibleWarning")}
+        title={getAlertTitle(t("labels.discard"), selectedQuizSlugs.length)}
         onClose={() => setShowDiscardAlert(false)}
         onSubmit={() =>
           handleAlertSubmit(() =>
@@ -29,8 +31,8 @@ const QuizAlerts = ({
     {showDeleteAlert && (
       <Alert
         isOpen={showDeleteAlert}
-        message="Are you sure you want to continue? This cannot be undone."
-        title={getAlertTitle("Delete", selectedQuizSlugs.length)}
+        message={t("alert.irreversibleWarning")}
+        title={getAlertTitle(t("labels.delete"), selectedQuizSlugs.length)}
         onClose={() => setShowDeleteAlert(false)}
         onSubmit={() =>
           handleAlertSubmit(() =>
@@ -42,4 +44,4 @@ const QuizAlerts = ({
   </>
 );
 
-export default QuizAlerts;
+export default withT(QuizAlerts);

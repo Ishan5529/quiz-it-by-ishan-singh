@@ -13,11 +13,11 @@ export const useQuizTableData = ({
 }) => {
   const [quizzesData, setQuizzesData] = useState([]);
 
-  useEffect(() => {
-    const handleTitleClick = slug => () => {
-      history.push(`/dashboard/quizzes/${slug}/edit`);
-    };
+  const handleTitleClick = slug => () => {
+    history.push(`/dashboard/quizzes/${slug}/edit`);
+  };
 
+  useEffect(() => {
     setQuizzesData(
       getQuizTableRowData({
         quizzes,

@@ -13,7 +13,12 @@
   "yup": {
     "string": {
       "email": "Invalid email address",
-      "passwordConfirmation": "Passwords must match"
+      "passwordConfirmation": "Passwords must match",
+      "title": "Title is required",
+      "option": "Option cannot be empty",
+      "minOptions": "At least {{count}} options are required",
+      "maxOptions": "Maximum {{count}} options allowed",
+      "selectOption": "Select the correct option"
     },
     "required": "Required"
   },
@@ -28,6 +33,7 @@
     "signUp": "Signup",
     "forgotPassword": "Forgot password?",
     "back": "Back",
+    "quiz": "Quiz",
     "quizzes": "Quizzes",
     "all": "All",
     "published": "Published",
@@ -40,6 +46,8 @@
     "status": "Status",
     "category": "Category",
     "submissionDate": "Submission Date",
+    "submissionCount": "Submission Count",
+    "createdOn": "Created On",
     "correctAnswers": "Correct Answers",
     "wrongAnswers": "Wrong Answers",
     "unanswered": "Unanswered",
@@ -54,7 +62,8 @@
     "clone": "Clone",
     "delete": "Delete",
     "completed": "Completed",
-    "incomplete": "Incomplete"
+    "incomplete": "Incomplete",
+    "changeStatus": "Change status"
   },
   "placeholders": {
     "title": "Enter title",
@@ -67,7 +76,8 @@
     "category": "Select category",
     "questionTitle": "Enter question title",
     "quizTitle": "Enter quiz title",
-    "names": "Search names"
+    "names": "Search names",
+    "quizSearch": "Search quizzes"
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
@@ -75,12 +85,15 @@
   },
   "quizzes": {
     "add": "Add new quiz",
+    "all": "All Quizzes",
     "filters": "Filters",
     "submissions": "Submissions",
     "allSubmissions": "All submissions",
     "empty": {
       "submissionsDescription": "There are no submissions yet.",
-      "submissionsTitle": "No submissions found"
+      "submissionsTitle": "No submissions found",
+      "quizzesDescription": "Create a quiz to get started.",
+      "quizzesTitle": "Looks like you don't have any quizzes!"
     },
     "questions": {
       "index": "Question",
