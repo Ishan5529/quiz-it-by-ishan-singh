@@ -3,12 +3,14 @@ import React from "react";
 import { Filter } from "neetoicons";
 import { Dropdown, Checkbox, Typography } from "neetoui";
 import { isEmpty } from "ramda";
+import withT from "utils/withT";
 
 const StatusFilter = ({
   status,
   setStatus,
   updateQueryParams,
   setSelectedAttemptIds,
+  t,
 }) => {
   const determineStatus = action => {
     if (!isEmpty(status)) return "";
@@ -26,13 +28,13 @@ const StatusFilter = ({
     >
       <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
         <div className="w-full text-left text-gray-700">
-          <Typography style="h4">Select status:</Typography>
+          <Typography style="h4">{t("filter.select.status")}:</Typography>
         </div>
         <div className="flex w-full flex-row space-x-4 pb-2">
           <Checkbox
             checked={status === "completed" || isEmpty(status)}
             className="w-full"
-            label="Completed"
+            label={t("labels.completed")}
             onChange={() => {
               const newStatus = determineStatus("completed");
               setStatus(newStatus);
@@ -42,7 +44,7 @@ const StatusFilter = ({
           <Checkbox
             checked={status === "incomplete" || isEmpty(status)}
             className="w-full"
-            label="Incomplete"
+            label={t("labels.incomplete")}
             onChange={() => {
               const newStatus = determineStatus("incomplete");
               setStatus(newStatus);
@@ -55,4 +57,4 @@ const StatusFilter = ({
   );
 };
 
-export default StatusFilter;
+export default withT(StatusFilter);

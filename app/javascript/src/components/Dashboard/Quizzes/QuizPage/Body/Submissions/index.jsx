@@ -10,6 +10,7 @@ import attemptsApi from "apis/attempts";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
+import SubHeaderText from "components/Dashboard/Quizzes/SubHeaderText";
 import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import useFuncDebounce from "hooks/useFuncDebounce";
@@ -17,6 +18,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { Delete, Download } from "neetoicons";
 import { Button, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { routes } from "routes";
 import { formatTableDate, filterNonNullAndEmpty, capitalize } from "utils";
@@ -51,6 +53,8 @@ const Submissions = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const history = useHistory();
+
+  const { t } = useTranslation();
 
   const clearQueryClient = useClearQueryClient();
 
@@ -99,7 +103,10 @@ const Submissions = () => {
 
   useEffect(() => {
     const handleTitleClick = attemptId => () => {
-      history.push(`/public/quizzes/${slug}/result/${attemptId}`);
+      const link = routes.public.quizzes.result
+        .replace(":slug", slug)
+        .replace(":attemptId", attemptId);
+      history.push(link);
     };
 
     const updateRowData = () =>
@@ -135,32 +142,15 @@ const Submissions = () => {
     setAttemptsData(updateRowData());
   }, [attempts]);
 
-  const handleAlertSubmit = async action => {
-    await action();
+  const handleDelete = async () => {
+    await attemptsApi.destroy({
+      slug,
+      attemptIds: selectedAttemptIds,
+      quiet: true,
+    });
     clearQueryClient(QUERY_KEYS.SUBMISSIONS);
     setSelectedAttemptIds([]);
     setShowDeleteAlert(false);
-  };
-
-  const subHeaderText = () => {
-    if (!isEmpty(selectedAttemptIds)) {
-      return (
-        <Typography className="flex flex-row text-gray-400" style="h4">
-          <Typography className="mr-1 text-gray-600" style="h4">
-            {selectedAttemptIds.length}{" "}
-            {selectedAttemptIds.length === 1 ? "Submission" : "Submissions"}
-          </Typography>
-          {`selected of ${meta.total_count}`}
-        </Typography>
-      );
-    }
-
-    return (
-      <Typography className="text-gray-600" style="h4">
-        {meta.total_count}{" "}
-        {meta.total_count === 1 ? "Submission" : "Submissions"}
-      </Typography>
-    );
   };
 
   const handleDownload = () => {
@@ -174,11 +164,11 @@ const Submissions = () => {
   return (
     <Container className="h-full">
       <Header
-        title="All submissions"
+        title={t("quizzes.allSubmissions")}
         searchProps={{
           value: searchTerm,
           className: "w-72",
-          placeholder: "Search names",
+          placeholder: t("placeholders.names"),
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
       />
@@ -186,14 +176,19 @@ const Submissions = () => {
         leftActionBlock={
           <div className="flex flex-row items-center space-x-4">
             <Typography className="text-gray-600" style="h4">
-              {subHeaderText()}
+              <SubHeaderText
+                meta={meta}
+                plural={t("alert.submissions")}
+                selectedItems={selectedAttemptIds}
+                singular={t("alert.submission")}
+              />
             </Typography>
             {!isEmpty(selectedAttemptIds) && (
               <div className="flex flex-row items-center space-x-2">
                 <Button
                   disabled={!selectedAttemptIds.length}
                   icon={Delete}
-                  label="Delete"
+                  label={t("labels.delete")}
                   size="small"
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
@@ -205,7 +200,7 @@ const Submissions = () => {
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
             <Button icon={Download} style="text" onClick={handleDownload} />
-            <ColumnSelector setSelectedAttemptIds={setSelectedAttemptIds} />
+            <ColumnSelector />
             <StatusFilter
               setSelectedAttemptIds={setSelectedAttemptIds}
               setStatus={setStatus}
@@ -238,17 +233,15 @@ const Submissions = () => {
       ) : (
         <EmptyState
           image={<EmptyQuizzesListImage />}
-          subtitle="There are no submissions yet."
-          title="No submissions found"
+          subtitle={t("quizzes.empty.submissionsDescription")}
+          title={t("quizzes.empty.submissionsTitle")}
         />
       )}
       <DeleteAlert
-        attemptsApi={attemptsApi}
-        handleAlertSubmit={handleAlertSubmit}
+        handleDelete={handleDelete}
         selectedAttemptIds={selectedAttemptIds}
         setShowDeleteAlert={setShowDeleteAlert}
         showDeleteAlert={showDeleteAlert}
-        slug={slug}
       />
       {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
     </Container>

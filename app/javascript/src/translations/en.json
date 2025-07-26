@@ -20,6 +20,7 @@
   "labels": {
     "email": "Email",
     "password": "Password",
+    "name": "Name",
     "firstName": "First Name",
     "lastName": "Last Name",
     "passwordConfirmation": "Confirm Password",
@@ -38,6 +39,11 @@
     "title": "Title",
     "status": "Status",
     "category": "Category",
+    "submissionDate": "Submission Date",
+    "correctAnswers": "Correct Answers",
+    "wrongAnswers": "Wrong Answers",
+    "unanswered": "Unanswered",
+    "questions": "Questions",
     "clearFilters": "Clear filters",
     "cancel": "Cancel",
     "done": "Done",
@@ -46,7 +52,9 @@
     "addOption": "Add new option +",
     "edit": "Edit",
     "clone": "Clone",
-    "delete": "Delete"
+    "delete": "Delete",
+    "completed": "Completed",
+    "incomplete": "Incomplete"
   },
   "placeholders": {
     "title": "Enter title",
@@ -58,7 +66,8 @@
     "status": "Select status",
     "category": "Select category",
     "questionTitle": "Enter question title",
-    "quizTitle": "Enter quiz title"
+    "quizTitle": "Enter quiz title",
+    "names": "Search names"
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
@@ -68,6 +77,11 @@
     "add": "Add new quiz",
     "filters": "Filters",
     "submissions": "Submissions",
+    "allSubmissions": "All submissions",
+    "empty": {
+      "submissionsDescription": "There are no submissions yet.",
+      "submissionsTitle": "No submissions found"
+    },
     "questions": {
       "index": "Question",
       "plural": "Questions",
@@ -76,6 +90,16 @@
       "all": "All Questions",
       "loading": "Loading questions",
       "empty": "No questions found"
+    }
+  },
+  "alert": {
+    "irreversibleWarning": "Are you sure you want to continue? This cannot be undone.",
+    "submission": "submission",
+    "submissions": "submissions"
+  },
+  "filter": {
+    "select": {
+      "status": "Select status"
     }
   },
   "misc": {

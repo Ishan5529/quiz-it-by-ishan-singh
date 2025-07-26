@@ -2,12 +2,13 @@ import React from "react";
 
 import { Typography } from "neetoui";
 import { capitalize } from "utils";
+import withT from "utils/withT";
 
-const FilterChips = ({ status }) =>
+const FilterChips = ({ status, t }) =>
   status ? (
     <Typography className="flex flex-row space-x-1" style="h4">
       <Typography className="text-gray-700" style="h4">
-        Status:
+        {t("labels.status")}:
       </Typography>
       <Typography className="text-gray-400" style="h4">
         {capitalize(status)}
@@ -15,4 +16,4 @@ const FilterChips = ({ status }) =>
     </Typography>
   ) : null;
 
-export default FilterChips;
+export default withT(FilterChips);

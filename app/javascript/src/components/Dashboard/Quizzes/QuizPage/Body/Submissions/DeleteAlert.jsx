@@ -2,35 +2,27 @@ import React from "react";
 
 import { Alert } from "neetoui";
 import { getAlertTitle } from "utils";
+import withT from "utils/withT";
 
 const DeleteAlert = ({
   showDeleteAlert,
   setShowDeleteAlert,
   selectedAttemptIds,
-  handleAlertSubmit,
-  attemptsApi,
-  slug,
+  handleDelete,
+  t,
 }) => (
   <Alert
     isOpen={showDeleteAlert}
-    message="Are you sure you want to continue? This cannot be undone."
+    message={t("alert.irreversibleWarning")}
     title={getAlertTitle(
-      "Delete",
+      t("labels.delete"),
       selectedAttemptIds.length,
-      "submission",
-      "submissions"
+      t("alert.submission"),
+      t("alert.submissions")
     )}
     onClose={() => setShowDeleteAlert(false)}
-    onSubmit={() =>
-      handleAlertSubmit(() =>
-        attemptsApi.destroy({
-          slug,
-          attemptIds: selectedAttemptIds,
-          quiet: true,
-        })
-      )
-    }
+    onSubmit={handleDelete}
   />
 );
 
-export default DeleteAlert;
+export default withT(DeleteAlert);
