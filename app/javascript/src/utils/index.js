@@ -33,6 +33,9 @@ const capitalize = (str = "") => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+const getQuizAttemptUrl = slug =>
+  `http://localhost:3000/public/quizzes/${slug}/registration`;
+
 export {
   showToastr,
   isPresent,
@@ -40,5 +43,6 @@ export {
   filterNonNullAndEmpty,
   formatTableDate,
   getAlertTitle,
+  getQuizAttemptUrl,
   capitalize,
 };

@@ -14,21 +14,19 @@ import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Filter, Column, Download } from "neetoicons";
-import { Alert, Button, Tag, Dropdown, Checkbox, Typography } from "neetoui";
+import { Delete, Download } from "neetoicons";
+import { Button, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useHistory, useParams } from "react-router-dom";
 import { routes } from "routes";
-import { useSubmissionTableActiveColumnsStore } from "stores/useSubmissionTableActiveColumnsStore";
-import {
-  formatTableDate,
-  getAlertTitle,
-  filterNonNullAndEmpty,
-  capitalize,
-} from "utils";
+import { formatTableDate, filterNonNullAndEmpty, capitalize } from "utils";
 import { buildUrl } from "utils/url";
 
+import ColumnSelector from "./ColumnSelector";
+import DeleteAlert from "./DeleteAlert";
 import DownloadReport from "./DownloadReport";
+import FilterChips from "./FilterChips";
+import StatusFilter from "./StatusFilter";
 
 const Submissions = () => {
   const {
@@ -51,23 +49,6 @@ const Submissions = () => {
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
   const [status, setStatus] = useState(queryStatus);
   const [isOpen, setIsOpen] = useState(false);
-
-  const {
-    showEmail,
-    showSubmissionDate,
-    showCorrectAnswers,
-    showWrongAnswers,
-    showUnanswered,
-    showQuestions,
-    showStatus,
-    setShowEmail,
-    setShowSubmissionDate,
-    setShowCorrectAnswers,
-    setShowWrongAnswers,
-    setShowUnanswered,
-    setShowQuestions,
-    setShowStatus,
-  } = useSubmissionTableActiveColumnsStore();
 
   const history = useHistory();
 
@@ -182,16 +163,6 @@ const Submissions = () => {
     );
   };
 
-  const determineStatus = action => {
-    if (!isEmpty(status)) return "";
-
-    if (action === "completed") {
-      return "incomplete";
-    }
-
-    return "completed";
-  };
-
   const handleDownload = () => {
     setIsOpen(true);
   };
@@ -234,120 +205,20 @@ const Submissions = () => {
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
             <Button icon={Download} style="text" onClick={handleDownload} />
-            <Dropdown
-              buttonStyle="text"
-              closeOnSelect={false}
-              icon={Column}
-              strategy="fixed"
-              onClick={() => setSelectedAttemptIds([])}
-            >
-              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-                <Checkbox checked disabled className="w-full" label="Name" />
-                <Checkbox
-                  checked={showEmail}
-                  className="w-full"
-                  label="Email"
-                  onChange={({ target: { checked } }) => setShowEmail(checked)}
-                />
-                <Checkbox
-                  checked={showSubmissionDate}
-                  className="w-full"
-                  label="Submission Date"
-                  onChange={({ target: { checked } }) =>
-                    setShowSubmissionDate(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showCorrectAnswers}
-                  className="w-full"
-                  label="Correct Answers"
-                  onChange={({ target: { checked } }) =>
-                    setShowCorrectAnswers(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showWrongAnswers}
-                  className="w-full"
-                  label="Wrong Answers"
-                  onChange={({ target: { checked } }) =>
-                    setShowWrongAnswers(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showUnanswered}
-                  className="w-full"
-                  label="Unanswered"
-                  onChange={({ target: { checked } }) =>
-                    setShowUnanswered(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showQuestions}
-                  className="w-full"
-                  label="Questions"
-                  onChange={({ target: { checked } }) =>
-                    setShowQuestions(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showStatus}
-                  className="w-full"
-                  label="Status"
-                  onChange={({ target: { checked } }) => setShowStatus(checked)}
-                />
-              </div>
-            </Dropdown>
-            <Dropdown
-              buttonStyle="text"
-              closeOnSelect={false}
-              icon={Filter}
-              strategy="fixed"
-              onClick={() => setSelectedAttemptIds([])}
-            >
-              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-                <div className="w-full text-left text-gray-700">
-                  <Typography style="h4">Select status:</Typography>
-                </div>
-                <div className="flex w-full flex-row space-x-4 pb-2">
-                  <Checkbox
-                    checked={status === "completed" || isEmpty(status)}
-                    className="w-full"
-                    label="Completed"
-                    onChange={() => {
-                      const newStatus = determineStatus("completed");
-                      setStatus(newStatus);
-                      updateQueryParams({ status: newStatus });
-                    }}
-                  />
-                  <Checkbox
-                    checked={status === "incomplete" || isEmpty(status)}
-                    className="w-full"
-                    label="Incomplete"
-                    onChange={() => {
-                      const newStatus = determineStatus("incomplete");
-                      setStatus(newStatus);
-                      updateQueryParams({ status: newStatus });
-                    }}
-                  />
-                </div>
-              </div>
-            </Dropdown>
+            <ColumnSelector setSelectedAttemptIds={setSelectedAttemptIds} />
+            <StatusFilter
+              setSelectedAttemptIds={setSelectedAttemptIds}
+              setStatus={setStatus}
+              status={status}
+              updateQueryParams={updateQueryParams}
+            />
           </div>
         }
       />
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row space-x-4">
-            {status && (
-              <Typography className="flex flex-row space-x-1" style="h4">
-                <Typography className="text-gray-700" style="h4">
-                  Status:
-                </Typography>
-                <Typography className="text-gray-400" style="h4">
-                  {capitalize(status)}
-                </Typography>
-              </Typography>
-            )}
+            <FilterChips status={status} />
           </div>
         }
       />
@@ -371,28 +242,14 @@ const Submissions = () => {
           title="No submissions found"
         />
       )}
-      {showDeleteAlert && (
-        <Alert
-          isOpen={showDeleteAlert}
-          message="Are you sure you want to continue? This cannot be undone."
-          title={getAlertTitle(
-            "Delete",
-            selectedAttemptIds.length,
-            "submission",
-            "submissions"
-          )}
-          onClose={() => setShowDeleteAlert(false)}
-          onSubmit={() =>
-            handleAlertSubmit(() =>
-              attemptsApi.destroy({
-                slug,
-                attemptIds: selectedAttemptIds,
-                quiet: true,
-              })
-            )
-          }
-        />
-      )}
+      <DeleteAlert
+        attemptsApi={attemptsApi}
+        handleAlertSubmit={handleAlertSubmit}
+        selectedAttemptIds={selectedAttemptIds}
+        setShowDeleteAlert={setShowDeleteAlert}
+        showDeleteAlert={showDeleteAlert}
+        slug={slug}
+      />
       {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
     </Container>
   );

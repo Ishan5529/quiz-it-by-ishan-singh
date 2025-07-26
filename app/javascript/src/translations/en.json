@@ -30,6 +30,7 @@
     "quizzes": "Quizzes",
     "all": "All",
     "published": "Published",
+    "publish": "Publish",
     "draft": "Draft",
     "settings": "Settings",
     "profile": "Profile",
@@ -56,7 +57,8 @@
     "authPasswordConfirmation": "******",
     "status": "Select status",
     "category": "Select category",
-    "questionTitle": "Enter question title"
+    "questionTitle": "Enter question title",
+    "quizTitle": "Enter quiz title"
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
@@ -65,13 +67,20 @@
   "quizzes": {
     "add": "Add new quiz",
     "filters": "Filters",
+    "submissions": "Submissions",
     "questions": {
       "index": "Question",
+      "plural": "Questions",
       "add": "Add new question",
       "emptyTitle": "There are no questions to show.",
       "all": "All Questions",
       "loading": "Loading questions",
       "empty": "No questions found"
     }
+  },
+  "misc": {
+    "reportDownloadChannelConnected": "Connected the cables...",
+    "downloading": "Downloading report!",
+    "linkCopied": "Link copied to clipboard"
   }
 }

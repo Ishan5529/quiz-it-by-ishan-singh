@@ -4,9 +4,11 @@ import attemptsApi from "apis/attempts";
 import createConsumer from "channels/consumer";
 import { subscribeToReportDownloadChannel } from "channels/reportDownloadChannel";
 import { ProgressBar } from "components/commons";
+import { REPORT_PDF_NAME } from "components/Dashboard/Quizzes/constants";
 import { useUserState } from "contexts/user";
 import FileSaver from "file-saver";
-import { Modal } from "neetoui";
+import { Modal, Typography } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 const DownloadReport = ({ isOpen = true, setIsOpen }) => {
@@ -19,6 +21,8 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
 
   const consumer = createConsumer();
 
+  const { t } = useTranslation();
+
   const generatePdf = async () => {
     try {
       await attemptsApi.generatePdf(slug);
@@ -30,7 +34,7 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
   const downloadPdf = async () => {
     try {
       const { data } = await attemptsApi.download(slug);
-      FileSaver.saveAs(data, "quiz_submission_report.pdf");
+      FileSaver.saveAs(data, REPORT_PDF_NAME);
     } catch (error) {
       logger.error(error);
     }
@@ -52,7 +56,8 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
 
   useEffect(() => {
     if (progress === 100) {
-      setMessage("Downloading report");
+      const downloadingMessage = t("misc.downloading");
+      setMessage(downloadingMessage);
       downloadPdf();
       setIsOpen(false);
     }
@@ -66,7 +71,9 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
       onClose={() => setIsOpen(false)}
     >
       <div className="space-y-2 p-6">
-        <p className="text-xl font-semibold">{message}</p>
+        <Typography className="text-xl font-semibold" style="body2">
+          {message}
+        </Typography>
         <ProgressBar progress={progress} />
       </div>
     </Modal>

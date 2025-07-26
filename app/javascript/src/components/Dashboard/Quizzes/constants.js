@@ -139,3 +139,5 @@ export const SUBMISSIONS_TABLE_COLUMN_DATA = [
     width: "7%",
   },
 ];
+
+export const REPORT_PDF_NAME = "quiz_submission_report.pdf";
