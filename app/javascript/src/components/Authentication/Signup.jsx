@@ -43,35 +43,35 @@ const Signup = ({ history, t }) => {
                 required
                 label={t("labels.email")}
                 name="email"
-                placeholder="oliver@example.com"
+                placeholder={t("placeholders.authEmail")}
                 type="email"
               />
               <Input
                 required
                 label={t("labels.firstName")}
                 name="firstName"
-                placeholder="Oliver"
+                placeholder={t("placeholders.authFirstName")}
                 type="text"
               />
               <Input
                 required
                 label={t("labels.lastName")}
                 name="lastName"
-                placeholder="Smith"
+                placeholder={t("placeholders.authLastName")}
                 type="text"
               />
               <Input
                 required
                 label={t("labels.password")}
                 name="password"
-                placeholder="******"
+                placeholder={t("placeholders.authPassword")}
                 type="password"
               />
               <Input
                 required
                 label={t("labels.passwordConfirmation")}
                 name="passwordConfirmation"
-                placeholder="******"
+                placeholder={t("placeholders.authPasswordConfirmation")}
                 type="password"
               />
               <Button

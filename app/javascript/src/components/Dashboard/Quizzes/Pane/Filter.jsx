@@ -1,10 +1,13 @@
 import React from "react";
 
+import {
+  QUIZZES_FILTER_FORM_VALIDATION_SCHEMA,
+  categories,
+} from "components/Dashboard/Quizzes/constants";
 import { Pane, Typography } from "neetoui";
+import withT from "utils/withT";
 
 import Form from "./Form";
-
-import { QUIZZES_FILTER_FORM_VALIDATION_SCHEMA } from "../constants";
 
 const Filter = ({
   searchTerm,
@@ -16,14 +19,13 @@ const Filter = ({
   setStatus,
   setCategory,
   updateQueryParams,
+  t,
 }) => {
   const QUIZZES_FILTER_INITIAL_FORM_VALUES = {
     filterTitle: searchTerm,
     status,
     category: category.map(cat => ({ label: cat, value: cat })),
   };
-
-  const categories = ["General", "Science", "Math", "History", "Finance"];
 
   const onClose = () => {
     setShowPane(false);
@@ -65,7 +67,7 @@ const Filter = ({
     <Pane isOpen={showPane} onClose={onClose}>
       <Pane.Header>
         <Typography style="h2" weight="semibold">
-          Filters
+          {t("quizzes.filters")}
         </Typography>
       </Pane.Header>
       <Form
@@ -73,7 +75,7 @@ const Filter = ({
           isFilter: true,
           clearFilter,
           handleFilterSubmit,
-          quiz: QUIZZES_FILTER_INITIAL_FORM_VALUES,
+          data: QUIZZES_FILTER_INITIAL_FORM_VALUES,
           validationSchema: QUIZZES_FILTER_FORM_VALIDATION_SCHEMA,
           onClose,
           categories,
@@ -83,4 +85,4 @@ const Filter = ({
   );
 };
 
-export default Filter;
+export default withT(Filter);

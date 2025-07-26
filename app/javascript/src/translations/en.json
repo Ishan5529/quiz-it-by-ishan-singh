@@ -33,6 +33,27 @@
     "draft": "Draft",
     "settings": "Settings",
     "profile": "Profile",
-    "publicPage": "Public Page"
+    "publicPage": "Public Page",
+    "title": "Title",
+    "status": "Status",
+    "category": "Category",
+    "clearFilters": "Clear filters",
+    "cancel": "Cancel",
+    "done": "Done",
+    "save": "Save"
+  },
+  "placeholders": {
+    "title": "Enter title",
+    "authEmail": "oliver@example.com",
+    "authFirstName": "Oliver",
+    "authLastName": "Smith",
+    "authPassword": "******",
+    "authPasswordConfirmation": "******",
+    "status": "Select status",
+    "category": "Select category"
+  },
+  "quizzes": {
+    "add": "Add new quiz",
+    "filters": "Filters"
   }
 }

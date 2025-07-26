@@ -55,7 +55,7 @@ const Login = ({ history }) => {
                 data-cy="login-email-text-field"
                 label={t("labels.email")}
                 name="email"
-                placeholder="oliver@example.com"
+                placeholder={t("placeholders.authEmail")}
                 type="email"
               />
               <Input
@@ -63,7 +63,7 @@ const Login = ({ history }) => {
                 data-cy="login-password-text-field"
                 label={t("labels.password")}
                 name="password"
-                placeholder="******"
+                placeholder={t("placeholders.authPassword")}
                 type="password"
               />
               <Button
