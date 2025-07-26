@@ -1,0 +1,38 @@
+{
+  "authentication": {
+    "login": "Login",
+    "logout": "Log out",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "existingAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+    "forgotPasswordDescription": "Enter your email address below and we'll send you a link to reset your password.",
+    "sendResetPasswordEmail": "Send reset password email"
+  },
+  "yup": {
+    "string": {
+      "email": "Invalid email address",
+      "passwordConfirmation": "Passwords must match"
+    },
+    "required": "Required"
+  },
+  "labels": {
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "passwordConfirmation": "Confirm Password",
+    "login": "Login",
+    "signUp": "Signup",
+    "forgotPassword": "Forgot password?",
+    "back": "Back",
+    "quizzes": "Quizzes",
+    "all": "All",
+    "published": "Published",
+    "draft": "Draft",
+    "settings": "Settings",
+    "profile": "Profile",
+    "publicPage": "Public Page"
+  }
+}

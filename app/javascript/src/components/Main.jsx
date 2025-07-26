@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import { setAuthHeaders, registerIntercepts } from "apis/axios";
+import "common/i18n";
 import { initializeLogger } from "common/logger";
 import PrivateRoute from "components/commons/PrivateRoute";
 import Public from "components/Public";

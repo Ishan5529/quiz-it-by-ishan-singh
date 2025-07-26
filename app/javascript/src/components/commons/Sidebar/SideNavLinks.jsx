@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import classNames from "classnames";
 import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
+import { Up } from "neetoicons";
 import { NavLink } from "react-router-dom";
 
 import { SIDENAV_LINKS } from "./constants";
@@ -15,15 +16,17 @@ const SideNavLinks = ({
 }) => {
   const { data: { data: { meta } = {} } = {} } = useQuizzesFetch();
 
-  SIDENAV_LINKS[0].sub_links.forEach(sublink => {
-    if (sublink.label === "All") {
-      sublink.count = meta?.total_count || 0;
-    } else if (sublink.label === "Published") {
-      sublink.count = meta?.published_count || 0;
-    } else if (sublink.label === "Draft") {
-      sublink.count = meta?.draft_count || 0;
-    }
-  });
+  useEffect(() => {
+    SIDENAV_LINKS[0].sub_links.forEach(sublink => {
+      if (sublink.label === "All") {
+        sublink.count = meta?.total_count || 0;
+      } else if (sublink.label === "Published") {
+        sublink.count = meta?.published_count || 0;
+      } else if (sublink.label === "Draft") {
+        sublink.count = meta?.draft_count || 0;
+      }
+    });
+  }, [meta]);
 
   return SIDENAV_LINKS.map(
     ({ label, to, icon: Icon, icon_size, target, sub_links }, index) => {
@@ -73,24 +76,15 @@ const SideNavLinks = ({
                   >
                     {label}
                     {hasSubLinks && (
-                      <span className="ml-2">
-                        <svg
-                          fill="currentColor"
-                          height="12"
-                          viewBox="0 0 20 20"
-                          width="12"
+                      <span className="ml-auto">
+                        <Up
+                          size={16}
+                          textColor="currentColor"
                           className={classNames(
                             "transition-transform duration-200",
                             { "rotate-180": isOpen }
                           )}
-                        >
-                          <path
-                            d="M7 8l3 3 3-3"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          />
-                        </svg>
+                        />
                       </span>
                     )}
                   </div>
@@ -100,14 +94,11 @@ const SideNavLinks = ({
           </NavLink>
           <div
             className={classNames(
-              "ml-12 mt-1 flex flex-col overflow-hidden py-1",
-              "transition-all duration-300",
-              { "pointer-events-none": !isOpen }
+              "ml-12 mt-1 flex flex-col overflow-hidden py-1 transition-all duration-300",
+              isOpen
+                ? "pointer-events-auto max-h-96 opacity-100"
+                : "pointer-events-none max-h-0 opacity-0"
             )}
-            style={{
-              maxHeight: isOpen ? `${sub_links?.length * 40}px` : "0px",
-              opacity: isOpen ? 1 : 0,
-            }}
           >
             {sub_links?.map((sub, subIdx) => (
               <NavLink
