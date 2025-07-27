@@ -33,6 +33,7 @@ const alias = {
   hooks: absolutePath("src/hooks"),
   stores: absolutePath("src/stores"),
   routes: absolutePath("src/routes"),
+  translations: absolutePath("src/translations"),
   assets: absolutePath("../assets"),
 };
 

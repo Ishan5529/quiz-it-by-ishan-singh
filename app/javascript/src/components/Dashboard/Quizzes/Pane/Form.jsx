@@ -3,23 +3,25 @@ import { QUERY_KEYS } from "constants/query";
 import React from "react";
 
 import quizzesApi from "apis/quizzes";
+import { QUIZZES_FORM_VALIDATION_SCHEMA } from "components/Dashboard/Quizzes/constants";
 import { Formik, Form as FormikForm } from "formik";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { Pane } from "neetoui";
 import { ActionBlock, Input, Select } from "neetoui/formik";
-
-import { QUIZZES_FORM_VALIDATION_SCHEMA } from "../constants";
+import { useTranslation } from "react-i18next";
 
 const Form = ({
   isFilter = true,
   onClose,
   clearFilter,
-  quiz,
+  data,
   onSuccess,
   handleFilterSubmit,
   validationSchema = QUIZZES_FORM_VALIDATION_SCHEMA,
   categories = [],
 }) => {
+  const { t } = useTranslation();
+
   const clearQueryClient = useClearQueryClient();
 
   const handleSubmit = async values => {
@@ -45,7 +47,7 @@ const Form = ({
 
   return (
     <Formik
-      initialValues={quiz}
+      initialValues={data}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
@@ -53,9 +55,9 @@ const Form = ({
         <Pane.Body className="space-y-6">
           <Input
             className="w-full flex-grow-0"
-            label="Title"
+            label={t("labels.title")}
             name={isFilter ? "filterTitle" : "title"}
-            placeholder="Enter title"
+            placeholder={t("placeholders.title")}
             required={!isFilter}
           />
           {isFilter && (
@@ -63,9 +65,9 @@ const Form = ({
               <Select
                 isClearable
                 className="w-full flex-grow-0"
-                label="Status"
+                label={t("labels.status")}
                 name="status"
-                placeholder="Select status"
+                placeholder={t("placeholders.status")}
                 options={[
                   { label: "Draft", value: "draft" },
                   { label: "Published", value: "published" },
@@ -75,9 +77,9 @@ const Form = ({
                 isClearable
                 isMulti
                 className="w-full flex-grow-0"
-                label="Category"
+                label={t("labels.category")}
                 name="category"
-                placeholder="Select category"
+                placeholder={t("placeholders.category")}
                 options={categories.map(category => ({
                   label: category,
                   value: category,
@@ -90,11 +92,11 @@ const Form = ({
           <ActionBlock
             cancelButtonProps={{
               onClick: isFilter ? clearFilter : onClose,
-              label: isFilter ? "Clear filters" : "Cancel",
+              label: isFilter ? t("labels.clearFilters") : t("labels.cancel"),
             }}
             submitButtonProps={{
               className: "mr-3",
-              label: isFilter ? "Done" : "Save",
+              label: isFilter ? t("labels.done") : t("labels.save"),
             }}
           />
         </Pane.Footer>

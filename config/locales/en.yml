@@ -39,6 +39,7 @@ en:
     other: "%{entity} have been successfully deleted!"
   update_failure: "Couldn't update the %{entity}! Please try again."
   signup_successful: "Signup successful. Please login to continue"
+  something_went_wrong: "Something went wrong! Please try again."
   session:
     expiry: "Your session has expired. Please login again."
   quiz:
@@ -50,3 +51,8 @@ en:
       already_exists: "Quiz with this slug already exists!"
       invalid: "Slug is invalid! Please use only alphanumeric characters, dashes, and underscores."
       immutable: "Slug cannot be changed once set!"
+  report:
+    render: "Rendering the report"
+    generate: "Generating the PDF report"
+    upload: "Uploading to the server"
+    attach: "Attaching the report to the quiz"

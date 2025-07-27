@@ -45,7 +45,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
         {
           notice: t(
             "successfully_updated", count: @quizzes.size,
-            entity: @quizzes.size > 1 ? "Quizzes" : "Quiz")
+            entity: "Quiz")
         })
     end
   end
@@ -55,7 +55,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     if @quizzes.destroy_all
       render_message(t("successfully_deleted", count: records_size, entity: records_size > 1 ? "Quizzes" : "Quiz"))
     else
-      render_error(t("Something went wrong!"))
+      render_error(t("something_went_wrong"))
     end
   end
 

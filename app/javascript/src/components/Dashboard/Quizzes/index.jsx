@@ -15,10 +15,12 @@ import { useQuizFilters } from "hooks/useQuizFilters";
 import { useQuizTableData } from "hooks/useQuizTableData";
 import { Filter } from "neetoicons";
 import { Button, Dropdown } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { filterNonNullAndEmpty } from "utils";
 import { buildUrl } from "utils/url";
+import withTitle from "utils/withTitle";
 
 import BulkActions from "./BulkActions";
 import FilterChips from "./FilterChips";
@@ -46,6 +48,7 @@ const Quizzes = () => {
 
   const history = useHistory();
   const clearQueryClient = useClearQueryClient();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setTablePage(safePage);
@@ -64,7 +67,7 @@ const Quizzes = () => {
 
   const { Menu, MenuItem } = Dropdown;
 
-  const { data: { data: { quizzes = [], meta = [] } = {}, isLoading } = {} } =
+  const { data: { data: { quizzes = [], meta = [] } = {} } = {}, isLoading } =
     useQuizzesFetch({
       page: tablePage,
       per_page: perPage,
@@ -140,38 +143,45 @@ const Quizzes = () => {
   return (
     <Container>
       <Header
-        title="All Quizzes"
+        title={t("quizzes.all")}
         actionBlock={
           <Button
             icon="ri-add-line"
-            label="Add new quiz"
+            label={t("quizzes.add")}
             size="small"
             onClick={() => setShowNewQuizPane(true)}
           />
         }
         searchProps={{
           value: searchTerm,
-          placeholder: "Search quizzes",
+          placeholder: t("placeholders.quizSearch"),
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
       />
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row items-center space-x-4">
-            <SubHeaderText meta={meta} selectedQuizSlugs={selectedQuizSlugs} />
+            <SubHeaderText
+              meta={meta}
+              plural={t("labels.quizzes")}
+              selectedItems={selectedQuizSlugs}
+              singular={t("labels.quiz")}
+            />
             <BulkActions
-              Menu={Menu}
-              MenuItem={MenuItem}
-              handlePublishToggle={handlePublishToggle}
-              selectedQuizSlugs={selectedQuizSlugs}
-              setSelectedQuizSlugs={setSelectedQuizSlugs}
-              setShowDeleteAlert={setShowDeleteAlert}
+              {...{
+                Menu,
+                MenuItem,
+                handlePublishToggle,
+                selectedQuizSlugs,
+                setSelectedQuizSlugs,
+                setShowDeleteAlert,
+              }}
             />
           </div>
         }
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
-            <TableColumnControls setSelectedQuizSlugs={setSelectedQuizSlugs} />
+            <TableColumnControls />
             <Button
               icon={Filter}
               style="text"
@@ -180,9 +190,7 @@ const Quizzes = () => {
           </div>
         }
       />
-      <SubHeader
-        leftActionBlock={<FilterChips category={category} status={status} />}
-      />
+      <SubHeader leftActionBlock={<FilterChips {...{ category, status }} />} />
       <TableContainer
         {...{
           quizzesData,
@@ -212,16 +220,17 @@ const Quizzes = () => {
         }}
       />
       <QuizAlerts
-        handleAlertSubmit={handleAlertSubmit}
-        quizzesApi={quizzesApi}
-        selectedQuizSlugs={selectedQuizSlugs}
-        setShowDeleteAlert={setShowDeleteAlert}
-        setShowDiscardAlert={setShowDiscardAlert}
-        showDeleteAlert={showDeleteAlert}
-        showDiscardAlert={showDiscardAlert}
+        {...{
+          handleAlertSubmit,
+          selectedQuizSlugs,
+          setShowDeleteAlert,
+          setShowDiscardAlert,
+          showDeleteAlert,
+          showDiscardAlert,
+        }}
       />
     </Container>
   );
 };
 
-export default Quizzes;
+export default withTitle(Quizzes, "Quizzes");

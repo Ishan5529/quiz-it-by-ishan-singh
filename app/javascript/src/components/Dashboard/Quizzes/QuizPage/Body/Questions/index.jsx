@@ -3,10 +3,12 @@ import { QUERY_KEYS } from "constants/query";
 import React, { useState, useEffect } from "react";
 
 import quizzesApi from "apis/quizzes";
+import { PageNotFound } from "components/commons";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuestionsFetch } from "hooks/reactQuery/useQuestionsApi";
 import { useParams, useHistory, Switch, Route } from "react-router-dom";
 import { routes } from "routes";
+import withTitle from "utils/withTitle";
 
 import Builder from "./Builder";
 import Display from "./Display";
@@ -36,7 +38,11 @@ const Questions = () => {
     useQuestionsFetch(slug);
 
   const handleQuestionAddClick = () => {
-    history.push(`/dashboard/quizzes/${slug}/edit/add-question`);
+    const link = routes.dashboard.quizzes.edit.addQuestion.replace(
+      ":slug",
+      slug
+    );
+    history.push(link);
   };
 
   return (
@@ -64,8 +70,9 @@ const Questions = () => {
           />
         )}
       />
+      <Route component={PageNotFound} path={routes.pageNotFound} />
     </Switch>
   );
 };
 
-export default Questions;
+export default withTitle(Questions, "Quiz Editor");

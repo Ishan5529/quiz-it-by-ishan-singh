@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { routes } from "routes";
 import { getQuizTableRowData } from "utils/getQuizTableRowData";
 
 export const useQuizTableData = ({
@@ -13,11 +14,12 @@ export const useQuizTableData = ({
 }) => {
   const [quizzesData, setQuizzesData] = useState([]);
 
-  useEffect(() => {
-    const handleTitleClick = slug => () => {
-      history.push(`/dashboard/quizzes/${slug}/edit`);
-    };
+  const handleTitleClick = slug => () => {
+    const link = routes.dashboard.quizzes.edit.index.replace(":slug", slug);
+    history.push(link);
+  };
 
+  useEffect(() => {
     setQuizzesData(
       getQuizTableRowData({
         quizzes,

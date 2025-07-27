@@ -6,6 +6,8 @@ import { useAuthDispatch } from "contexts/auth";
 import { useUserState } from "contexts/user";
 import { LeftArrow } from "neetoicons";
 import { NeetoQuiz } from "neetoicons/logos";
+import { Typography } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useLocation, Link } from "react-router-dom";
 import { routes } from "src/routes";
 
@@ -15,9 +17,13 @@ import SideNavLinks from "./SideNavLinks";
 const SideBar = () => {
   const authDispatch = useAuthDispatch();
   const { user } = useUserState();
+
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+
   const { pathname, search } = useLocation();
+
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -36,12 +42,10 @@ const SideBar = () => {
       onMouseLeave={() => setIsSidebarExpanded(false)}
     >
       <div
-        className="flex flex-col items-center text-white"
-        style={{
-          width: isSidebarExpanded ? "320px" : "80px",
-          justifyItems: isSidebarExpanded ? "flex-start" : "center",
-          transition: "all 0.3s ease-in-out",
-        }}
+        className={classNames(
+          "flex flex-col items-center text-white transition-all duration-300",
+          isSidebarExpanded ? "w-[320px] justify-start" : "w-20 justify-center"
+        )}
       >
         <div
           className={classNames(
@@ -55,9 +59,12 @@ const SideBar = () => {
         >
           <NeetoQuiz />
           {isSidebarExpanded && (
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-4xl font-bold">
+            <Typography
+              className="overflow-hidden text-ellipsis whitespace-nowrap text-4xl font-bold"
+              style="body2"
+            >
               uiz It
-            </p>
+            </Typography>
           )}
         </div>
         <SideNavLinks
@@ -71,19 +78,22 @@ const SideBar = () => {
         />
       </div>
       <div
-        className="absolute bottom-0 left-0 z-20 mt-2 overflow-hidden bg-transparent pt-1 shadow-xl"
-        style={{
-          width: isSidebarExpanded ? "320px" : "80px",
-          transition:
-            "width 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s cubic-bezier(0.4,0,0.2,1)",
-        }}
+        className={classNames(
+          "absolute bottom-0 left-0 z-20 mt-2 overflow-hidden bg-transparent pt-1 shadow-xl transition-all duration-300",
+          isSidebarExpanded ? "w-[320px]" : "w-20"
+        )}
       >
         <div className="flex flex-row items-center space-x-2 border-b-2 p-3">
           <Profile name={`${user.first_name} ${user.last_name}`} />
           {isSidebarExpanded && (
             <div className="flex flex-col">
-              <p className="text-lg font-bold text-gray-800">{`${user.first_name} ${user.last_name}`}</p>
-              <p className="text-gray-800">{user.email}</p>
+              <Typography
+                className="text-lg font-bold text-gray-800"
+                style="body2"
+              >{`${user.first_name} ${user.last_name}`}</Typography>
+              <Typography className="text-gray-800" style="body2">
+                {user.email}
+              </Typography>
             </div>
           )}
         </div>
@@ -93,7 +103,7 @@ const SideBar = () => {
             onClick={handleLogout}
           >
             <LeftArrow className="mr-2 inline" />
-            Log out
+            {t("authentication.logout")}
           </Link>
         )}
       </div>

@@ -3,19 +3,25 @@ import React from "react";
 import questionsApi from "apis/questions";
 import { MenuHorizontal } from "neetoicons";
 import { Typography, Radio, Dropdown } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { routes } from "routes";
 
 const Question = ({ question, slug, setIsDirty }) => {
   const history = useHistory();
+
+  const { t } = useTranslation();
 
   const options = question.options.filter(option => option !== null);
 
   const { Menu, MenuItem, Divider } = Dropdown;
 
   const handleEdit = () => {
-    history.push(
-      `/dashboard/quizzes/${slug}/edit/edit-question/${question.id}`
-    );
+    const link = routes.dashboard.quizzes.edit.editQuestion
+      .replace(":slug", slug)
+      .replace(":id", question.id);
+
+    history.push(link);
   };
 
   const handleClone = async () => {
@@ -36,11 +42,15 @@ const Question = ({ question, slug, setIsDirty }) => {
         </Typography>
         <Dropdown buttonStyle="text" icon={MenuHorizontal}>
           <Menu>
-            <MenuItem.Button onClick={handleEdit}>Edit</MenuItem.Button>
-            <MenuItem.Button onClick={handleClone}>Clone</MenuItem.Button>
+            <MenuItem.Button onClick={handleEdit}>
+              {t("labels.edit")}
+            </MenuItem.Button>
+            <MenuItem.Button onClick={handleClone}>
+              {t("labels.clone")}
+            </MenuItem.Button>
             <Divider />
             <MenuItem.Button style="danger" onClick={handleDelete}>
-              Delete
+              {t("labels.delete")}
             </MenuItem.Button>
           </Menu>
         </Dropdown>

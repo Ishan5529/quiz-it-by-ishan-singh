@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import { setAuthHeaders, registerIntercepts } from "apis/axios";
+import "common/i18n";
 import { initializeLogger } from "common/logger";
+import { PageNotFound } from "components/commons";
 import PrivateRoute from "components/commons/PrivateRoute";
 import Public from "components/Public";
 import { AUTH_ROUTES, PRIVATE_ROUTES } from "components/routeConstants";
@@ -19,6 +21,7 @@ import {
   clearLocalStorageCredentials,
   getFromLocalStorage,
 } from "utils/storage";
+import withTitle from "utils/withTitle";
 
 import Quizzes from "./Public/Quizzes";
 
@@ -79,6 +82,7 @@ const Main = props => {
               redirectRoute={routes.public.index}
             />
           ))}
+          <Route component={PageNotFound} path={routes.pageNotFound} />
         </Switch>
       </BrowserRouter>
     </QueryClientProvider>
@@ -89,4 +93,4 @@ Main.propTypes = {
   user: PropTypes.object,
 };
 
-export default Main;
+export default withTitle(Main);

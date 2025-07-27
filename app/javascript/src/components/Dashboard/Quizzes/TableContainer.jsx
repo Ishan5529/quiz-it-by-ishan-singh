@@ -3,6 +3,7 @@ import React from "react";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
+import withT from "utils/withT";
 
 const TableContainer = ({
   quizzesData,
@@ -13,6 +14,7 @@ const TableContainer = ({
   tablePage,
   handlePageChange,
   setShowNewQuizPane,
+  t,
 }) =>
   quizzesData.length ? (
     <Table
@@ -30,10 +32,10 @@ const TableContainer = ({
     <EmptyState
       image={<EmptyQuizzesListImage />}
       primaryAction={() => setShowNewQuizPane(true)}
-      primaryActionLabel="Add new quiz"
-      subtitle="Create a quiz to get started."
-      title="Looks like you don't have any quizzes!"
+      primaryActionLabel={t("quizzes.add")}
+      subtitle={t("quizzes.empty.quizzesDescription")}
+      title={t("quizzes.empty.quizzesTitle")}
     />
   );
 
-export default TableContainer;
+export default withT(TableContainer);

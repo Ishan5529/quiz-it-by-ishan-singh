@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import * as yup from "yup";
 
 export const QUIZZES_FORM_INITIAL_FORM_VALUES = {
@@ -5,7 +6,7 @@ export const QUIZZES_FORM_INITIAL_FORM_VALUES = {
 };
 
 export const QUIZZES_FORM_VALIDATION_SCHEMA = yup.object().shape({
-  title: yup.string().required("Title is required"),
+  title: yup.string().required(t("yup.string.title")),
 });
 
 export const QUIZZES_FILTER_FORM_VALIDATION_SCHEMA = yup.object().shape({
@@ -14,33 +15,35 @@ export const QUIZZES_FILTER_FORM_VALIDATION_SCHEMA = yup.object().shape({
   category: yup.object().nullable(),
 });
 
+export const categories = ["General", "Science", "Math", "History", "Finance"];
+
 export const QUIZZES_TABLE_COLUMN_DATA = [
   {
-    title: "Title",
+    title: t("labels.title"),
     dataIndex: "title",
     key: "title",
     width: "auto",
   },
   {
-    title: "Submission Count",
+    title: t("labels.submissionCount"),
     dataIndex: "submission_count",
     key: "submission_count",
     width: "19%",
   },
   {
-    title: "Created On",
+    title: t("labels.createdOn"),
     dataIndex: "created_at",
     key: "created_at",
     width: "14%",
   },
   {
-    title: "Status",
+    title: t("labels.status"),
     dataIndex: "status",
     key: "status",
     width: "14%",
   },
   {
-    title: "Category",
+    title: t("labels.category"),
     dataIndex: "category",
     key: "category",
     width: "19%",
@@ -61,79 +64,140 @@ export const QUESTIONS_FORM_INITIAL_FORM_VALUES = {
 };
 
 export const QUESTIONS_FORM_VALIDATION_SCHEMA = yup.object().shape({
-  title: yup.string().required("Title is required"),
+  title: yup.string().required(t("yup.string.title")),
   options: yup
     .array()
     .of(
       yup
         .string()
-        .required("Option cannot be empty")
+        .required(t("yup.string.option"))
         .test(
           "not-empty-or-spaces",
-          "Option cannot be empty",
+          t("yup.string.option"),
           value => !!value && value.trim().length > 0
         )
     )
-    .min(2, "At least 2 options required")
-    .max(6, "Maximum 6 options allowed"),
+    .min(2, t("yup.string.minOptions", { count: 2 }))
+    .max(6, t("yup.string.maxOptions", { count: 6 })),
   correctOption: yup
     .number()
-    .typeError("Select the correct option")
-    .required("Select the correct option")
-    .min(0, "Select the correct option")
+    .typeError(t("yup.string.correctOption"))
+    .required(t("yup.string.correctOption"))
+    .min(0, t("yup.string.correctOption"))
     .when("options", (options, schema) =>
-      schema.max(options.length - 1, "Select the correct option")
+      schema.max(options.length - 1, t("yup.string.correctOption"))
     )
     .nullable(),
 });
 
 export const SUBMISSIONS_TABLE_COLUMN_DATA = [
   {
-    title: "Name",
+    title: t("labels.name"),
     dataIndex: "name",
     key: "name",
     width: "auto",
   },
   {
-    title: "Email",
+    title: t("labels.email"),
     dataIndex: "email",
     key: "email",
     width: "20%",
   },
   {
-    title: "Submmission Date",
+    title: t("labels.submissionDate"),
     dataIndex: "submission_date",
     key: "submission_date",
     width: "13%",
   },
   {
-    title: "Correct Answers",
+    title: t("labels.correctAnswers"),
     dataIndex: "correct_answers",
     key: "correct_answers",
     width: "10%",
   },
   {
-    title: "Wrong Answers",
+    title: t("labels.wrongAnswers"),
     dataIndex: "wrong_answers",
     key: "wrong_answers",
     width: "10%",
   },
   {
-    title: "Unanswered",
+    title: t("labels.unanswered"),
     dataIndex: "unanswered",
     key: "unanswered",
     width: "10%",
   },
   {
-    title: "Questions",
+    title: t("labels.questions"),
     dataIndex: "questions",
     key: "questions",
     width: "10%",
   },
   {
-    title: "Status",
+    title: t("labels.status"),
     dataIndex: "status",
     key: "status",
     width: "7%",
   },
 ];
+
+export const REPORT_PDF_NAME = "quiz_submission_report.pdf";
+
+export const STATUS_TAGS = {
+  draft: {
+    condition: quiz => quiz.isDraft,
+    label: t("labels.draft"),
+    style: "warning",
+  },
+  published: {
+    condition: quiz => quiz.isPublished,
+    label: t("labels.published"),
+    style: "info",
+  },
+};
+
+export const getQuizMenuItems =
+  ({
+    handlePublishToggle,
+    handleQuizClone,
+    setShowDiscardAlert,
+    setShowDeleteAlert,
+    setSelectedQuizSlugs,
+  }) =>
+  quiz =>
+    [
+      {
+        label: quiz.isPublished ? t("labels.unpublish") : t("labels.publish"),
+        onClick: () => {
+          handlePublishToggle({
+            slugs: quiz.slug,
+            publishedStatus: quiz.isPublished,
+          });
+        },
+      },
+      {
+        label: t("labels.clone"),
+        onClick: () => handleQuizClone(quiz.slug),
+      },
+      { type: "divider" },
+      ...(quiz.isDraft
+        ? [
+            {
+              label: t("labels.discardDraft"),
+              style: "danger",
+              onClick: () => {
+                setShowDiscardAlert(true);
+                setSelectedQuizSlugs([quiz.slug]);
+              },
+            },
+          ]
+        : []),
+      {
+        label: t("labels.delete"),
+        style: "danger",
+        onClick: () => {
+          setShowDeleteAlert(true);
+          setSelectedQuizSlugs([quiz.slug]);
+        },
+      },
+    ];

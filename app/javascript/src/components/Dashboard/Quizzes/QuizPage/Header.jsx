@@ -5,8 +5,10 @@ import classNames from "classnames";
 import { InlineInput } from "components/commons";
 import { LeftArrow, Link } from "neetoicons";
 import { Typography } from "neetoui";
+import { useTranslation } from "react-i18next";
 import { NavLink, useLocation, useHistory } from "react-router-dom";
-import { showToastr, generateDraftInfoMessage } from "utils";
+import { routes } from "routes";
+import { showToastr, generateDraftInfoMessage, getQuizAttemptUrl } from "utils";
 
 const Header = ({
   title,
@@ -21,22 +23,28 @@ const Header = ({
   const { pathname } = useLocation();
   const history = useHistory();
 
+  const { t } = useTranslation();
+
   const handleBackClick = () => {
-    history.push(`/dashboard/quizzes`);
+    const link = routes.dashboard.quizzes.index;
+    history.push(link);
   };
 
   const handleLinkCopy = async () => {
-    const link = `http://localhost:3000/public/quizzes/${slug}/registration`;
+    const link = getQuizAttemptUrl(slug);
     await navigator.clipboard.writeText(link);
     showToastr({
-      message: "Link copied to clipboard",
+      message: t("misc.linkCopied"),
       type: "info",
       autoClose: 2000,
     });
   };
 
   const handlePreviewClick = async () => {
-    const link = `/public/quizzes/${slug}/registration?isPreview=true`;
+    const link = `${routes.public.quizzes.registration.replace(
+      ":slug",
+      slug
+    )}?isPreview=true`;
     history.push(link);
   };
 
@@ -49,7 +57,7 @@ const Header = ({
         <InlineInput
           allowCancel
           originalValue={originalTitle}
-          placeholder="Enter quiz title"
+          placeholder={t("placeholders.quizTitle")}
           value={title}
           onBlur={handleInputBlur}
           onChange={handleTitleUpdate}
@@ -58,7 +66,7 @@ const Header = ({
       <div className="pointer-events-none absolute left-0 right-0 flex flex-1 justify-center">
         <div className="pointer-events-auto flex flex-row space-x-4">
           <NavLink
-            to={`/dashboard/quizzes/${slug}/edit`}
+            to={routes.dashboard.quizzes.edit.index.replace(":slug", slug)}
             className={classNames(
               "text-base font-semibold hover:text-blue-300",
               {
@@ -67,10 +75,10 @@ const Header = ({
               }
             )}
           >
-            Questions
+            {t("quizzes.questions.plural")}
           </NavLink>
           <NavLink
-            to={`/dashboard/quizzes/${slug}/submissions`}
+            to={routes.dashboard.quizzes.submissions.replace(":slug", slug)}
             className={classNames(
               "text-base font-semibold hover:text-blue-300",
               {
@@ -79,7 +87,7 @@ const Header = ({
               }
             )}
           >
-            Submissions
+            {t("quizzes.submissions")}
           </NavLink>
         </div>
       </div>
@@ -96,7 +104,7 @@ const Header = ({
               {
                 isActive: true,
                 key: "Publish",
-                label: "Publish",
+                label: t("labels.publish"),
                 onClick: handlePublish,
               },
               {

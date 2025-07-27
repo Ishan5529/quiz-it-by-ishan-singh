@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { InlineInput } from "components/commons";
 import { Delete } from "neetoicons";
 import { Button } from "neetoui";
+import withT from "utils/withT";
 
 const OptionField = ({
   index,
@@ -12,6 +13,7 @@ const OptionField = ({
   handleOptionChange,
   isDeleteDisabled = false,
   minimumOptions,
+  t,
 }) => (
   <div className="flex w-full flex-row items-center space-x-3">
     <InlineInput
@@ -29,8 +31,8 @@ const OptionField = ({
       })}
       tooltipProps={{
         content: isDeleteDisabled
-          ? `Minimum ${minimumOptions} options required`
-          : "Delete option",
+          ? t("tooltip.minOptions", { count: minimumOptions })
+          : t("tooltip.deleteOption"),
         position: "top",
       }}
       onClick={handleDelete}
@@ -40,4 +42,4 @@ const OptionField = ({
   </div>
 );
 
-export default OptionField;
+export default withT(OptionField);

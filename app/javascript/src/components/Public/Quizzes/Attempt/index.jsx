@@ -5,12 +5,19 @@ import { usePublicQuizzesShow } from "hooks/reactQuery/usePublicQuizzesApi";
 import { isEmpty } from "ramda";
 import attemptsApi from "apis/attempts";
 import useQueryParams from "hooks/useQueryParams";
+import { useTranslation } from "react-i18next";
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import { routes } from "routes";
+import withTitle from "utils/withTitle";
 
 const Attempt = () => {
   const { slug, attemptId } = useParams();
   const { isPreview } = useQueryParams();
+
   const [attemptData, setAttemptData] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
+
+  const { t } = useTranslation();
   const history = useHistory();
 
   const { data: { data: quiz = {} } = {}, isLoading } =
@@ -30,11 +37,11 @@ const Attempt = () => {
   }, [quiz, isLoading]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageLoader />;
   }
 
   if (isEmpty(quiz?.questions)) {
-    return <div>No questions found for this quiz.</div>;
+    return <div>{t("quizzes.empty.questions")}</div>;
   }
 
   const totalQuestions = quiz.questions.length;
@@ -65,14 +72,13 @@ const Attempt = () => {
     try {
       await attemptsApi.update(slug, attemptId, payload, isPreview);
       if (isComplete) {
-        history.push(
-          `/public/quizzes/${slug}/result/${attemptId}${
-            isPreview ? "?isPreview=true" : ""
-          }`
-        );
+        const link = routes.public.quizzes.result
+          .replace(":slug", slug)
+          .replace(":attemptId", attemptId);
+        history.push(`${link}${isPreview ? "?isPreview=true" : ""}`);
       }
     } catch (error) {
-      logger.error("Error submitting attempt:", error);
+      logger.error(error);
     }
   };
 
@@ -107,4 +113,4 @@ const Attempt = () => {
   );
 };
 
-export default Attempt;
+export default withTitle(Attempt, "Quiz Session");

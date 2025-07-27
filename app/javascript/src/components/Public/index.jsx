@@ -13,6 +13,8 @@ import { useAuthState } from "contexts/auth";
 import { filterNonNullAndEmpty } from "utils";
 import { buildUrl } from "utils/url";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import withTitle from "utils/withTitle";
 
 import Filter from "./Filter";
 import QuizCard from "./QuizCard";
@@ -21,6 +23,8 @@ const Public = () => {
   const { searchTerm: querySearchTerm = "" } = useQueryParams();
 
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
+
+  const { t } = useTranslation();
 
   const params = {
     searchTerm,
@@ -48,7 +52,9 @@ const Public = () => {
   const buttonDestination = isAdmin
     ? routes.dashboard.quizzes.index
     : routes.auth.login;
-  const buttonLabel = isAdmin ? "Go to dashboard" : "Login as admin";
+  const buttonLabel = isAdmin
+    ? t("labels.goToDashboard")
+    : t("labels.loginAsAdmin");
 
   if (isLoading) {
     return (
@@ -61,7 +67,7 @@ const Public = () => {
   return (
     <Container>
       <Header
-        title="BigBinary Academy"
+        title={t("labels.organization")}
         actionBlock={
           <Button label={buttonLabel} to={buttonDestination} type="primary" />
         }
@@ -80,4 +86,4 @@ const Public = () => {
   );
 };
 
-export default Public;
+export default withTitle(Public, "Public");

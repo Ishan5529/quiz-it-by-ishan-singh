@@ -4,7 +4,7 @@ class ReportsJob
   include Sidekiq::Worker
 
   def perform(user_id, quiz_slug, report_path)
-    ActionCable.server.broadcast(user_id, { message: "Finding quiz submissions.", progress: 25 })
+    ActionCable.server.broadcast(user_id, { message: I18n.t("report.render"), progress: 25 })
 
     quiz = Quiz.find_by(slug: quiz_slug)
     return unless quiz
@@ -12,7 +12,7 @@ class ReportsJob
     @published_quiz = PublishedQuiz.find_by(quiz_id: quiz.id)
     return unless @published_quiz
 
-    ActionCable.server.broadcast(user_id, { message: "Generating report.", progress: 50 })
+    ActionCable.server.broadcast(user_id, { message: I18n.t("report.generate"), progress: 50 })
 
     @attempts = Attempt.belonging_to(quiz.id).order(submission_time: :desc)
     html_report = ApplicationController.render(
@@ -24,7 +24,7 @@ class ReportsJob
       layout: "pdf"
     )
 
-    ActionCable.server.broadcast(user_id, { message: "Uploading the generated report", progress: 75 })
+    ActionCable.server.broadcast(user_id, { message: I18n.t("report.upload"), progress: 75 })
 
     pdf_report = WickedPdf.new.pdf_from_string html_report
     if quiz.report.attached?
@@ -37,6 +37,6 @@ class ReportsJob
 
     ActionCable.server.broadcast(
       user_id,
-      { message: "Submission report attached and ready to download!", progress: 100 })
+      { message: I18n.t("report.attach"), progress: 100 })
   end
 end

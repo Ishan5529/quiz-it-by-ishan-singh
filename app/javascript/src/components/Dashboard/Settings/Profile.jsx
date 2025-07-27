@@ -7,6 +7,7 @@ import { useUserState, useUserDispatch } from "contexts/user";
 import { Form, Formik } from "formik";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
+import { useTranslation } from "react-i18next";
 
 import ConfirmPasswordFormModal from "./ConfirmPasswordFormModal";
 import { PROFILE_FORM_VALIDATION_SCHEMA } from "./constants";
@@ -16,6 +17,8 @@ import { buildProfileFormInitialValues } from "./utils";
 const Profile = () => {
   const formikPasswordContext = useFormikPasswordConfirmationModal();
   const { user } = useUserState();
+
+  const { t } = useTranslation();
 
   const userDispatch = useUserDispatch();
   const initialFormValues = useMemo(
@@ -51,7 +54,7 @@ const Profile = () => {
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title="My profile"
+        title={t("labels.myProfile")}
       />
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
         <Formik
@@ -63,13 +66,13 @@ const Profile = () => {
         >
           {({ dirty, isSubmitting, validateForm }) => (
             <Form className="neeto-ui-rounded-lg neeto-ui-bg-white neeto-ui-shadow-s w-full space-y-6 border p-8">
-              <Input required label="First Name" name="firstName" />
-              <Input required label="Last name" name="lastName" />
+              <Input required label={t("labels.firstName")} name="firstName" />
+              <Input required label={t("labels.lastName")} name="lastName" />
               <Button
                 fullWidth
                 className="h-8"
                 disabled={!dirty || isSubmitting}
-                label="Update"
+                label={t("labels.update")}
                 loading={isSubmitting}
                 size="small"
                 type="submit"
@@ -79,7 +82,7 @@ const Profile = () => {
           )}
         </Formik>
         <ConfirmPasswordFormModal
-          header="Please enter your password to continue."
+          header={t("alert.passwordConfirmation")}
           isOpen={formikPasswordContext.showPasswordModal}
           onClose={formikPasswordContext.closeModal}
           onSubmit={formikPasswordContext.handlePasswordConfirmation}

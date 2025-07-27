@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Column } from "neetoicons";
 import { Dropdown, Checkbox } from "neetoui";
 import { useQuizTableActiveColumnsStore } from "stores/useQuizTableActiveColumnsStore";
+import withT from "utils/withT";
 
-const TableColumnControls = ({ setSelectedQuizSlugs }) => {
+const TableColumnControls = ({ t }) => {
   const {
     showSubmissionCount,
     showCreatedOn,
@@ -16,43 +17,69 @@ const TableColumnControls = ({ setSelectedQuizSlugs }) => {
     setShowCategory,
   } = useQuizTableActiveColumnsStore();
 
+  const checkboxConfigs = useMemo(
+    () => [
+      {
+        checked: true,
+        disabled: true,
+        label: t("labels.title"),
+        onClick: undefined,
+      },
+      {
+        checked: showSubmissionCount,
+        label: t("labels.submissionCount"),
+        onClick: () => setShowSubmissionCount(!showSubmissionCount),
+      },
+      {
+        checked: showCreatedOn,
+        label: t("labels.createdOn"),
+        onClick: () => setShowCreatedOn(!showCreatedOn),
+      },
+      {
+        checked: showStatus,
+        label: t("labels.status"),
+        onClick: () => setShowStatus(!showStatus),
+      },
+      {
+        checked: showCategory,
+        label: t("labels.category"),
+        onClick: () => setShowCategory(!showCategory),
+      },
+    ],
+    [
+      t,
+      showSubmissionCount,
+      showCreatedOn,
+      showStatus,
+      showCategory,
+      setShowSubmissionCount,
+      setShowCreatedOn,
+      setShowStatus,
+      setShowCategory,
+    ]
+  );
+
   return (
     <Dropdown
       buttonStyle="text"
       closeOnSelect={false}
       icon={Column}
       strategy="fixed"
-      onClick={() => setSelectedQuizSlugs([])}
     >
       <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-        <Checkbox checked disabled className="w-full" label="Title" />
-        <Checkbox
-          checked={showSubmissionCount}
-          className="w-full"
-          label="Submissions Count"
-          onChange={e => setShowSubmissionCount(e.target.checked)}
-        />
-        <Checkbox
-          checked={showCreatedOn}
-          className="w-full"
-          label="Created On"
-          onChange={e => setShowCreatedOn(e.target.checked)}
-        />
-        <Checkbox
-          checked={showStatus}
-          className="w-full"
-          label="Status"
-          onChange={e => setShowStatus(e.target.checked)}
-        />
-        <Checkbox
-          checked={showCategory}
-          className="w-full"
-          label="Category"
-          onChange={e => setShowCategory(e.target.checked)}
-        />
+        {checkboxConfigs.map(config => (
+          <Checkbox
+            checked={config.checked}
+            className="w-full"
+            disabled={config.disabled}
+            key={config.label}
+            label={config.label}
+            onClick={config.onClick}
+          />
+        ))}
       </div>
     </Dropdown>
   );
 };
 
-export default TableColumnControls;
+export default withT(TableColumnControls);

@@ -1,3 +1,5 @@
+import { t } from "i18next";
+
 export const subscribeToReportDownloadChannel = ({
   userId = "",
   consumer,
@@ -12,7 +14,7 @@ export const subscribeToReportDownloadChannel = ({
     },
     {
       connected() {
-        setMessage("Connected the Cables...");
+        setMessage(t("misc.reportDownloadChannelConnected"));
         generatePdf();
       },
       received(data) {

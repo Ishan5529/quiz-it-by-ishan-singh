@@ -1,5 +1,9 @@
 import React from "react";
 
+import {
+  STATUS_TAGS,
+  getQuizMenuItems,
+} from "components/Dashboard/Quizzes/constants";
 import { MenuHorizontal } from "neetoicons";
 import { Tag, Dropdown } from "neetoui";
 import { formatTableDate } from "utils";
@@ -12,8 +16,16 @@ export const getQuizTableRowData = ({
   setShowDiscardAlert,
   setShowDeleteAlert,
   setSelectedQuizSlugs,
-}) =>
-  quizzes.map(quiz => ({
+}) => {
+  const getMenuItems = getQuizMenuItems({
+    handlePublishToggle,
+    handleQuizClone,
+    setShowDiscardAlert,
+    setShowDeleteAlert,
+    setSelectedQuizSlugs,
+  });
+
+  return quizzes.map(quiz => ({
     ...quiz,
     created_at: formatTableDate(quiz.created_at),
     category: quiz.category.name,
@@ -25,68 +37,40 @@ export const getQuizTableRowData = ({
     ),
     status: (
       <div className="flex flex-row items-center space-x-2">
-        {quiz.isDraft && (
-          <Tag
-            disabled
-            label="Draft"
-            size="large"
-            style="warning"
-            type="outline"
-          />
-        )}
-        {quiz.isPublished && (
-          <Tag
-            disabled
-            label="Published"
-            size="large"
-            style="info"
-            type="outline"
-          />
-        )}
+        {Object.values(STATUS_TAGS)
+          .filter(tag => tag.condition(quiz))
+          .map((tag, index) => (
+            <Tag
+              disabled
+              key={index}
+              label={tag.label}
+              size="large"
+              style={tag.style}
+              type="outline"
+            />
+          ))}
       </div>
     ),
     actions: (
       <div className="flex w-full items-center justify-between">
         <Dropdown buttonStyle="text" icon={MenuHorizontal} strategy="fixed">
           <Dropdown.Menu>
-            <Dropdown.MenuItem.Button
-              onClick={() => {
-                handlePublishToggle({
-                  slugs: quiz.slug,
-                  publishedStatus: quiz.isPublished,
-                });
-              }}
-            >
-              {quiz.isPublished ? "Unpublish" : "Publish"}
-            </Dropdown.MenuItem.Button>
-            <Dropdown.MenuItem.Button
-              onClick={() => handleQuizClone(quiz.slug)}
-            >
-              Clone
-            </Dropdown.MenuItem.Button>
-            <Dropdown.Divider />
-            {quiz.isDraft && (
-              <Dropdown.MenuItem.Button
-                style="danger"
-                onClick={() => {
-                  setShowDiscardAlert(true);
-                  setSelectedQuizSlugs([quiz.slug]);
-                }}
-              >
-                Discard draft
-              </Dropdown.MenuItem.Button>
+            {getMenuItems(quiz).map((item, index) =>
+              item.type === "divider" ? (
+                <Dropdown.Divider key={`divider-${index}`} />
+              ) : (
+                <Dropdown.MenuItem.Button
+                  key={index}
+                  style={item.style}
+                  onClick={item.onClick}
+                >
+                  {item.label}
+                </Dropdown.MenuItem.Button>
+              )
             )}
-            <Dropdown.MenuItem.Button
-              style="danger"
-              onClick={() => {
-                setShowDeleteAlert(true);
-                setSelectedQuizSlugs([quiz.slug]);
-              }}
-            >
-              Delete
-            </Dropdown.MenuItem.Button>
           </Dropdown.Menu>
         </Dropdown>
       </div>
     ),
   }));
+};

@@ -1,5 +1,7 @@
 import React from "react";
 
+import withT from "utils/withT";
+
 import { Button, Typography } from "neetoui";
 import OptionField from "./OptionField";
 
@@ -14,16 +16,18 @@ const Question = ({
   onSubmit,
   isFirst,
   isLast,
+  t,
 }) => {
   const title = question?.title || "Quiz Question";
   const questionId = question?.id || "default-question-id";
   const options = question?.options || [];
+
   return (
     <div className="flex h-3/5 w-[75%] flex-col items-center">
       <div className="flex h-full w-full flex-col space-y-8 p-4">
         <div>
           <Typography style="h4">
-            Question {questionNumber} of {totalQuestions}
+            {t("labels.question")} {questionNumber} of {totalQuestions}
           </Typography>
           <Typography style="h2">{title}</Typography>
         </div>
@@ -39,13 +43,17 @@ const Question = ({
         </div>
         <div className="mt-4 flex flex-row space-x-4">
           {!isFirst && (
-            <Button label="Previous" style="secondary" onClick={onPrevious} />
+            <Button
+              label={t("labels.previous")}
+              style="secondary"
+              onClick={onPrevious}
+            />
           )}
           {!isLast ? (
-            <Button label="Next" style="primary" onClick={onNext} />
+            <Button label={t("labels.next")} style="primary" onClick={onNext} />
           ) : (
             <Button
-              label="Save and submit the quiz"
+              label={t("labels.saveAndSubmit")}
               style="primary"
               onClick={onSubmit}
             />
@@ -56,4 +64,4 @@ const Question = ({
   );
 };
 
-export default Question;
+export default withT(Question);

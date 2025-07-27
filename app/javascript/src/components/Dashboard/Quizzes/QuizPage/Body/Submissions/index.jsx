@@ -10,25 +10,26 @@ import attemptsApi from "apis/attempts";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
+import SubHeaderText from "components/Dashboard/Quizzes/SubHeaderText";
 import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Filter, Column, Download } from "neetoicons";
-import { Alert, Button, Tag, Dropdown, Checkbox, Typography } from "neetoui";
+import { Delete, Download } from "neetoicons";
+import { Button, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { routes } from "routes";
-import { useSubmissionTableActiveColumnsStore } from "stores/useSubmissionTableActiveColumnsStore";
-import {
-  formatTableDate,
-  getAlertTitle,
-  filterNonNullAndEmpty,
-  capitalize,
-} from "utils";
+import { formatTableDate, filterNonNullAndEmpty, capitalize } from "utils";
 import { buildUrl } from "utils/url";
+import withTitle from "utils/withTitle";
 
+import ColumnSelector from "./ColumnSelector";
+import DeleteAlert from "./DeleteAlert";
 import DownloadReport from "./DownloadReport";
+import FilterChips from "./FilterChips";
+import StatusFilter from "./StatusFilter";
 
 const Submissions = () => {
   const {
@@ -52,24 +53,9 @@ const Submissions = () => {
   const [status, setStatus] = useState(queryStatus);
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    showEmail,
-    showSubmissionDate,
-    showCorrectAnswers,
-    showWrongAnswers,
-    showUnanswered,
-    showQuestions,
-    showStatus,
-    setShowEmail,
-    setShowSubmissionDate,
-    setShowCorrectAnswers,
-    setShowWrongAnswers,
-    setShowUnanswered,
-    setShowQuestions,
-    setShowStatus,
-  } = useSubmissionTableActiveColumnsStore();
-
   const history = useHistory();
+
+  const { t } = useTranslation();
 
   const clearQueryClient = useClearQueryClient();
 
@@ -118,7 +104,10 @@ const Submissions = () => {
 
   useEffect(() => {
     const handleTitleClick = attemptId => () => {
-      history.push(`/public/quizzes/${slug}/result/${attemptId}`);
+      const link = routes.public.quizzes.result
+        .replace(":slug", slug)
+        .replace(":attemptId", attemptId);
+      history.push(link);
     };
 
     const updateRowData = () =>
@@ -154,42 +143,15 @@ const Submissions = () => {
     setAttemptsData(updateRowData());
   }, [attempts]);
 
-  const handleAlertSubmit = async action => {
-    await action();
+  const handleDelete = async () => {
+    await attemptsApi.destroy({
+      slug,
+      attemptIds: selectedAttemptIds,
+      quiet: true,
+    });
     clearQueryClient(QUERY_KEYS.SUBMISSIONS);
     setSelectedAttemptIds([]);
     setShowDeleteAlert(false);
-  };
-
-  const subHeaderText = () => {
-    if (!isEmpty(selectedAttemptIds)) {
-      return (
-        <Typography className="flex flex-row text-gray-400" style="h4">
-          <Typography className="mr-1 text-gray-600" style="h4">
-            {selectedAttemptIds.length}{" "}
-            {selectedAttemptIds.length === 1 ? "Submission" : "Submissions"}
-          </Typography>
-          {`selected of ${meta.total_count}`}
-        </Typography>
-      );
-    }
-
-    return (
-      <Typography className="text-gray-600" style="h4">
-        {meta.total_count}{" "}
-        {meta.total_count === 1 ? "Submission" : "Submissions"}
-      </Typography>
-    );
-  };
-
-  const determineStatus = action => {
-    if (!isEmpty(status)) return "";
-
-    if (action === "completed") {
-      return "incomplete";
-    }
-
-    return "completed";
   };
 
   const handleDownload = () => {
@@ -203,11 +165,11 @@ const Submissions = () => {
   return (
     <Container className="h-full">
       <Header
-        title="All submissions"
+        title={t("quizzes.allSubmissions")}
         searchProps={{
           value: searchTerm,
           className: "w-72",
-          placeholder: "Search names",
+          placeholder: t("placeholders.names"),
           onChange: ({ target: { value } }) => setSearchTerm(value),
         }}
       />
@@ -215,14 +177,19 @@ const Submissions = () => {
         leftActionBlock={
           <div className="flex flex-row items-center space-x-4">
             <Typography className="text-gray-600" style="h4">
-              {subHeaderText()}
+              <SubHeaderText
+                meta={meta}
+                plural={t("alert.submissions")}
+                selectedItems={selectedAttemptIds}
+                singular={t("alert.submission")}
+              />
             </Typography>
             {!isEmpty(selectedAttemptIds) && (
               <div className="flex flex-row items-center space-x-2">
                 <Button
                   disabled={!selectedAttemptIds.length}
                   icon={Delete}
-                  label="Delete"
+                  label={t("labels.delete")}
                   size="small"
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
@@ -234,120 +201,22 @@ const Submissions = () => {
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
             <Button icon={Download} style="text" onClick={handleDownload} />
-            <Dropdown
-              buttonStyle="text"
-              closeOnSelect={false}
-              icon={Column}
-              strategy="fixed"
-              onClick={() => setSelectedAttemptIds([])}
-            >
-              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-                <Checkbox checked disabled className="w-full" label="Name" />
-                <Checkbox
-                  checked={showEmail}
-                  className="w-full"
-                  label="Email"
-                  onChange={({ target: { checked } }) => setShowEmail(checked)}
-                />
-                <Checkbox
-                  checked={showSubmissionDate}
-                  className="w-full"
-                  label="Submission Date"
-                  onChange={({ target: { checked } }) =>
-                    setShowSubmissionDate(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showCorrectAnswers}
-                  className="w-full"
-                  label="Correct Answers"
-                  onChange={({ target: { checked } }) =>
-                    setShowCorrectAnswers(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showWrongAnswers}
-                  className="w-full"
-                  label="Wrong Answers"
-                  onChange={({ target: { checked } }) =>
-                    setShowWrongAnswers(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showUnanswered}
-                  className="w-full"
-                  label="Unanswered"
-                  onChange={({ target: { checked } }) =>
-                    setShowUnanswered(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showQuestions}
-                  className="w-full"
-                  label="Questions"
-                  onChange={({ target: { checked } }) =>
-                    setShowQuestions(checked)
-                  }
-                />
-                <Checkbox
-                  checked={showStatus}
-                  className="w-full"
-                  label="Status"
-                  onChange={({ target: { checked } }) => setShowStatus(checked)}
-                />
-              </div>
-            </Dropdown>
-            <Dropdown
-              buttonStyle="text"
-              closeOnSelect={false}
-              icon={Filter}
-              strategy="fixed"
-              onClick={() => setSelectedAttemptIds([])}
-            >
-              <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-                <div className="w-full text-left text-gray-700">
-                  <Typography style="h4">Select status:</Typography>
-                </div>
-                <div className="flex w-full flex-row space-x-4 pb-2">
-                  <Checkbox
-                    checked={status === "completed" || isEmpty(status)}
-                    className="w-full"
-                    label="Completed"
-                    onChange={() => {
-                      const newStatus = determineStatus("completed");
-                      setStatus(newStatus);
-                      updateQueryParams({ status: newStatus });
-                    }}
-                  />
-                  <Checkbox
-                    checked={status === "incomplete" || isEmpty(status)}
-                    className="w-full"
-                    label="Incomplete"
-                    onChange={() => {
-                      const newStatus = determineStatus("incomplete");
-                      setStatus(newStatus);
-                      updateQueryParams({ status: newStatus });
-                    }}
-                  />
-                </div>
-              </div>
-            </Dropdown>
+            <ColumnSelector />
+            <StatusFilter
+              {...{
+                setSelectedAttemptIds,
+                setStatus,
+                status,
+                updateQueryParams,
+              }}
+            />
           </div>
         }
       />
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row space-x-4">
-            {status && (
-              <Typography className="flex flex-row space-x-1" style="h4">
-                <Typography className="text-gray-700" style="h4">
-                  Status:
-                </Typography>
-                <Typography className="text-gray-400" style="h4">
-                  {capitalize(status)}
-                </Typography>
-              </Typography>
-            )}
+            <FilterChips {...{ status }} />
           </div>
         }
       />
@@ -367,35 +236,21 @@ const Submissions = () => {
       ) : (
         <EmptyState
           image={<EmptyQuizzesListImage />}
-          subtitle="There are no submissions yet."
-          title="No submissions found"
+          subtitle={t("quizzes.empty.submissionsDescription")}
+          title={t("quizzes.empty.submissionsTitle")}
         />
       )}
-      {showDeleteAlert && (
-        <Alert
-          isOpen={showDeleteAlert}
-          message="Are you sure you want to continue? This cannot be undone."
-          title={getAlertTitle(
-            "Delete",
-            selectedAttemptIds.length,
-            "submission",
-            "submissions"
-          )}
-          onClose={() => setShowDeleteAlert(false)}
-          onSubmit={() =>
-            handleAlertSubmit(() =>
-              attemptsApi.destroy({
-                slug,
-                attemptIds: selectedAttemptIds,
-                quiet: true,
-              })
-            )
-          }
-        />
-      )}
-      {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
+      <DeleteAlert
+        {...{
+          handleDelete,
+          selectedAttemptIds,
+          setShowDeleteAlert,
+          showDeleteAlert,
+        }}
+      />
+      {isOpen && <DownloadReport {...{ isOpen, setIsOpen }} />}
     </Container>
   );
 };
 
-export default Submissions;
+export default withTitle(Submissions, "Submissions");

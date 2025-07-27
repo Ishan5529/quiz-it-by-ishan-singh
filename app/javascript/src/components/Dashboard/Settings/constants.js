@@ -1,16 +1,17 @@
+import { t } from "i18next";
 import * as yup from "yup";
 
 export const PROFILE_FORM_VALIDATION_SCHEMA = yup.object().shape({
-  firstName: yup.string().required("Required"),
-  lastName: yup.string().required("Required"),
+  firstName: yup.string().required(t("yup.required")),
+  lastName: yup.string().required(t("yup.required")),
 });
 
 export const PASSWORD_VALIDATION_SCHEMA = yup.object().shape({
-  password: yup.string().required("Required"),
+  password: yup.string().required(t("yup.required")),
 });
 
 export const EMAIL_FORM_VALIDATION_SCHEMA = yup.object().shape({
-  email: yup.string().email("Invalid email address").required("Required"),
+  email: yup.string().email(t("yup.string.email")).required(t("yup.required")),
 });
 
 export const PASSWORD_CONFIRMATION_FORM_INITIAL_VALUES = {
@@ -24,19 +25,16 @@ export const CHANGE_PASSWORD_FORM_INITIAL_VALUES = {
 };
 
 export const CHANGE_PASSWORD_FORM_VALIDATION_SCHEMA = yup.object({
-  currentPassword: yup.string().required("Current password is required"),
-  password: yup.string().required("New password is required"),
+  currentPassword: yup.string().required(t("yup.string.currentPassword")),
+  password: yup.string().required(t("yup.string.newPassword")),
   passwordConfirmation: yup
     .string()
-    .required("Password confirmation is required")
-    .oneOf(
-      [yup.ref("password"), null],
-      "New password and confirmation password must match"
-    ),
+    .required(t("yup.string.confirmPassword"))
+    .oneOf([yup.ref("password"), null], t("yup.string.passwordConfirmation")),
 });
 
 export const CHANGE_PASSWORD_FORM_INPUT_ATTRIBUTES = {
   type: "password",
   "aria-required": "true",
-  placeholder: "******",
+  placeholder: t("placeholders.authPassword"),
 };

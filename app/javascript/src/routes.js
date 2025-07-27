@@ -42,4 +42,5 @@ export const routes = {
       },
     },
   },
+  pageNotFound: "*",
 };

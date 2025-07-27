@@ -2,6 +2,7 @@ import { routes } from "routes";
 import React from "react";
 
 import { Switch, Route } from "react-router-dom";
+import { PageNotFound } from "components/commons";
 
 import Attempt from "./Attempt";
 import Result from "./Result";
@@ -21,6 +22,7 @@ const Quizzes = () => (
         component={UserRegistration}
         path={routes.public.quizzes.registration}
       />
+      <Route component={PageNotFound} path={routes.pageNotFound} />
     </Switch>
   </div>
 );

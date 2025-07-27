@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import useQueryParams from "hooks/useQueryParams";
 
 export const useQuizFilters = () => {
@@ -11,12 +13,15 @@ export const useQuizFilters = () => {
 
   const safePage = queryPage ? Number(queryPage) : 1;
   const safePerPage = queryPerPage ? Number(queryPerPage) : 12;
-  let safeCategory = [];
-  if (Array.isArray(queryCategory)) {
-    safeCategory = queryCategory;
-  } else if (queryCategory) {
-    safeCategory = [queryCategory];
-  }
+  const safeCategory = useMemo(() => {
+    if (Array.isArray(queryCategory)) {
+      return queryCategory;
+    } else if (queryCategory) {
+      return [queryCategory];
+    }
+
+    return [];
+  }, [queryCategory]);
 
   return {
     querySearchTerm,

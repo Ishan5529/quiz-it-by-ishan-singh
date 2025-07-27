@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { t } from "i18next";
 import { filterNonNull } from "neetocist";
 import * as R from "ramda";
 
@@ -9,12 +10,12 @@ const isPresent = R.pipe(R.either(R.isNil, R.isEmpty), R.not);
 const generateDraftInfoMessage = ({ date }) => {
   const formattedDate = dayjs(date).format("hh:mmA, DD MMMM YYYY");
 
-  return `Draft saved at ${formattedDate}`;
+  return `${t("misc.draftSaved")} ${formattedDate}`;
 };
 
 const formatTableDate = date => dayjs(date).format("DD MMMM YYYY, hh:mm A");
 
-const getAlertTitle = (action, count, singular = "quiz", plural = "quizzes") =>
+const getAlertTitle = (action, count, singular = "item", plural = "items") =>
   `${action} ${count} ${count > 1 ? plural : singular}?`;
 
 const filterNonNullAndEmpty = params => {
@@ -27,11 +28,14 @@ const filterNonNullAndEmpty = params => {
 
 const capitalize = (str = "") => {
   if (typeof str !== "string") {
-    throw new TypeError("Expected a string");
+    throw new TypeError(t("misc.stringExpected"));
   }
 
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+const getQuizAttemptUrl = slug =>
+  `http://localhost:3000/public/quizzes/${slug}/registration`;
 
 export {
   showToastr,
@@ -40,5 +44,6 @@ export {
   filterNonNullAndEmpty,
   formatTableDate,
   getAlertTitle,
+  getQuizAttemptUrl,
   capitalize,
 };
