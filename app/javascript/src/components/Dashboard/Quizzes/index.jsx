@@ -66,7 +66,7 @@ const Quizzes = () => {
 
   const { Menu, MenuItem } = Dropdown;
 
-  const { data: { data: { quizzes = [], meta = [] } = {}, isLoading } = {} } =
+  const { data: { data: { quizzes = [], meta = [] } = {} } = {}, isLoading } =
     useQuizzesFetch({
       page: tablePage,
       per_page: perPage,

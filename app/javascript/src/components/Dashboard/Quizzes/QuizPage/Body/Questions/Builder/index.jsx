@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import questionsApi from "apis/questions";
 import { InlineInput } from "components/commons";
 import {
@@ -18,6 +19,7 @@ import OptionField from "./OptionField";
 
 const Builder = ({ position, isEdit = false, setIsDirty }) => {
   const { slug, id } = useParams();
+
   const [initialValues, setInitialValues] = useState(
     QUESTIONS_FORM_INITIAL_FORM_VALUES
   );
@@ -32,10 +34,8 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
     }
   }, [position, isEdit]);
 
-  const { data: { data: { question } = {} } = {} } = useQuestionsShow(
-    { quizSlug: slug, id },
-    { enabled: isEdit }
-  );
+  const { data: { data: { question } = {} } = {}, isLoading } =
+    useQuestionsShow({ quizSlug: slug, id }, { enabled: isEdit });
 
   useEffect(() => {
     if (question) {
@@ -87,6 +87,10 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
       setSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-gray-100 p-12">

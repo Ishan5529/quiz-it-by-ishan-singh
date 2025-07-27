@@ -12,7 +12,7 @@ const Filter = ({ searchTerm, setSearchTerm, updateQueryParams, t }) => {
   return (
     <div className="flex w-1/3 flex-row items-center justify-center space-x-4">
       <Input
-        placeholder={t("quizSearch")}
+        placeholder={t("placeholders.quizSearch")}
         prefix={<Search />}
         value={searchTerm}
         onChange={handleChange}

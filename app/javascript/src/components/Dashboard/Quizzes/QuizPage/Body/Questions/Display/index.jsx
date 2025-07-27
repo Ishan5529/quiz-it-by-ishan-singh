@@ -1,5 +1,6 @@
 import React from "react";
 
+import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import EmptyState from "components/commons/EmptyState";
 import { Button, Typography } from "neetoui";
 import { isEmpty } from "ramda";
@@ -9,7 +10,7 @@ import Question from "./Question";
 
 const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty, t }) => {
   if (isLoading) {
-    return <EmptyState title={t("quizzes.questions.loading")} />;
+    return <PageLoader />;
   }
 
   if (isEmpty(questions)) {
