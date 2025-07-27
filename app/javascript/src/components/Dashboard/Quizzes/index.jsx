@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { filterNonNullAndEmpty } from "utils";
 import { buildUrl } from "utils/url";
+import withTitle from "utils/withTitle";
 
 import BulkActions from "./BulkActions";
 import FilterChips from "./FilterChips";
@@ -232,4 +233,4 @@ const Quizzes = () => {
   );
 };
 
-export default Quizzes;
+export default withTitle(Quizzes, "Quizzes");

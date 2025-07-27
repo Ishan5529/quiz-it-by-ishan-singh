@@ -8,6 +8,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { useTranslation } from "react-i18next";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import { routes } from "routes";
+import withTitle from "utils/withTitle";
 
 const Attempt = () => {
   const { slug, attemptId } = useParams();
@@ -112,4 +113,4 @@ const Attempt = () => {
   );
 };
 
-export default Attempt;
+export default withTitle(Attempt, "Quiz Session");

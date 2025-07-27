@@ -14,6 +14,7 @@ import { Typography, Button } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
 import { routes } from "routes";
+import withTitle from "utils/withTitle";
 
 import OptionField from "./OptionField";
 
@@ -232,4 +233,4 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
   );
 };
 
-export default Builder;
+export default withTitle(Builder, "Question Builder");

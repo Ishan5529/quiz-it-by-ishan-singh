@@ -8,6 +8,7 @@ import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuestionsFetch } from "hooks/reactQuery/useQuestionsApi";
 import { useParams, useHistory, Switch, Route } from "react-router-dom";
 import { routes } from "routes";
+import withTitle from "utils/withTitle";
 
 import Builder from "./Builder";
 import Display from "./Display";
@@ -74,4 +75,4 @@ const Questions = () => {
   );
 };
 
-export default Questions;
+export default withTitle(Questions, "Quiz Editor");

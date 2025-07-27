@@ -21,6 +21,7 @@ import {
   clearLocalStorageCredentials,
   getFromLocalStorage,
 } from "utils/storage";
+import withTitle from "utils/withTitle";
 
 import Quizzes from "./Public/Quizzes";
 
@@ -92,4 +93,4 @@ Main.propTypes = {
   user: PropTypes.object,
 };
 
-export default Main;
+export default withTitle(Main);

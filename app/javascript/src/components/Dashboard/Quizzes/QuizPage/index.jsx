@@ -6,6 +6,7 @@ import quizzesApi from "apis/quizzes";
 import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuizzesShow } from "hooks/reactQuery/useQuizzesApi";
 import { useParams } from "react-router-dom";
+import withTitle from "utils/withTitle";
 
 import Body from "./Body";
 import Header from "./Header";
@@ -84,4 +85,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default withTitle(QuizPage, "Quiz Editor");

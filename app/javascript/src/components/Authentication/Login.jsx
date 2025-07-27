@@ -9,6 +9,7 @@ import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { routes } from "src/routes";
+import withTitle from "utils/withTitle";
 
 import {
   LOGIN_FORM_INITIAL_VALUES,
@@ -112,4 +113,4 @@ Login.propTypes = {
   history: PropTypes.object,
 };
 
-export default Login;
+export default withTitle(Login, "Login");

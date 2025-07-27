@@ -5,6 +5,7 @@ import EmptyState from "components/commons/EmptyState";
 import { Button, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import withT from "utils/withT";
+import withTitle from "utils/withTitle";
 
 import Question from "./Question";
 
@@ -41,4 +42,4 @@ const Display = ({ questions, slug, isLoading, onAddClick, setIsDirty, t }) => {
   );
 };
 
-export default withT(Display);
+export default withTitle(withT(Display), "Quiz Editor");

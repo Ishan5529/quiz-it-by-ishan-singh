@@ -23,6 +23,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { routes } from "routes";
 import { formatTableDate, filterNonNullAndEmpty, capitalize } from "utils";
 import { buildUrl } from "utils/url";
+import withTitle from "utils/withTitle";
 
 import ColumnSelector from "./ColumnSelector";
 import DeleteAlert from "./DeleteAlert";
@@ -252,4 +253,4 @@ const Submissions = () => {
   );
 };
 
-export default Submissions;
+export default withTitle(Submissions, "Submissions");

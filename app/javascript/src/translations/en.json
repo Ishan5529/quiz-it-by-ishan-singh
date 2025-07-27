@@ -25,6 +25,8 @@
     },
     "required": "Required"
   },
+  "title": "Quiz It",
+  "pageTitle": "Quiz It | {{title}}",
   "labels": {
     "organization": "BigBinary Academy",
     "email": "Email",

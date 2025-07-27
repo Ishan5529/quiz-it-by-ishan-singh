@@ -7,6 +7,7 @@ import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
 import { routes } from "src/routes";
 import withT from "utils/withT";
+import withTitle from "utils/withTitle";
 
 import {
   SIGNUP_FORM_INITIAL_VALUES,
@@ -109,4 +110,4 @@ Signup.propTypes = {
   history: PropTypes.object,
 };
 
-export default withT(Signup);
+export default withTitle(withT(Signup), "Signup");

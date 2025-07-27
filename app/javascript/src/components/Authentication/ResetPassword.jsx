@@ -5,6 +5,7 @@ import { Button, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
 import { routes } from "src/routes";
 import withT from "utils/withT";
+import withTitle from "utils/withTitle";
 
 import {
   RESET_PASSWORD_FORM_INITIAL_VALUES,
@@ -78,4 +79,4 @@ const ResetPassword = ({ t }) => (
   </div>
 );
 
-export default withT(ResetPassword);
+export default withTitle(withT(ResetPassword), "Reset Password");

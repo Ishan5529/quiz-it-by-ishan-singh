@@ -13,6 +13,7 @@ import { Button } from "neetoui/index";
 import useQueryParams from "hooks/useQueryParams";
 import attemptsApi from "apis/attempts";
 import { useTranslation } from "react-i18next";
+import withTitle from "utils/withTitle";
 
 const UserRegistration = ({ history }) => {
   const { slug } = useParams();
@@ -136,4 +137,4 @@ UserRegistration.propTypes = {
   history: PropTypes.object,
 };
 
-export default UserRegistration;
+export default withTitle(UserRegistration, "Quiz Registration");

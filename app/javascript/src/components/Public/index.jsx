@@ -14,6 +14,7 @@ import { filterNonNullAndEmpty } from "utils";
 import { buildUrl } from "utils/url";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import withTitle from "utils/withTitle";
 
 import Filter from "./Filter";
 import QuizCard from "./QuizCard";
@@ -85,4 +86,4 @@ const Public = () => {
   );
 };
 
-export default Public;
+export default withTitle(Public, "Public");

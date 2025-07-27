@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import MenuBar from "@bigbinary/neeto-molecules/MenuBar";
 import queryString from "query-string";
 import { useTranslation } from "react-i18next";
+import withTitle from "utils/withTitle";
 
 import { SETTINGS_NAVLINKS } from "./navLinks";
 import { getActiveNavLink } from "./utils";
@@ -40,4 +41,4 @@ const Settings = ({ history, location }) => {
   );
 };
 
-export default Settings;
+export default withTitle(Settings, "Settings");

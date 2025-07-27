@@ -8,6 +8,7 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { routes } from "routes";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import withTitle from "utils/withTitle";
 
 const Result = () => {
   const history = useHistory();
@@ -254,4 +255,4 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default withTitle(Result, "Result");

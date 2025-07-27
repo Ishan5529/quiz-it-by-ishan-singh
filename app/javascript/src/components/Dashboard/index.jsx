@@ -5,6 +5,7 @@ import Sidebar from "components/commons/Sidebar";
 import { DASHBOARD_ROUTES } from "components/routeConstants";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { routes } from "src/routes";
+import withTitle from "utils/withTitle";
 
 const Dashboard = () => (
   <div className="flex h-screen w-full">
@@ -23,4 +24,4 @@ const Dashboard = () => (
   </div>
 );
 
-export default Dashboard;
+export default withTitle(Dashboard, "Dashboard");
