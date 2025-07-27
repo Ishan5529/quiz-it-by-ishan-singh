@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :published_quiz do
-    quiz { nil }
-    data { "" }
+    association :quiz
+    data { {} }
   end
 end
