@@ -167,18 +167,20 @@ const Quizzes = () => {
               singular={t("labels.quiz")}
             />
             <BulkActions
-              Menu={Menu}
-              MenuItem={MenuItem}
-              handlePublishToggle={handlePublishToggle}
-              selectedQuizSlugs={selectedQuizSlugs}
-              setSelectedQuizSlugs={setSelectedQuizSlugs}
-              setShowDeleteAlert={setShowDeleteAlert}
+              {...{
+                Menu,
+                MenuItem,
+                handlePublishToggle,
+                selectedQuizSlugs,
+                setSelectedQuizSlugs,
+                setShowDeleteAlert,
+              }}
             />
           </div>
         }
         rightActionBlock={
           <div className="flex flex-row items-center space-x-4">
-            <TableColumnControls setSelectedQuizSlugs={setSelectedQuizSlugs} />
+            <TableColumnControls />
             <Button
               icon={Filter}
               style="text"
@@ -187,9 +189,7 @@ const Quizzes = () => {
           </div>
         }
       />
-      <SubHeader
-        leftActionBlock={<FilterChips category={category} status={status} />}
-      />
+      <SubHeader leftActionBlock={<FilterChips {...{ category, status }} />} />
       <TableContainer
         {...{
           quizzesData,
@@ -219,12 +219,14 @@ const Quizzes = () => {
         }}
       />
       <QuizAlerts
-        handleAlertSubmit={handleAlertSubmit}
-        selectedQuizSlugs={selectedQuizSlugs}
-        setShowDeleteAlert={setShowDeleteAlert}
-        setShowDiscardAlert={setShowDiscardAlert}
-        showDeleteAlert={showDeleteAlert}
-        showDiscardAlert={showDiscardAlert}
+        {...{
+          handleAlertSubmit,
+          selectedQuizSlugs,
+          setShowDeleteAlert,
+          setShowDiscardAlert,
+          showDeleteAlert,
+          showDiscardAlert,
+        }}
       />
     </Container>
   );

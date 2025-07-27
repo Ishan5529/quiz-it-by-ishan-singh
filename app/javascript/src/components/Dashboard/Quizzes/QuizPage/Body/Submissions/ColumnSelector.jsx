@@ -25,6 +25,50 @@ const ColumnSelector = () => {
 
   const { t } = useTranslation();
 
+  const checkboxConfigs = [
+    {
+      checked: true,
+      disabled: true,
+      label: t("labels.name"),
+      onClick: undefined,
+    },
+    {
+      checked: showEmail,
+      label: t("labels.email"),
+      onClick: () => setShowEmail(!showEmail),
+    },
+    {
+      checked: showSubmissionDate,
+      label: t("labels.submissionDate"),
+      onClick: () => setShowSubmissionDate(!showSubmissionDate),
+    },
+    {
+      checked: showCorrectAnswers,
+      label: t("labels.correctAnswers"),
+      onClick: () => setShowCorrectAnswers(!showCorrectAnswers),
+    },
+    {
+      checked: showWrongAnswers,
+      label: t("labels.wrongAnswers"),
+      onClick: () => setShowWrongAnswers(!showWrongAnswers),
+    },
+    {
+      checked: showUnanswered,
+      label: t("labels.unanswered"),
+      onClick: () => setShowUnanswered(!showUnanswered),
+    },
+    {
+      checked: showQuestions,
+      label: t("labels.questions"),
+      onClick: () => setShowQuestions(!showQuestions),
+    },
+    {
+      checked: showStatus,
+      label: t("labels.status"),
+      onClick: () => setShowStatus(!showStatus),
+    },
+  ];
+
   return (
     <Dropdown
       buttonStyle="text"
@@ -33,54 +77,16 @@ const ColumnSelector = () => {
       strategy="fixed"
     >
       <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
-        <Checkbox
-          checked
-          disabled
-          className="w-full"
-          label={t("labels.name")}
-        />
-        <Checkbox
-          checked={showEmail}
-          className="w-full"
-          label={t("labels.email")}
-          onClick={() => setShowEmail(!showEmail)}
-        />
-        <Checkbox
-          checked={showSubmissionDate}
-          className="w-full"
-          label={t("labels.submissionDate")}
-          onClick={() => setShowSubmissionDate(!showSubmissionDate)}
-        />
-        <Checkbox
-          checked={showCorrectAnswers}
-          className="w-full"
-          label={t("labels.correctAnswers")}
-          onClick={() => setShowCorrectAnswers(!showCorrectAnswers)}
-        />
-        <Checkbox
-          checked={showWrongAnswers}
-          className="w-full"
-          label={t("labels.wrongAnswers")}
-          onClick={() => setShowWrongAnswers(!showWrongAnswers)}
-        />
-        <Checkbox
-          checked={showUnanswered}
-          className="w-full"
-          label={t("labels.unanswered")}
-          onClick={() => setShowUnanswered(!showUnanswered)}
-        />
-        <Checkbox
-          checked={showQuestions}
-          className="w-full"
-          label={t("labels.questions")}
-          onClick={() => setShowQuestions(!showQuestions)}
-        />
-        <Checkbox
-          checked={showStatus}
-          className="w-full"
-          label={t("labels.status")}
-          onClick={() => setShowStatus(!showStatus)}
-        />
+        {checkboxConfigs.map(config => (
+          <Checkbox
+            checked={config.checked}
+            className="w-full"
+            disabled={config.disabled}
+            key={config.label}
+            label={config.label}
+            onClick={config.onClick}
+          />
+        ))}
       </div>
     </Dropdown>
   );

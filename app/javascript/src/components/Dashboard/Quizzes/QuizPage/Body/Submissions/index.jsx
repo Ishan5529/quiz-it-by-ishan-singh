@@ -202,10 +202,12 @@ const Submissions = () => {
             <Button icon={Download} style="text" onClick={handleDownload} />
             <ColumnSelector />
             <StatusFilter
-              setSelectedAttemptIds={setSelectedAttemptIds}
-              setStatus={setStatus}
-              status={status}
-              updateQueryParams={updateQueryParams}
+              {...{
+                setSelectedAttemptIds,
+                setStatus,
+                status,
+                updateQueryParams,
+              }}
             />
           </div>
         }
@@ -213,7 +215,7 @@ const Submissions = () => {
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row space-x-4">
-            <FilterChips status={status} />
+            <FilterChips {...{ status }} />
           </div>
         }
       />
@@ -238,12 +240,14 @@ const Submissions = () => {
         />
       )}
       <DeleteAlert
-        handleDelete={handleDelete}
-        selectedAttemptIds={selectedAttemptIds}
-        setShowDeleteAlert={setShowDeleteAlert}
-        showDeleteAlert={showDeleteAlert}
+        {...{
+          handleDelete,
+          selectedAttemptIds,
+          setShowDeleteAlert,
+          showDeleteAlert,
+        }}
       />
-      {isOpen && <DownloadReport isOpen={isOpen} setIsOpen={setIsOpen} />}
+      {isOpen && <DownloadReport {...{ isOpen, setIsOpen }} />}
     </Container>
   );
 };

@@ -119,9 +119,11 @@ const UserRegistration = ({ history }) => {
             </div>
           ) : (
             <UserRegistrationForm
-              quiz={quiz}
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
+              {...{
+                quiz,
+                isSubmitting,
+                onSubmit: handleSubmit,
+              }}
             />
           )}
         </div>

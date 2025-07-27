@@ -74,7 +74,7 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
         <Typography className="text-xl font-semibold" style="body2">
           {message}
         </Typography>
-        <ProgressBar progress={progress} />
+        <ProgressBar {...{ progress }} />
       </div>
     </Modal>
   );
