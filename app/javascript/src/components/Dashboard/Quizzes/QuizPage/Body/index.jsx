@@ -1,5 +1,6 @@
 import React from "react";
 
+import { PageNotFound } from "components/commons";
 import { Switch, Route } from "react-router-dom";
 import { routes } from "routes";
 
@@ -15,6 +16,7 @@ const Body = () => (
         component={Submissions}
         path={routes.dashboard.quizzes.submissions}
       />
+      <Route component={PageNotFound} path={routes.pageNotFound} />
     </Switch>
   </div>
 );

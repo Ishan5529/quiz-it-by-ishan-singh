@@ -112,7 +112,8 @@
     "questionTitle": "Enter question title",
     "quizTitle": "Enter quiz title",
     "names": "Search names",
-    "quizSearch": "Search quizzes"
+    "quizSearch": "Search quizzes",
+    "backHome": "Back to home"
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
@@ -165,6 +166,7 @@
     "linkCopied": "Link copied to clipboard",
     "stringExpected": "Expected a string",
     "draftSaved": "Draft saved at",
-    "emptyFilter": "No filters yet."
+    "emptyFilter": "No filters yet.",
+    "noPage": "The page you're looking for is missing."
   }
 }
