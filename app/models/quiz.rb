@@ -21,6 +21,8 @@ class Quiz < ApplicationRecord
   private
 
     def set_slug
+      return if title.blank?
+
       title_slug = title.parameterize
       regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
       latest_quiz_slug = Quiz.where(

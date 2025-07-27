@@ -11,6 +11,6 @@ FactoryBot.define do
     option5 { nil }
     option6 { nil }
     correct_option { 1 }
-    # position { 0 }
+    position { 0 }
   end
 end

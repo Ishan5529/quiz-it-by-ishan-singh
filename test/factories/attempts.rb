@@ -10,7 +10,21 @@ FactoryBot.define do
     correct_answers { rand(1..5) }
     wrong_answers { rand(0..3) }
     unanswered { rand(0..2) }
-    questions { [] }
+    questions {
+      opts = [
+        Faker::Lorem.sentence(word_count: 2),
+        Faker::Lorem.sentence(word_count: 2),
+        Faker::Lorem.sentence(word_count: 2)
+      ]
+      [
+        {
+          id: SecureRandom.uuid,
+          title: Faker::Lorem.question,
+          options: opts,
+          correct_option: opts.sample
+        }
+      ]
+    }
     status { "incomplete" }
   end
 end

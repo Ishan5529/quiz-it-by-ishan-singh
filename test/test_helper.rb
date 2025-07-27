@@ -29,6 +29,7 @@ Minitest::Ci.report_dir = "reports" if ENV["CI"]
 
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
+  require "minitest/mock"
 
   include FactoryBot::Syntax::Methods
   include ActionView::Helpers::TranslationHelper
