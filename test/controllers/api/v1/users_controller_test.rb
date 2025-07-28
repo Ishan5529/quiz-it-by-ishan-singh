@@ -13,7 +13,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     json = response_body
-    assert_equal %w{ email first_name last_name current_sign_in_at }.sort, json.keys.sort
+    assert_equal %w{ email first_name last_name id current_sign_in_at }.sort, json.keys.sort
   end
 
   def test_show_when_email_is_not_present
@@ -38,7 +38,6 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
       phone_number: "1(555)555-5555"
     }
 
-    # Ensure that there are no users with this email in db
     User.where(email: valid_email).delete_all
 
     assert_difference "User.count", 1 do
@@ -59,7 +58,6 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
       password_confirmation: nil
     }
 
-    # Ensure that there are no users with this email in db
     User.where(email: valid_email).delete_all
 
     post api_v1_users_url, params: { user: invalid_user_json, format: :json }
@@ -91,5 +89,58 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unauthorized
     assert_equal response_body["error"], t("invalid_credentials")
+  end
+
+  def test_create_user_with_duplicate_email_and_quiet_param
+    existing_email = "duplicate@example.com"
+    create(:user, email: existing_email)
+
+    user_params = {
+      email: existing_email,
+      first_name: "Another",
+      last_name: "User",
+      password: "welcome",
+      password_confirmation: "welcome"
+    }
+
+    assert_no_difference "User.count" do
+      post api_v1_users_url,
+        params: { user: user_params, quiet: "true", format: :json }
+    end
+
+    assert_response :success
+
+    assert_empty response.body
+
+    assert_equal 1, User.where(email: existing_email).count
+  end
+
+  def test_create_user_with_valid_info_and_quiet_param
+    valid_email = "quiet_user@example.com"
+
+    valid_user_json = {
+      email: valid_email,
+      first_name: "Quiet",
+      last_name: "User",
+      password: "welcome",
+      password_confirmation: "welcome"
+    }
+
+    User.where(email: valid_email).delete_all
+
+    assert_difference "User.count", 1 do
+      post api_v1_users_url, params: { user: valid_user_json, quiet: "true", format: :json }
+
+      assert_response :success
+    end
+
+    json = response_body
+    assert json.key?("user")
+    assert json.key?("auth_token")
+    assert_not json.key?("notice")
+
+    assert_equal valid_email, json["user"]["email"]
+    assert_equal "Quiet", json["user"]["first_name"]
+    assert_equal "User", json["user"]["last_name"]
   end
 end

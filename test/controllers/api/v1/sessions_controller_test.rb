@@ -28,4 +28,17 @@ class Api::V1::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert response_body["auth_token"]
   end
+
+  def test_should_be_able_to_log_out
+    post api_v1_login_url, params: { user: { email: @admin.email, password: "welcome" } }, as: :json
+    assert_response :success
+    token = response_body["auth_token"]
+
+    delete api_v1_logout_url, headers: { "X-Auth-Token" => token }
+    assert_response :success
+
+    # Try to access a protected endpoint with the same token
+    get api_v1_quizzes_url, headers: { "X-Auth-Token" => token }
+    assert_response :unauthorized
+  end
 end

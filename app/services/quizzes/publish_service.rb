@@ -6,6 +6,8 @@ class Quizzes::PublishService
   end
 
   def publish!
+    @quiz.reload
+
     published_data = {
       title: @quiz.title,
       slug: @quiz.slug,
