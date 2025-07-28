@@ -46,7 +46,7 @@ const Organization = () => {
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title={t("labels.updateEmail")}
+        title={t("labels.updateOrganization")}
       />
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
         <Formik

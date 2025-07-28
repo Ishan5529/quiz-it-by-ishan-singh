@@ -30,6 +30,7 @@
   "labels": {
     "organization": "Organization",
     "organizationDescription": "Manage organization",
+    "updateOrganization": "Update organization",
     "email": "Email",
     "emailAddress": "Email address",
     "emailDescription": "Manage email",

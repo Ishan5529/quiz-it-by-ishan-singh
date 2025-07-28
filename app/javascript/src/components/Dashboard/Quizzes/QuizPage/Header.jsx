@@ -18,6 +18,7 @@ const Header = ({
   handleTitleUpdate,
   handleInputBlur,
   isDraft,
+  isPublished = false,
   handlePublish,
 }) => {
   const { pathname } = useLocation();
@@ -108,6 +109,7 @@ const Header = ({
                 onClick: handlePublish,
               },
               {
+                disabled: !isPublished,
                 isActive: false,
                 key: "ExternalLink",
                 icon: "ri-arrow-right-up-line",

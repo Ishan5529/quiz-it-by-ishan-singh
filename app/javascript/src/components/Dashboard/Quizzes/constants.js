@@ -15,7 +15,7 @@ export const QUIZZES_FILTER_FORM_VALIDATION_SCHEMA = yup.object().shape({
   category: yup.object().nullable(),
 });
 
-export const categories = ["General", "Science", "Math", "History", "Finance"];
+export const categories = ["Science", "History", "Programming"];
 
 export const QUIZZES_TABLE_COLUMN_DATA = [
   {
