@@ -5,10 +5,13 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :trackable, :validatable, :rememberable
+
+  belongs_to :organization
   has_many :quizzes, dependent: :destroy
   has_many :attempts, dependent: :destroy
 
   validates :email, uniqueness: true
+  validates :organization, presence: true
   validates :password_confirmation, presence: true, on: :create
   validates :first_name, :last_name, :email, presence: true
 

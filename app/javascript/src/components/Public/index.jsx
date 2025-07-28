@@ -6,6 +6,7 @@ import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import Scrollable from "@bigbinary/neeto-molecules/Scrollable";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
+import { useOrganizationsShow } from "hooks/reactQuery/useOrganizationsApi";
 import { usePublicQuizzesFetch } from "hooks/reactQuery/usePublicQuizzesApi";
 import useQueryParams from "hooks/useQueryParams";
 import useFuncDebounce from "hooks/useFuncDebounce";
@@ -38,6 +39,10 @@ const Public = () => {
       title: querySearchTerm,
     });
 
+  const {
+    data: { data: { organization: { name: organizationName } = {} } = {} } = {},
+  } = useOrganizationsShow();
+
   const updateQueryParams = useFuncDebounce(updatedValue => {
     const updatedParam = {
       ...params,
@@ -67,7 +72,7 @@ const Public = () => {
   return (
     <Container>
       <Header
-        title={t("labels.organization")}
+        title={organizationName}
         actionBlock={
           <Button label={buttonLabel} to={buttonDestination} type="primary" />
         }

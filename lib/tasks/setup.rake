@@ -38,9 +38,12 @@ def delete_all_records_from_all_tables
 end
 
 def create_sample_data!
-  admin = create_user!(email: "oliver@example.com", role: "super_admin")
-  user1 = create_user!(email: "luna@example.com", first_name: "Luna", role: "standard")
-  user2 = create_user!(email: "sam@example.com", first_name: "Sam", role: "standard")
+  organization = Organization.create!(name: "BigBinary Academy")
+  puts "Created organization: #{organization.name}"
+
+  admin = create_user!(email: "oliver@example.com", role: "super_admin", organization: organization)
+  user1 = create_user!(email: "luna@example.com", first_name: "Luna", role: "standard", organization: organization)
+  user2 = create_user!(email: "sam@example.com", first_name: "Sam", role: "standard", organization: organization)
   puts "Created users: #{admin.email}, #{user1.email}, #{user2.email}"
 
   categories = []

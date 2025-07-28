@@ -28,7 +28,8 @@
   "title": "Quiz It",
   "pageTitle": "Quiz It | {{title}}",
   "labels": {
-    "organization": "BigBinary Academy",
+    "organization": "Organization",
+    "organizationDescription": "Manage organization",
     "email": "Email",
     "emailAddress": "Email address",
     "emailDescription": "Manage email",

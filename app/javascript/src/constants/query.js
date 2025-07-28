@@ -3,4 +3,5 @@ export const QUERY_KEYS = {
   PUBLIC_QUIZZES: "public_quizzes",
   QUESTIONS: "questions",
   ATTEMPTS: "attempts",
+  ORGANIZATIONS: "organizations",
 };
