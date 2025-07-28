@@ -38,7 +38,109 @@ def delete_all_records_from_all_tables
 end
 
 def create_sample_data!
-  create_user! email: "oliver@example.com"
+  admin = create_user!(email: "oliver@example.com", role: "super_admin")
+  user1 = create_user!(email: "luna@example.com", first_name: "Luna", role: "standard")
+  user2 = create_user!(email: "sam@example.com", first_name: "Sam", role: "standard")
+  puts "Created users: #{admin.email}, #{user1.email}, #{user2.email}"
+
+  categories = []
+  categories << Category.create!(name: "Programming")
+  categories << Category.create!(name: "Science")
+  categories << Category.create!(name: "History")
+
+  puts "Created #{categories.size} categories"
+
+  quizzes = []
+  categories.each do |category|
+    2.times do |i|
+      is_published = [true, false].sample
+      is_draft = !is_published
+
+      quiz = Quiz.create!(
+        title: "#{category.name} Quiz #{i+1}",
+        # slug: "#{category.name.parameterize}-quiz-#{i+1}",
+        category: category,
+        user: admin,
+        isDraft: is_draft,
+        isPublished: is_published
+      )
+
+      quizzes << quiz
+
+      5.times do |j|
+        question = Question.create!(
+          title: "#{category.name} Question #{j+1}",
+          quiz: quiz,
+          position: j,
+          option1: "Option A",
+          option2: "Option B",
+          option3: "Option C",
+          option4: "Option D",
+          correct_option: rand(1..4)
+        )
+      end
+
+      if is_published
+        Quizzes::PublishService.new(quiz).publish!
+      end
+    end
+  end
+
+  puts "Created #{quizzes.size} quizzes with 5 questions each"
+
+  quizzes_for_attempts = quizzes.select(&:isPublished).sample(3)
+
+  quizzes_for_attempts.each do |quiz|
+    next unless quiz.published_quiz
+
+    2.times do |i|
+      user = [user1, user2].sample
+
+      published_data = quiz.published_quiz.data
+      question_objs = published_data["questions"]
+
+      questions_data = question_objs.map do |question|
+        # 80% chance of answering
+        selected =
+          if rand < 0.8
+            # 60% chance correct, else random wrong
+            rand < 0.6 ? question["correct_option"].to_s : ((question["correct_option"].to_i % 4) + 1).to_s
+          else
+            nil
+          end
+
+        {
+          question_id: question["id"],
+          title: question["title"],
+          options: question["options"],
+          correct_option: question["correct_option"].to_s,
+          selected_option: selected
+        }
+      end
+
+      attempt = Attempt.create!(
+        quiz: quiz,
+        user: user,
+        user_name: "#{user.first_name} #{user.last_name}",
+        user_email: user.email,
+        submission_time: Time.current - i.days,
+        status: "completed",
+        questions: questions_data
+      )
+
+      correct = questions_data.count { |q| q[:selected_option] == q[:correct_option] }
+      unanswered = questions_data.count { |q| q[:selected_option].nil? }
+      wrong = questions_data.length - correct - unanswered
+
+      attempt.update!(
+        correct_answers: correct,
+        wrong_answers: wrong,
+        unanswered: unanswered
+      )
+    end
+  end
+
+  puts "Created attempts for #{quizzes_for_attempts.count} quizzes"
 end
 
 def create_user!(options = {})
@@ -47,7 +149,7 @@ def create_user!(options = {})
     last_name: "Smith",
     password: "welcome",
     password_confirmation: "welcome",
-    role: "super_admin"
+    role: "standard"
   }
   attributes = user_attributes.merge options
   User.create! attributes
