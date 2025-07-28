@@ -24,6 +24,7 @@ export const routes = {
     settings: {
       index: "/dashboard/settings",
       email: "/dashboard/settings?tab=email",
+      organization: "/dashboard/settings?tab=organization",
       profile: "/dashboard/settings?tab=profile",
       changePassword: "/dashboard/settings?tab=password",
     },

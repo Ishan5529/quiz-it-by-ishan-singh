@@ -14,6 +14,10 @@ export const EMAIL_FORM_VALIDATION_SCHEMA = yup.object().shape({
   email: yup.string().email(t("yup.string.email")).required(t("yup.required")),
 });
 
+export const ORGANIZATION_FORM_VALIDATION_SCHEMA = yup.object().shape({
+  organization: yup.string().required(t("yup.required")),
+});
+
 export const PASSWORD_CONFIRMATION_FORM_INITIAL_VALUES = {
   password: "",
 };

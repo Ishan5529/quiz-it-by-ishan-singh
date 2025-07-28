@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_21_124159) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_28_064022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -81,6 +81,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_21_124159) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "organizations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_organizations_on_name", unique: true
+  end
+
   create_table "published_quizzes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "quiz_id", null: false
     t.jsonb "data"
@@ -136,7 +143,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_21_124159) do
     t.string "authentication_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "organization_id", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -147,4 +156,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_21_124159) do
   add_foreign_key "published_quizzes", "quizzes"
   add_foreign_key "questions", "quizzes"
   add_foreign_key "quizzes", "categories"
+  add_foreign_key "users", "organizations"
 end

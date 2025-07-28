@@ -23,7 +23,9 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   end
 
   def create
-    new_quiz = current_user.quizzes.create!(quiz_params)
+    quiz_attributes = quiz_params.to_h
+    quiz_attributes[:category_id] ||= Category.first&.id
+    new_quiz = current_user.quizzes.create!(quiz_attributes)
     if params.key?(:quiet)
       render_json({ slug: new_quiz.slug })
       return

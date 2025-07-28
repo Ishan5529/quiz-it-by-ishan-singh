@@ -73,6 +73,7 @@ const QuizPage = () => {
             handleTitleUpdate,
             handleInputBlur,
             isDraft: quiz?.isDraft,
+            isPublished: quiz?.published,
             updatedAt: quiz?.updated_at,
             handlePublish,
           }}
