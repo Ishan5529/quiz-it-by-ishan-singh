@@ -28,7 +28,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     questions = @quiz.questions.where(id: params[:ids])
     positions = questions.pluck(:position)
     count = questions.size
-    if questions.destroy_all
+    destroyed = questions.destroy_all
+    if destroyed.size == count
       positions.sort.reverse.each do |pos|
         @quiz.questions.where("position > ?", pos).update_all("position = position - 1")
       end

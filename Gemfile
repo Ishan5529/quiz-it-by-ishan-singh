@@ -112,6 +112,7 @@ end
 group :test do
   # Complete suite of testing facilities
   gem "minitest"
+  gem "mocha"
 
   # for test coverage report
   gem "simplecov", require: false

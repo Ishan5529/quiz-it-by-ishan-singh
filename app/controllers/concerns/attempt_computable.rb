@@ -23,10 +23,10 @@ module AttemptComputable
     questions.each do |q|
       published_question = published_questions.find { |pq| pq["id"].to_s == q["question_id"].to_s }
       options = published_question ? published_question["options"] || [] : []
-      correct_option = published_question["correct_option"].to_s
+      correct_option = published_question ? published_question["correct_option"].to_s : nil
 
       q["options"] = options
-      q["title"] = published_question["title"]
+      q["title"] = published_question ? published_question["title"] : nil
       q["correct_option"] = correct_option
 
       selected_option_index = options.index(q["selected_option"])&.+(1)

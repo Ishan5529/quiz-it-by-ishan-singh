@@ -3,7 +3,7 @@
 class Api::V1::QuizzesController < Api::V1::BaseController
   include QuizFilterable
 
-  before_action :load_quiz!, only: %i[delete]
+  before_action :load_quiz!, only: %i[show]
   before_action :load_quizzes, only: %i[bulk_destroy bulk_update]
 
   def index
@@ -25,7 +25,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
   def create
     new_quiz = current_user.quizzes.create!(quiz_params)
     if params.key?(:quiet)
-      render_json({ slug: @quiz.slug })
+      render_json({ slug: new_quiz.slug })
       return
     end
     render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
@@ -33,7 +33,7 @@ class Api::V1::QuizzesController < Api::V1::BaseController
 
   def bulk_update
     attrs = quiz_params.to_h
-    if attrs["isPublished"] == true || attrs[:isPublished] == true
+    if ActiveModel::Type::Boolean.new.cast(attrs["isPublished"])
       @quizzes.each do |quiz|
         quiz.publish!
       end

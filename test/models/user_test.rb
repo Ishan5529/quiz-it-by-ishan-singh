@@ -62,11 +62,30 @@ class UserTest < ActiveSupport::TestCase
 
   def test_as_json
     expected = {
+      "id" => @user.id,
       "email" => @user.email,
       "first_name" => @user.first_name,
       "last_name" => @user.last_name,
       "current_sign_in_at" => nil
     }
     assert_equal expected, @user.as_json
+  end
+
+  def test_name_returns_full_name
+    @user.first_name = "Jane"
+    @user.last_name = "Doe"
+    assert_equal "Jane Doe", @user.name
+  end
+
+  def test_name_with_blank_last_name
+    @user.first_name = "Jane"
+    @user.last_name = ""
+    assert_equal "Jane", @user.name
+  end
+
+  def test_name_with_blank_first_name
+    @user.first_name = ""
+    @user.last_name = "Doe"
+    assert_equal "Doe", @user.name
   end
 end

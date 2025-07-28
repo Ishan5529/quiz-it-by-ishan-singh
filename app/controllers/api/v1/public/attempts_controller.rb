@@ -52,7 +52,9 @@ class Api::V1::Public::AttemptsController < Api::V1::BaseController
 
     def attempt_params
       params.require(:attempt).permit(
-        :status, questions: [:question_id, :selected_option]
+        :quiz_id, :user_id, :user_name, :user_email, :submission_time,
+        :correct_answers, :wrong_answers, :unanswered, :status,
+        questions: [:question_id, :selected_option]
       )
     end
 

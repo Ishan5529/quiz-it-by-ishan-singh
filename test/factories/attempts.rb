@@ -2,15 +2,29 @@
 
 FactoryBot.define do
   factory :attempt do
-    user_name { "MyString" }
-    user_email { "MyString" }
-    submission_time { "2025-07-21 18:11:59" }
-    correct_answers { 1 }
-    wrong_answers { 1 }
-    unanswered { 1 }
-    questions { "" }
-    status { "MyString" }
-    user { nil }
-    quiz { nil }
+    association :user
+    association :quiz
+    user_name { user&.name }
+    user_email { user&.email }
+    submission_time { Time.current }
+    correct_answers { rand(1..5) }
+    wrong_answers { rand(0..3) }
+    unanswered { rand(0..2) }
+    questions {
+      opts = [
+        Faker::Lorem.sentence(word_count: 2),
+        Faker::Lorem.sentence(word_count: 2),
+        Faker::Lorem.sentence(word_count: 2)
+      ]
+      [
+        {
+          id: SecureRandom.uuid,
+          title: Faker::Lorem.question,
+          options: opts,
+          correct_option: opts.sample
+        }
+      ]
+    }
+    status { "incomplete" }
   end
 end
