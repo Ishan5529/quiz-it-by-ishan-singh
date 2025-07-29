@@ -78,7 +78,15 @@ export const QUESTIONS_FORM_VALIDATION_SCHEMA = yup.object().shape({
         )
     )
     .min(2, t("yup.string.minOptions", { count: 2 }))
-    .max(6, t("yup.string.maxOptions", { count: 6 })),
+    .max(6, t("yup.string.maxOptions", { count: 6 }))
+    .test(
+      "unique-options",
+      t("yup.string.uniqueOptions"),
+      options =>
+        new Set(
+          options.filter(option => !!option).map(v => v.trim().toLowerCase())
+        ).size === options.length
+    ),
   correctOption: yup
     .number()
     .typeError(t("yup.string.correctOption"))

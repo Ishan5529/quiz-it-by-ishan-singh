@@ -21,7 +21,8 @@
       "option": "Option cannot be empty",
       "minOptions": "At least {{count}} options are required",
       "maxOptions": "Maximum {{count}} options allowed",
-      "selectOption": "Select the correct option"
+      "correctOption": "Select the correct option",
+      "uniqueOptions": "Options must be unique"
     },
     "required": "Required"
   },
@@ -111,6 +112,9 @@
     "authLastName": "Smith",
     "authPassword": "******",
     "authPasswordConfirmation": "******",
+    "email": "Enter a valid email address",
+    "firstName": "Enter your first name",
+    "lastName": "Enter your last name",
     "status": "Select status",
     "category": "Select category",
     "questionTitle": "Enter question title",
@@ -138,7 +142,6 @@
       "quizzesDescription": "Create a quiz to get started.",
       "quizzesTitle": "Looks like you don't have any quizzes!",
       "questions": "No questions found for this quiz.",
-      "description": "No quiz description provided.",
       "answer": "You did not answer this question"
     },
     "questions": {

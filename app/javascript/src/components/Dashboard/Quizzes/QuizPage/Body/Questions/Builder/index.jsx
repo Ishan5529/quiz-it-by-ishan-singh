@@ -181,8 +181,9 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
                           </div>
                           {touched.options &&
                             touched.options[index] &&
-                            errors.options &&
-                            errors.options[index] && (
+                            Array.isArray(errors.options) &&
+                            errors.options[index] &&
+                            typeof errors.options[index] === "string" && (
                               <div className="mt-1 text-xs text-red-500">
                                 {errors.options[index]}
                               </div>

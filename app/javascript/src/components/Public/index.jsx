@@ -40,7 +40,10 @@ const Public = () => {
     });
 
   const {
-    data: { data: { organization: { name: organizationName } = {} } = {} } = {},
+    data: {
+      data: { organization: { name: organizationName } = {} } = {},
+      isLoading: loadingOrganizationData,
+    } = {},
   } = useOrganizationsShow();
 
   const updateQueryParams = useFuncDebounce(updatedValue => {
@@ -61,7 +64,7 @@ const Public = () => {
     ? t("labels.goToDashboard")
     : t("labels.loginAsAdmin");
 
-  if (isLoading) {
+  if (isLoading || loadingOrganizationData) {
     return (
       <div className="h-screen w-screen">
         <PageLoader />

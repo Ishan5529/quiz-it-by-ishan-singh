@@ -29,7 +29,7 @@ const SideBar = () => {
     try {
       await authenticationApi.logout();
       authDispatch({ type: "LOGOUT" });
-      window.location.href = routes.auth.public;
+      window.location.href = routes.public.index;
     } catch (error) {
       logger.error(error);
     }

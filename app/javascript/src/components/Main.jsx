@@ -12,7 +12,7 @@ import { useAuthState, useAuthDispatch } from "contexts/auth";
 import { useUserDispatch, useUserState } from "contexts/user";
 import PropTypes from "prop-types";
 import { QueryClientProvider } from "react-query";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { routes } from "src/routes";
 import { isPresent } from "utils";
@@ -82,6 +82,7 @@ const Main = props => {
               redirectRoute={routes.public.index}
             />
           ))}
+          <Redirect exact from={routes.root} to={routes.public.index} />
           <Route component={PageNotFound} path={routes.pageNotFound} />
         </Switch>
       </BrowserRouter>

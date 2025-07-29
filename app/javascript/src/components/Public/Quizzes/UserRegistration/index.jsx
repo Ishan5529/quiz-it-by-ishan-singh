@@ -9,7 +9,7 @@ import { routes } from "src/routes";
 import { capitalize } from "utils";
 import PropTypes from "prop-types";
 import UserRegistrationForm from "./Form";
-import { Button } from "neetoui/index";
+import { Button, Typography } from "neetoui";
 import useQueryParams from "hooks/useQueryParams";
 import { useAttemptsCreate } from "hooks/reactQuery/useAttemptsApi";
 import { useTranslation } from "react-i18next";
@@ -77,8 +77,8 @@ const UserRegistration = ({ history }) => {
         email,
         firstName,
         lastName,
-        password: "example",
-        passwordConfirmation: "example",
+        password: "welcome",
+        passwordConfirmation: "welcome",
         role: "standard",
         quiet: true,
       });
@@ -102,17 +102,20 @@ const UserRegistration = ({ history }) => {
     <div className="neeto-ui-bg-gray-100 flex h-screen w-screen flex-row items-center justify-center overflow-y-auto overflow-x-hidden p-6">
       <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-xl">
         <div className="neeto-ui-bg-white neeto-ui-shadow-s w-full rounded-lg p-10">
-          <h2 className="neeto-ui-text-gray-800 mb-2 text-left text-3xl font-extrabold">
+          <Typography
+            className="neeto-ui-text-gray-800 mb-8 text-left text-3xl font-extrabold"
+            style="h2"
+          >
             {capitalize(quiz?.title)} {t("labels.quiz").toLowerCase()}
-          </h2>
-          <p className="mb-2 text-left text-base text-gray-600">
-            {quiz?.description || t("quizzes.empty.description")}
-          </p>
+          </Typography>
           {isPreview ? (
             <div className="flex flex-col">
-              <p className="mb-12 text-left text-base text-gray-600">
+              <Typography
+                className="mb-12 text-left text-base text-gray-600"
+                style="body2"
+              >
                 {t("quizzes.preview", { title: quiz?.title })}
-              </p>
+              </Typography>
               <div className="flex flex-row justify-end space-x-2">
                 <Button
                   label={t("labels.startQuiz")}
