@@ -4,7 +4,7 @@ import ButtonGroup from "@bigbinary/neeto-molecules/ButtonGroup";
 import classNames from "classnames";
 import { InlineInput } from "components/commons";
 import { LeftArrow, Link } from "neetoicons";
-import { Typography } from "neetoui";
+import { Button, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation, useHistory } from "react-router-dom";
 import { routes } from "routes";
@@ -103,9 +103,14 @@ const Header = ({
             size="small"
             buttons={[
               {
+                disabled: !isDraft,
                 isActive: true,
                 key: "Publish",
                 label: t("labels.publish"),
+                tooltipProps: {
+                  content: t("tooltip.publishQuiz"),
+                  position: "bottom",
+                },
                 onClick: handlePublish,
               },
               {
@@ -113,17 +118,26 @@ const Header = ({
                 isActive: false,
                 key: "ExternalLink",
                 icon: "ri-arrow-right-up-line",
+                tooltipProps: {
+                  content: t("tooltip.openPreview"),
+                  position: "bottom",
+                },
                 onClick: handlePreviewClick,
               },
             ]}
           />
         </div>
-        <div
-          className="h-full cursor-pointer hover:text-blue-500"
+        <Button
+          className="text-black hover:text-blue-500"
+          disabled={!isPublished}
+          icon={Link}
+          style="link"
+          tooltipProps={{
+            content: t("tooltip.copyLink"),
+            position: "bottom",
+          }}
           onClick={handleLinkCopy}
-        >
-          <Link />
-        </div>
+        />
       </div>
     </div>
   );

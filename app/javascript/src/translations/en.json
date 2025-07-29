@@ -125,7 +125,10 @@
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
-    "deleteOption": "Delete option"
+    "deleteOption": "Delete option",
+    "copyLink": "Copy link to clipboard",
+    "openPreview": "Open quiz preview",
+    "publishQuiz": "Publish quiz"
   },
   "quizzes": {
     "add": "Add new quiz",

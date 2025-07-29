@@ -35,9 +35,28 @@ class Api::V1::QuizzesController < Api::V1::BaseController
 
   def bulk_update
     attrs = quiz_params.to_h
+    failed_quizzes = []
+
     if ActiveModel::Type::Boolean.new.cast(attrs["isPublished"])
       @quizzes.each do |quiz|
-        quiz.publish!
+        begin
+          error_raised = quiz.publish!
+          failed_quizzes << quiz if error_raised
+          next
+        end
+      end
+      if failed_quizzes.empty?
+        render_json(
+          {
+            notice: t(
+              "successfully_updated", count: @quizzes.size,
+              entity: "Quiz")
+          })
+      else
+        render_message(
+          t(
+            "failed_to_publish_quiz", title: failed_quizzes.map(&:title).join(", "),
+            count: failed_quizzes.size), :ok, "error")
       end
     else
       @quizzes.update_all(attrs)

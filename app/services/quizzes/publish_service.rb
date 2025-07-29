@@ -8,6 +8,10 @@ class Quizzes::PublishService
   def publish!
     @quiz.reload
 
+    if @quiz.questions.empty?
+      return true
+    end
+
     published_data = {
       title: @quiz.title,
       slug: @quiz.slug,
@@ -31,5 +35,6 @@ class Quizzes::PublishService
     end
 
     @quiz.update!(isPublished: true, isDraft: false)
+    false
   end
 end
