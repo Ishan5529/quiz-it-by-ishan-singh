@@ -3,7 +3,7 @@ import Question from "./Question";
 import { useParams, useHistory } from "react-router-dom";
 import { usePublicQuizzesShow } from "hooks/reactQuery/usePublicQuizzesApi";
 import { isEmpty } from "ramda";
-import attemptsApi from "apis/attempts";
+import { useAttemptsUpdate } from "hooks/reactQuery/useAttemptsApi";
 import useQueryParams from "hooks/useQueryParams";
 import { useTranslation } from "react-i18next";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
@@ -16,6 +16,8 @@ const Attempt = () => {
 
   const [attemptData, setAttemptData] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
+
+  const { mutateAsync: updateAttempt } = useAttemptsUpdate();
 
   const { t } = useTranslation();
   const history = useHistory();
@@ -58,7 +60,7 @@ const Attempt = () => {
     );
   };
 
-  const handleSubmit = async (isComplete = true) => {
+  const handleSubmit = (isComplete = true) => {
     const questions = attemptData.map(({ questionId, selectedOption }) => ({
       question_id: questionId,
       selected_option: selectedOption,
@@ -69,17 +71,19 @@ const Attempt = () => {
       questions,
     };
 
-    try {
-      await attemptsApi.update(slug, attemptId, payload, isPreview);
-      if (isComplete) {
-        const link = routes.public.quizzes.result
-          .replace(":slug", slug)
-          .replace(":attemptId", attemptId);
-        history.push(`${link}${isPreview ? "?isPreview=true" : ""}`);
+    updateAttempt(
+      { slug, attemptId, payload, isPreview },
+      {
+        onSuccess: () => {
+          if (isComplete) {
+            const link = routes.public.quizzes.result
+              .replace(":slug", slug)
+              .replace(":attemptId", attemptId);
+            history.push(`${link}${isPreview ? "?isPreview=true" : ""}`);
+          }
+        },
       }
-    } catch (error) {
-      logger.error(error);
-    }
+    );
   };
 
   const handleNext = () => {

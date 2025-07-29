@@ -1,18 +1,17 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
-import attemptsApi from "apis/attempts";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
 import SubHeaderText from "components/Dashboard/Quizzes/SubHeaderText";
-import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import {
+  useAttemptsFetch,
+  useAttemptsDestroy,
+} from "hooks/reactQuery/useAttemptsApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
 import { Delete, Download } from "neetoicons";
@@ -57,8 +56,6 @@ const Submissions = () => {
 
   const { t } = useTranslation();
 
-  const clearQueryClient = useClearQueryClient();
-
   const params = {
     page: tablePage,
     searchTerm,
@@ -74,6 +71,8 @@ const Submissions = () => {
       user_name: querySearchTerm,
       status: queryStatus,
     });
+
+  const { mutate: destroyAttempt } = useAttemptsDestroy();
 
   const updateQueryParams = useFuncDebounce(updatedValue => {
     const updatedParam = {
@@ -143,13 +142,12 @@ const Submissions = () => {
     setAttemptsData(updateRowData());
   }, [attempts]);
 
-  const handleDelete = async () => {
-    await attemptsApi.destroy({
+  const handleDelete = () => {
+    destroyAttempt({
       slug,
       attemptIds: selectedAttemptIds,
       quiet: true,
     });
-    clearQueryClient(QUERY_KEYS.SUBMISSIONS);
     setSelectedAttemptIds([]);
     setShowDeleteAlert(false);
   };

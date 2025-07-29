@@ -1,14 +1,14 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
-import quizzesApi from "apis/quizzes";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
-import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
+import {
+  useQuizzesFetch,
+  useQuizzesUpdate,
+  useQuizzesClone,
+} from "hooks/reactQuery/useQuizzesApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import { useQuizAlerts } from "hooks/useQuizAlerts";
 import { useQuizFilters } from "hooks/useQuizFilters";
@@ -47,7 +47,10 @@ const Quizzes = () => {
   const [category, setCategory] = useState(safeCategory);
 
   const history = useHistory();
-  const clearQueryClient = useClearQueryClient();
+
+  const { mutate: updateQuiz } = useQuizzesUpdate();
+  const { mutate: cloneQuiz } = useQuizzesClone();
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -103,8 +106,8 @@ const Quizzes = () => {
     );
   };
 
-  const handlePublishToggle = async ({ slugs, publishedStatus }) => {
-    await quizzesApi.update({
+  const handlePublishToggle = ({ slugs, publishedStatus }) => {
+    updateQuiz({
       slugs,
       quiet: true,
       payload: {
@@ -112,12 +115,10 @@ const Quizzes = () => {
         isDraft: publishedStatus,
       },
     });
-    clearQueryClient(QUERY_KEYS.QUIZZES);
   };
 
-  const handleQuizClone = async slug => {
-    await quizzesApi.clone(slug);
-    clearQueryClient(QUERY_KEYS.QUIZZES);
+  const handleQuizClone = slug => {
+    cloneQuiz({ slug });
   };
 
   const quizzesData = useQuizTableData({

@@ -10,25 +10,21 @@ const fetch = (quizSlug, params = {}) =>
 const show = ({ quizSlug, id }) =>
   axios.get(`${BASE_QUESTIONS_URL(quizSlug)}/${id}`);
 
-const create = (quizSlug, payload, params = {}) =>
-  axios.post(BASE_QUESTIONS_URL(quizSlug), { question: payload }, { params });
+const create = ({ slug, payload, params = {} }) =>
+  axios.post(BASE_QUESTIONS_URL(slug), { question: payload }, { params });
 
-const update = (quizSlug, id, payload, params = {}) =>
+const update = ({ slug, id, payload, params = {} }) =>
   axios.put(
-    `${BASE_QUESTIONS_URL(quizSlug)}/${id}`,
+    `${BASE_QUESTIONS_URL(slug)}/${id}`,
     { question: payload },
     { params }
   );
 
-const destroy = (quizSlug, ids, params = {}) =>
-  axios.post(
-    `${BASE_QUESTIONS_URL(quizSlug)}/bulk_destroy`,
-    { ids },
-    { params }
-  );
+const destroy = ({ slug, ids, params = {} }) =>
+  axios.post(`${BASE_QUESTIONS_URL(slug)}/bulk_destroy`, { ids }, { params });
 
-const clone = (quizSlug, id) =>
-  axios.post(`${BASE_QUESTIONS_URL(quizSlug)}/${id}/clone`);
+const clone = ({ slug, id }) =>
+  axios.post(`${BASE_QUESTIONS_URL(slug)}/${id}/clone`);
 
 const questionsApi = {
   fetch,

@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import UserRegistrationForm from "./Form";
 import { Button } from "neetoui/index";
 import useQueryParams from "hooks/useQueryParams";
-import attemptsApi from "apis/attempts";
+import { useAttemptsCreate } from "hooks/reactQuery/useAttemptsApi";
 import { useTranslation } from "react-i18next";
 import withTitle from "utils/withTitle";
 
@@ -21,6 +21,8 @@ const UserRegistration = ({ history }) => {
   const authDispatch = useAuthDispatch();
   const userDispatch = useUserDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutateAsync: createAttempt } = useAttemptsCreate();
   const { t } = useTranslation();
 
   const { data: { data: quiz = {} } = {} } = usePublicQuizzesShow(slug);
@@ -33,24 +35,30 @@ const UserRegistration = ({ history }) => {
         selected_option: null,
       })),
     };
-    const { data: { attempt: { id } = {} } = {} } = await attemptsApi.create(
-      slug,
-      payload,
-      isPreview
+
+    createAttempt(
+      { slug, payload, isPreview },
+      {
+        onSuccess: ({
+          data: {
+            attempt: { id },
+          },
+        }) => {
+          const link = `${routes.public.quizzes.attempts.new
+            .replace(":slug", slug)
+            .replace(":attemptId", id)}${isPreview ? "?isPreview=true" : ""}`;
+
+          history.push(link);
+        },
+      }
     );
-
-    const link = `${routes.public.quizzes.attempts.new
-      .replace(":slug", slug)
-      .replace(":attemptId", id)}${isPreview ? "?isPreview=true" : ""}`;
-
-    history.push(link);
   };
 
   const handleLogin = async ({ email }) => {
     try {
       const {
         data: { auth_token, user, is_admin },
-      } = await authenticationApi.login({ email, password: "example" });
+      } = await authenticationApi.login({ email, password: "welcome" });
       authDispatch({
         type: "LOGIN",
         payload: { auth_token, email, is_admin },

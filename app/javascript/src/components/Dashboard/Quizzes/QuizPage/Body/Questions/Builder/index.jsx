@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
-import questionsApi from "apis/questions";
 import { InlineInput } from "components/commons";
 import {
   QUESTIONS_FORM_INITIAL_FORM_VALUES,
   QUESTIONS_FORM_VALIDATION_SCHEMA,
 } from "components/Dashboard/Quizzes/constants";
 import { Formik, Form as FormikForm, FieldArray } from "formik";
-import { useQuestionsShow } from "hooks/reactQuery/useQuestionsApi";
+import {
+  useQuestionsShow,
+  useQuestionsCreate,
+  useQuestionsUpdate,
+} from "hooks/reactQuery/useQuestionsApi";
 import { Right } from "neetoicons";
 import { Typography, Button } from "neetoui";
 import { useTranslation } from "react-i18next";
@@ -28,6 +31,9 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
   const history = useHistory();
 
   const { t } = useTranslation();
+
+  const { mutate: createQuestion } = useQuestionsCreate();
+  const { mutate: updateQuestion } = useQuestionsUpdate();
 
   useEffect(() => {
     if (!isEdit) {
@@ -67,10 +73,10 @@ const Builder = ({ position, isEdit = false, setIsDirty }) => {
     try {
       if (isEdit) {
         payload.id = id;
-        await questionsApi.update(slug, id, payload);
+        updateQuestion({ slug, id, payload });
       } else {
         payload.position = questionNumber - 1;
-        await questionsApi.create(slug, payload);
+        createQuestion({ slug, payload });
       }
       setIsDirty(true);
       if (values.isSaveAndAddNew) {

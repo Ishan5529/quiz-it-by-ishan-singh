@@ -1,6 +1,9 @@
 import React from "react";
 
-import quizzesApi from "apis/quizzes";
+import {
+  useQuizzesDestroy,
+  useQuizzesDiscardDraft,
+} from "hooks/reactQuery/useQuizzesApi";
 import { Alert } from "neetoui";
 import { getAlertTitle } from "utils";
 import withT from "utils/withT";
@@ -13,45 +16,48 @@ const QuizAlerts = ({
   selectedQuizSlugs,
   handleAlertSubmit,
   t,
-}) => (
-  <>
-    {showDiscardAlert && (
-      <Alert
-        isOpen={showDiscardAlert}
-        message={t("alert.irreversibleWarning")}
-        title={getAlertTitle(
-          t("labels.discard"),
-          selectedQuizSlugs.length,
-          t("labels.quiz"),
-          t("labels.quizzes")
-        )}
-        onClose={() => setShowDiscardAlert(false)}
-        onSubmit={() =>
-          handleAlertSubmit(() =>
-            quizzesApi.discardDraft({ slugs: selectedQuizSlugs })
-          )
-        }
-      />
-    )}
-    {showDeleteAlert && (
-      <Alert
-        isOpen={showDeleteAlert}
-        message={t("alert.irreversibleWarning")}
-        title={getAlertTitle(
-          t("labels.delete"),
-          selectedQuizSlugs.length,
-          t("labels.quiz"),
-          t("labels.quizzes")
-        )}
-        onClose={() => setShowDeleteAlert(false)}
-        onSubmit={() =>
-          handleAlertSubmit(() =>
-            quizzesApi.destroy({ slugs: selectedQuizSlugs })
-          )
-        }
-      />
-    )}
-  </>
-);
+}) => {
+  const { mutate: destroyQuiz } = useQuizzesDestroy();
+  const { mutate: discardDraftQuiz } = useQuizzesDiscardDraft();
+
+  return (
+    <>
+      {showDiscardAlert && (
+        <Alert
+          isOpen={showDiscardAlert}
+          message={t("alert.irreversibleWarning")}
+          title={getAlertTitle(
+            t("labels.discard"),
+            selectedQuizSlugs.length,
+            t("labels.quiz"),
+            t("labels.quizzes")
+          )}
+          onClose={() => setShowDiscardAlert(false)}
+          onSubmit={() =>
+            handleAlertSubmit(() =>
+              discardDraftQuiz({ slugs: selectedQuizSlugs })
+            )
+          }
+        />
+      )}
+      {showDeleteAlert && (
+        <Alert
+          isOpen={showDeleteAlert}
+          message={t("alert.irreversibleWarning")}
+          title={getAlertTitle(
+            t("labels.delete"),
+            selectedQuizSlugs.length,
+            t("labels.quiz"),
+            t("labels.quizzes")
+          )}
+          onClose={() => setShowDeleteAlert(false)}
+          onSubmit={() =>
+            handleAlertSubmit(() => destroyQuiz({ slugs: selectedQuizSlugs }))
+          }
+        />
+      )}
+    </>
+  );
+};
 
 export default withT(QuizAlerts);

@@ -1,14 +1,13 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
-import organizationsApi from "apis/organizations";
 import { Form, Formik } from "formik";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
-import { useOrganizationsShow } from "hooks/reactQuery/useOrganizationsApi";
+import {
+  useOrganizationsShow,
+  useOrganizationsUpdate,
+} from "hooks/reactQuery/useOrganizationsApi";
 import { Button } from "neetoui";
 import { Input } from "neetoui/formik";
 import { useTranslation } from "react-i18next";
@@ -17,7 +16,8 @@ import { ORGANIZATION_FORM_VALIDATION_SCHEMA } from "./constants";
 
 const Organization = () => {
   const { t } = useTranslation();
-  const clearQueryClient = useClearQueryClient();
+
+  const { mutate: updateOrganization } = useOrganizationsUpdate();
 
   const {
     data: { data: { organization: organizationData } = {} } = {},
@@ -30,16 +30,8 @@ const Organization = () => {
 
   const initialFormValues = { organization: organizationData?.name || "" };
 
-  const handleSubmit = async (data, { resetForm }) => {
-    try {
-      await organizationsApi.update({
-        name: data.organization,
-      });
-      clearQueryClient(QUERY_KEYS.ORGANIZATIONS);
-    } catch (err) {
-      resetForm();
-      logger.error(err);
-    }
+  const handleSubmit = (data, { resetForm }) => {
+    updateOrganization({ name: data.organization }, { onError: resetForm });
   };
 
   return (

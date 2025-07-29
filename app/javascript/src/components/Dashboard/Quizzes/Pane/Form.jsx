@@ -1,11 +1,8 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React from "react";
 
-import quizzesApi from "apis/quizzes";
 import { QUIZZES_FORM_VALIDATION_SCHEMA } from "components/Dashboard/Quizzes/constants";
 import { Formik, Form as FormikForm } from "formik";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import { useQuizzesCreate } from "hooks/reactQuery/useQuizzesApi";
 import { Pane } from "neetoui";
 import { ActionBlock, Input, Select } from "neetoui/formik";
 import { useTranslation } from "react-i18next";
@@ -21,8 +18,7 @@ const Form = ({
   categories = [],
 }) => {
   const { t } = useTranslation();
-
-  const clearQueryClient = useClearQueryClient();
+  const { mutateAsync: createQuiz } = useQuizzesCreate();
 
   const handleSubmit = async values => {
     if (isFilter) {
@@ -31,18 +27,16 @@ const Form = ({
 
       return;
     }
-    try {
-      const data = await quizzesApi.create(values);
 
-      if (onSuccess) {
-        clearQueryClient(QUERY_KEYS.QUIZZES);
-        onSuccess(data.data.slug);
-      } else {
-        onClose();
+    await createQuiz(
+      { quiz: values },
+      {
+        onSuccess: ({ data: { slug } }) => {
+          onSuccess(slug);
+        },
+        onError: () => onClose(),
       }
-    } catch (err) {
-      logger.error(err);
-    }
+    );
   };
 
   return (
