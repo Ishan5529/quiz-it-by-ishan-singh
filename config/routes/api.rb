@@ -47,7 +47,5 @@ namespace :api, defaults: { format: :json } do
         end
       end
     end
-
-    resources :cypress_runs, only: [:create]
   end
 end
