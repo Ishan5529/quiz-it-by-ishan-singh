@@ -116,6 +116,16 @@ const Quizzes = () => {
     });
   };
 
+  const handleCategoryToggle = ({ slugs, category }) => {
+    updateBulkQuiz({
+      slugs,
+      quiet: true,
+      payload: {
+        category,
+      },
+    });
+  };
+
   const handleQuizClone = slug => {
     cloneQuiz({ slug });
   };
@@ -172,6 +182,7 @@ const Quizzes = () => {
                 Menu,
                 MenuItem,
                 handlePublishToggle,
+                handleCategoryToggle,
                 selectedQuizSlugs,
                 setSelectedQuizSlugs,
                 setShowDeleteAlert,

@@ -3,11 +3,12 @@
 class Api::V1::Quizzes::BulkUpdateController < Api::V1::BaseController
   include QuizFilterable
   include BulkQuizUpdatable
+  include CategoryAssignable
 
   before_action :load_quizzes
 
   def update
-    attrs = quiz_params.to_h
+    attrs = assign_category_id_from_name(quiz_params.to_h)
     if ActiveModel::Type::Boolean.new.cast(attrs["isPublished"])
       handle_bulk_publish(@quizzes)
     else

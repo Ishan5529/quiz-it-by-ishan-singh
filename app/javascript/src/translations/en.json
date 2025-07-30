@@ -26,6 +26,7 @@
   "title": "Quiz It",
   "pageTitle": "Quiz It | {{title}}",
   "labels": {
+    "organization": "Organization",
     "organizationName": "Organization Name",
     "general": "General Settings",
     "organizationDescription": "Manage organization",
@@ -84,6 +85,7 @@
     "completed": "Completed",
     "incomplete": "Incomplete",
     "changeStatus": "Change status",
+    "changeCategory": "Change category",
     "changePassword": "Change password",
     "currentPassword": "Current password",
     "newPassword": "New password",
@@ -119,6 +121,7 @@
     "lastName": "Enter your last name",
     "status": "Select status",
     "category": "Select category",
+    "searchCategory": "Search category",
     "questionTitle": "Enter question title",
     "quizTitle": "Enter quiz title",
     "names": "Search names",
