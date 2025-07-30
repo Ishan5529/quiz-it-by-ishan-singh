@@ -26,8 +26,10 @@
   "title": "Quiz It",
   "pageTitle": "Quiz It | {{title}}",
   "labels": {
-    "organization": "Organization",
+    "organizationName": "Organization Name",
+    "general": "General Settings",
     "organizationDescription": "Manage organization",
+    "customizeQuizSiteName": "Customize the quiz site name",
     "updateOrganization": "Update organization",
     "email": "Email",
     "emailAddress": "Email address",
@@ -70,6 +72,7 @@
     "continue": "Continue",
     "done": "Done",
     "save": "Save",
+    "saveChanges": "Save changes",
     "saveAndAddNewQuestion": "Save & add new question",
     "addOption": "Add new option +",
     "edit": "Edit",
@@ -120,7 +123,8 @@
     "quizTitle": "Enter quiz title",
     "names": "Search names",
     "quizSearch": "Search quizzes",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "organization": "Enter organization name"
   },
   "tooltip": {
     "minOptions": "Minimum {{count}} options required.",
@@ -170,7 +174,7 @@
     }
   },
   "misc": {
-    "reportDownloadChannelConnected": "Connected the cables...",
+    "reportDownloadChannelConnected": "Starting download...",
     "downloading": "Downloading report!",
     "linkCopied": "Link copied to clipboard",
     "stringExpected": "Expected a string",

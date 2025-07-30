@@ -8,7 +8,7 @@ import {
   useOrganizationsShow,
   useOrganizationsUpdate,
 } from "hooks/reactQuery/useOrganizationsApi";
-import { Button } from "neetoui";
+import { Button, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
 import { useTranslation } from "react-i18next";
 
@@ -38,9 +38,16 @@ const Organization = () => {
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title={t("labels.updateOrganization")}
+        title={
+          <Typography style="h1">
+            {t("labels.general")}
+            <Typography style="body1">
+              {t("labels.customizeQuizSiteName")}
+            </Typography>
+          </Typography>
+        }
       />
-      <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
+      <div className="mt-4 w-2/5">
         <Formik
           enableReinitialize
           initialValues={initialFormValues}
@@ -48,21 +55,31 @@ const Organization = () => {
           onSubmit={handleSubmit}
         >
           {({ dirty, isSubmitting }) => (
-            <Form className="neeto-ui-rounded-lg neeto-ui-bg-white neeto-ui-shadow-s w-full space-y-6 border p-8">
+            <Form className="neeto-ui-rounded-lg neeto-ui-bg-white w-full space-y-6 p-8">
               <Input
                 required
-                label={t("labels.organization")}
+                label={t("labels.organizationName")}
                 name="organization"
+                placeholder={t("placeholders.organization")}
+                size="large"
                 type="name"
               />
               <Button
-                fullWidth
                 className="h-8"
                 disabled={!dirty || isSubmitting}
-                label={t("labels.update")}
+                label={t("labels.saveChanges")}
                 loading={isSubmitting}
                 size="small"
                 type="submit"
+              />
+              <Button
+                className="ml-4 h-8"
+                disabled={!dirty || isSubmitting}
+                label={t("labels.cancel")}
+                loading={isSubmitting}
+                size="small"
+                style="secondary"
+                type="reset"
               />
             </Form>
           )}
