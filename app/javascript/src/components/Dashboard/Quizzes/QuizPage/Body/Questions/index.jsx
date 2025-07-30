@@ -23,7 +23,7 @@ const Questions = () => {
     }
 
     updateQuiz({
-      slugs: [slug],
+      slug,
       quiet: true,
       payload: { isDraft: true },
     });

@@ -10,7 +10,10 @@ const create = payload =>
     ...payload,
   });
 
-const update = ({ slugs, quiet = false, payload }) =>
+const update = ({ slug, quiet = false, payload }) =>
+  axios.put(`${BASE_QUIZZES_URL}/${slug}`, { quiet, quiz: payload });
+
+const bulkUpdate = ({ slugs, quiet = false, payload }) =>
   axios.put(`${BASE_QUIZZES_URL}/bulk_update`, { slugs, quiet, quiz: payload });
 
 const destroy = payload =>
@@ -26,6 +29,7 @@ const quizzesApi = {
   show,
   create,
   update,
+  bulkUpdate,
   destroy,
   discardDraft,
   clone,

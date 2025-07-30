@@ -44,6 +44,15 @@ export const useQuizzesUpdate = () => {
   });
 };
 
+export const useQuizzesBulkUpdate = () => {
+  const handleSuccess = useQuizzesHandleSuccess();
+
+  return useMutation({
+    mutationFn: quizzesApi.bulkUpdate,
+    onSuccess: handleSuccess,
+  });
+};
+
 export const useQuizzesDestroy = () => {
   const handleSuccess = useQuizzesHandleSuccess();
 

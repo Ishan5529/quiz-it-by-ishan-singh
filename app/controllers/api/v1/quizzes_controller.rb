@@ -3,8 +3,8 @@
 class Api::V1::QuizzesController < Api::V1::BaseController
   include QuizFilterable
 
-  before_action :load_quiz!, only: %i[show]
-  before_action :load_quizzes, only: %i[bulk_destroy bulk_update]
+  before_action :load_quiz!, only: %i[show update]
+  before_action :load_quizzes, only: %i[bulk_destroy]
 
   def index
     @quizzes = current_user.quizzes
@@ -33,41 +33,11 @@ class Api::V1::QuizzesController < Api::V1::BaseController
     render_json({ notice: t("successfully_created", entity: "Quiz"), slug: new_quiz.slug })
   end
 
-  def bulk_update
-    attrs = quiz_params.to_h
-    failed_quizzes = []
-
-    if ActiveModel::Type::Boolean.new.cast(attrs["isPublished"])
-      @quizzes.each do |quiz|
-        begin
-          error_raised = quiz.publish!
-          failed_quizzes << quiz if error_raised
-          next
-        end
-      end
-      if failed_quizzes.empty?
-        render_json(
-          {
-            notice: t(
-              "successfully_updated", count: @quizzes.size,
-              entity: "Quiz")
-          })
-      else
-        render_message(
-          t(
-            "failed_to_publish_quiz", title: failed_quizzes.map(&:title).join(", "),
-            count: failed_quizzes.size), :ok, "error")
-      end
+  def update
+    if @quiz.update(quiz_params)
+      render_json({ notice: t("successfully_updated", entity: "Quiz"), slug: @quiz.slug }) unless params.key?(:quiet)
     else
-      @quizzes.update_all(attrs)
-    end
-    unless params.key?(:quiet)
-      render_json(
-        {
-          notice: t(
-            "successfully_updated", count: @quizzes.size,
-            entity: "Quiz")
-        })
+      render_error(@quiz.errors.full_messages)
     end
   end
 

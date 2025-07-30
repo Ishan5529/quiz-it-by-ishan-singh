@@ -6,7 +6,7 @@ import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
 import {
   useQuizzesFetch,
-  useQuizzesUpdate,
+  useQuizzesBulkUpdate,
   useQuizzesClone,
 } from "hooks/reactQuery/useQuizzesApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
@@ -48,7 +48,7 @@ const Quizzes = () => {
 
   const history = useHistory();
 
-  const { mutate: updateQuiz } = useQuizzesUpdate();
+  const { mutate: updateBulkQuiz } = useQuizzesBulkUpdate();
   const { mutate: cloneQuiz } = useQuizzesClone();
 
   const { t } = useTranslation();
@@ -106,7 +106,7 @@ const Quizzes = () => {
   };
 
   const handlePublishToggle = ({ slugs, publishedStatus }) => {
-    updateQuiz({
+    updateBulkQuiz({
       slugs,
       quiet: true,
       payload: {

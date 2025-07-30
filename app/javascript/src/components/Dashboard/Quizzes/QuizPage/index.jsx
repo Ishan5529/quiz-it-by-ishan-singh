@@ -34,12 +34,12 @@ const QuizPage = () => {
       return;
     }
 
-    updateQuiz({ slugs: slug, quiet: true, payload: { title } });
+    updateQuiz({ slug, quiet: true, payload: { title } });
   };
 
   const handlePublish = () => {
     updateQuiz({
-      slugs: slug,
+      slug,
       quiet: true,
       payload: { isDraft: false, isPublished: true },
     });

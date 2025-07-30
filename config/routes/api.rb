@@ -27,7 +27,7 @@ namespace :api, defaults: { format: :json } do
 
       collection do
         post :bulk_destroy
-        put :bulk_update
+        put :bulk_update, to: "quizzes/bulk_update#update"
       end
 
       member do
