@@ -231,7 +231,9 @@ const Submissions = () => {
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row space-x-4">
-            <FilterChips {...{ status }} />
+            <FilterChips
+              {...{ querySearchTerm, setSearchTerm, slug, status }}
+            />
           </div>
         }
       />

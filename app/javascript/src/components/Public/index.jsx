@@ -1,7 +1,7 @@
 import { routes } from "routes";
 import React, { useState } from "react";
 
-import { Button } from "neetoui";
+import { Button, Typography } from "neetoui";
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import Scrollable from "@bigbinary/neeto-molecules/Scrollable";
@@ -16,6 +16,7 @@ import { buildUrl } from "utils/url";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import withTitle from "utils/withTitle";
+import { isEmpty } from "ramda";
 
 import Filter from "./Filter";
 import QuizCard from "./QuizCard";
@@ -97,13 +98,21 @@ const Public = () => {
           }}
         />
       </div>
-      <Scrollable className="w-full gap-6 py-6">
-        <div className="flex w-full flex-row flex-wrap justify-center gap-8">
-          {quizzes.map((quiz, idx) => (
-            <QuizCard key={idx} {...quiz} />
-          ))}
+      {!isEmpty(quizzes) ? (
+        <Scrollable className="w-full gap-6 py-6">
+          <div className="flex w-full flex-row flex-wrap justify-center gap-8">
+            {quizzes.map((quiz, idx) => (
+              <QuizCard key={idx} {...quiz} />
+            ))}
+          </div>
+        </Scrollable>
+      ) : (
+        <div className="flex h-64 w-full items-center justify-center">
+          <Typography style="h3" className="text-gray-600">
+            {t("quizzes.empty.noQuizzesFound")}
+          </Typography>
         </div>
-      </Scrollable>
+      )}
     </Container>
   );
 };

@@ -60,6 +60,7 @@
     "title": "Title",
     "status": "Status",
     "category": "Category",
+    "contains": "Contains",
     "submissionDate": "Submission Date",
     "submissionCount": "Submission Count",
     "createdOn": "Created On",
@@ -151,7 +152,8 @@
       "quizzesDescription": "Create a quiz to get started.",
       "quizzesTitle": "Looks like you don't have any quizzes!",
       "questions": "No questions found for this quiz.",
-      "answer": "You did not answer this question"
+      "answer": "You did not answer this question",
+      "noQuizzesFound": "No quizzes found"
     },
     "questions": {
       "index": "Question",

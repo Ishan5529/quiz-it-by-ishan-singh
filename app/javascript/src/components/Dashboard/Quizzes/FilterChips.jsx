@@ -7,17 +7,28 @@ import { useHistory } from "react-router-dom";
 import { routes } from "routes";
 import { capitalize } from "utils";
 
-const FilterChips = ({ category, status }) => {
+const FilterChips = ({ querySearchTerm, setSearchTerm, category, status }) => {
   const history = useHistory();
 
   const { t } = useTranslation();
 
   const handleClear = () => {
+    setSearchTerm("");
     history.push(routes.dashboard.quizzes.index);
   };
 
   return (
     <div className="flex flex-row items-center justify-center space-x-6">
+      {querySearchTerm && (
+        <Typography className="flex flex-row space-x-1" style="h4">
+          <Typography className="text-gray-700" style="h4">
+            {t("labels.contains")}:
+          </Typography>
+          <Typography className="text-gray-400" style="h4">
+            {querySearchTerm}
+          </Typography>
+        </Typography>
+      )}
       {!isEmpty(category) && (
         <Typography className="flex flex-row space-x-1" style="h4">
           <Typography className="text-gray-700" style="h4">
@@ -38,7 +49,7 @@ const FilterChips = ({ category, status }) => {
           </Typography>
         </Typography>
       )}
-      {(status || !isEmpty(category)) && (
+      {(querySearchTerm || status || !isEmpty(category)) && (
         <Button
           label={t("labels.clearFilters")}
           style="secondary"

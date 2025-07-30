@@ -201,7 +201,13 @@ const Quizzes = () => {
           </div>
         }
       />
-      <SubHeader leftActionBlock={<FilterChips {...{ category, status }} />} />
+      <SubHeader
+        leftActionBlock={
+          <FilterChips
+            {...{ querySearchTerm, category, status, setSearchTerm }}
+          />
+        }
+      />
       <TableContainer
         {...{
           quizzesData,
