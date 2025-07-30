@@ -6,10 +6,6 @@ export const LOGIN_FORM_INITIAL_VALUES = {
   password: "",
 };
 
-export const RESET_PASSWORD_FORM_INITIAL_VALUES = {
-  email: "",
-};
-
 export const SIGNUP_FORM_INITIAL_VALUES = {
   email: "",
   firstName: "",
@@ -21,10 +17,6 @@ export const SIGNUP_FORM_INITIAL_VALUES = {
 export const LOGIN_FORM_VALIDATION_SCHEMA = yup.object().shape({
   email: yup.string().email(t("yup.string.email")).required(t("yup.required")),
   password: yup.string().required(t("yup.required")),
-});
-
-export const RESET_PASSWORD_FORM_VALIDATION_SCHEMA = yup.object().shape({
-  email: yup.string().email(t("yup.string.email")).required(t("yup.required")),
 });
 
 export const SIGNUP_FORM_VALIDATION_SCHEMA = yup.object().shape({
