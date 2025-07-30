@@ -14,7 +14,7 @@ import {
 } from "hooks/reactQuery/useAttemptsApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Download } from "neetoicons";
+import { Delete, Download, RemoveCircle } from "neetoicons";
 import { Button, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -56,6 +56,11 @@ const Submissions = () => {
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setSelectedAttemptIds([]);
+    setStatus(queryStatus);
+  }, [querySearchTerm, queryStatus]);
+
   const params = {
     page: tablePage,
     searchTerm,
@@ -87,6 +92,7 @@ const Submissions = () => {
         filterNonNullAndEmpty(updatedParam)
       )
     );
+    setTablePage(1);
   });
 
   const handlePageChange = (page, perPage) => {
@@ -161,14 +167,18 @@ const Submissions = () => {
   }
 
   return (
-    <Container className="h-full">
+    <Container className="h-full min-w-[95vw] max-w-[90vw]">
       <Header
         title={t("quizzes.allSubmissions")}
         searchProps={{
           value: searchTerm,
+          enableUrlSync: false,
           className: "w-72",
           placeholder: t("placeholders.names"),
-          onChange: ({ target: { value } }) => setSearchTerm(value),
+          onChange: ({ target: { value } }) => {
+            setSearchTerm(value);
+            updateQueryParams({ searchTerm: value });
+          },
         }}
       />
       <SubHeader
@@ -192,6 +202,14 @@ const Submissions = () => {
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
                 />
+                <Button
+                  disabled={!selectedAttemptIds.length}
+                  icon={RemoveCircle}
+                  label={t("labels.clearSelection")}
+                  size="small"
+                  style="tertiary"
+                  onClick={() => setSelectedAttemptIds([])}
+                />
               </div>
             )}
           </div>
@@ -202,7 +220,6 @@ const Submissions = () => {
             <ColumnSelector />
             <StatusFilter
               {...{
-                setSelectedAttemptIds,
                 setStatus,
                 status,
                 updateQueryParams,

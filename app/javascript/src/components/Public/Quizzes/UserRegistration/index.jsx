@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
 import authenticationApi from "apis/authentication";
-import { useAuthDispatch } from "contexts/auth";
+import { useAuthDispatch, useAuthState } from "contexts/auth";
 import { useUserDispatch } from "contexts/user";
 import { useParams } from "react-router-dom";
 import { usePublicQuizzesShow } from "hooks/reactQuery/usePublicQuizzesApi";
 import { routes } from "src/routes";
-import { capitalize } from "utils";
+import { capitalize, showToastr } from "utils";
 import PropTypes from "prop-types";
 import UserRegistrationForm from "./Form";
 import { Button, Typography } from "neetoui";
@@ -18,8 +18,10 @@ import withTitle from "utils/withTitle";
 const UserRegistration = ({ history }) => {
   const { slug } = useParams();
   const { isPreview } = useQueryParams();
+  const { isAdmin } = useAuthState();
   const authDispatch = useAuthDispatch();
   const userDispatch = useUserDispatch();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { mutateAsync: createAttempt } = useAttemptsCreate();
@@ -27,7 +29,21 @@ const UserRegistration = ({ history }) => {
 
   const { data: { data: quiz = {} } = {} } = usePublicQuizzesShow(slug);
 
+  const preventStandardUserFromPreviewingQuiz = () => {
+    if (!isAdmin) {
+      showToastr({
+        message: t("misc.noStandardUserPreview"),
+        type: "error",
+      });
+      return true;
+    }
+    return false;
+  };
+
   const handleQuizStart = async () => {
+    if (isPreview && preventStandardUserFromPreviewingQuiz()) {
+      return;
+    }
     const payload = {
       status: "incomplete",
       questions: quiz.questions.map(question => ({
@@ -73,7 +89,9 @@ const UserRegistration = ({ history }) => {
   const handleSubmit = async ({ email, firstName, lastName }) => {
     setIsSubmitting(true);
     try {
-      await authenticationApi.signup({
+      const {
+        data: { role = "standard" },
+      } = await authenticationApi.signup({
         email,
         firstName,
         lastName,
@@ -82,6 +100,14 @@ const UserRegistration = ({ history }) => {
         role: "standard",
         quiet: true,
       });
+
+      if (role === "super_admin") {
+        showToastr({
+          message: t("misc.noAdmin"),
+          type: "error",
+        });
+        return;
+      }
 
       handleLogin({ email });
     } catch (error) {

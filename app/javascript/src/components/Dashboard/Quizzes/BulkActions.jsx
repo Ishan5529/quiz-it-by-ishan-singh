@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Delete } from "neetoicons";
+import { Delete, RemoveCircle } from "neetoicons";
 import { Button, Dropdown } from "neetoui";
 import { isEmpty } from "ramda";
 import withT from "utils/withT";
@@ -53,6 +53,14 @@ const BulkActions = ({
         size="small"
         style="danger"
         onClick={() => setShowDeleteAlert(true)}
+      />
+      <Button
+        disabled={!selectedQuizSlugs.length}
+        icon={RemoveCircle}
+        label={t("labels.clearSelection")}
+        size="small"
+        style="tertiary"
+        onClick={() => setSelectedQuizSlugs([])}
       />
     </div>
   );

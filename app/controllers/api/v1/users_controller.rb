@@ -18,6 +18,8 @@ class Api::V1::UsersController < Api::V1::BaseController
 
     if user.invalid? && params[:quiet].to_s == "true"
       if user.errors[:email].any? { |e| e.to_s.downcase.include?("taken") }
+        dup_user = User.find_by(email: user.email)
+        render_json({ user:, role: dup_user.role })
         return
       end
     end

@@ -54,11 +54,10 @@ const Quizzes = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    setTablePage(safePage);
-    setPerPage(safePerPage);
+    setSelectedQuizSlugs([]);
     setStatus(queryStatus);
     setCategory(safeCategory);
-  }, [safePage, safePerPage, queryStatus, safeCategory]);
+  }, [querySearchTerm, queryStatus, safeCategory]);
 
   const params = {
     page: tablePage,
