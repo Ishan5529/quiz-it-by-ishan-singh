@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const login = payload => axios.post("api/v1/login", { user: payload });
+const login = ({ attempt = false, email, password }) =>
+  axios.post("api/v1/login", { user: { email, password }, attempt });
 
 const logout = () => axios.delete("api/v1/logout");
 

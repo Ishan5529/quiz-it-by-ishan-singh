@@ -32,6 +32,7 @@
 en:
   not_found: "%{entity} not found!"
   invalid_credentials: "Incorrect email or password!"
+  unauthorized_standard_access: "Standard users are not allowed to access this resource!"
   successfully_created: "%{entity} was successfully created!"
   successfully_updated: "%{entity} has been successfully updated!"
   successfully_deleted:

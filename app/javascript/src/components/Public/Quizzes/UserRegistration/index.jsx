@@ -74,7 +74,11 @@ const UserRegistration = ({ history }) => {
     try {
       const {
         data: { auth_token, user, is_admin },
-      } = await authenticationApi.login({ email, password: "welcome" });
+      } = await authenticationApi.login({
+        email,
+        password: "welcome",
+        attempt: true,
+      });
       authDispatch({
         type: "LOGIN",
         payload: { auth_token, email, is_admin },
