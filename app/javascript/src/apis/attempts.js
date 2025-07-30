@@ -11,7 +11,7 @@ const show = ({ slug, id, preview = false }) =>
     params: { preview },
   });
 
-const create = (slug, payload, preview = false) =>
+const create = ({ slug, payload, preview = false }) =>
   axios.post(
     `${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts${
       preview ? "?preview=true" : ""
@@ -19,7 +19,7 @@ const create = (slug, payload, preview = false) =>
     { attempt: payload }
   );
 
-const update = (slug, attemptId, payload, preview = false) =>
+const update = ({ slug, attemptId, payload, preview = false }) =>
   axios.put(
     `${BASE_PUBLIC_QUIZZES_URL}/${slug}/attempts/${attemptId}${
       preview ? "?preview=true" : ""
@@ -34,10 +34,10 @@ const destroy = ({ slug, attemptIds, quiet = false }) =>
     { params: { quiet } }
   );
 
-const generatePdf = slug =>
+const generatePdf = ({ slug }) =>
   axios.post(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/report`, {});
 
-const download = slug =>
+const download = ({ slug }) =>
   axios.get(`${BASE_PUBLIC_QUIZZES_URL}/${slug}/report/download`, {
     responseType: "blob",
   });

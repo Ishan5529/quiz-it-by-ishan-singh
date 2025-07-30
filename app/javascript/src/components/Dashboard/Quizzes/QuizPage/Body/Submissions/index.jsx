@@ -1,21 +1,20 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
-import attemptsApi from "apis/attempts";
 import EmptyQuizzesListImage from "assets/images/EmptyQuizzesList";
 import { Table } from "components/commons";
 import EmptyState from "components/commons/EmptyState";
 import SubHeaderText from "components/Dashboard/Quizzes/SubHeaderText";
-import { useAttemptsFetch } from "hooks/reactQuery/useAttemptsApi";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
+import {
+  useAttemptsFetch,
+  useAttemptsDestroy,
+} from "hooks/reactQuery/useAttemptsApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import useQueryParams from "hooks/useQueryParams";
-import { Delete, Download } from "neetoicons";
+import { Delete, Download, RemoveCircle } from "neetoicons";
 import { Button, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -57,7 +56,10 @@ const Submissions = () => {
 
   const { t } = useTranslation();
 
-  const clearQueryClient = useClearQueryClient();
+  useEffect(() => {
+    setSelectedAttemptIds([]);
+    setStatus(queryStatus);
+  }, [querySearchTerm, queryStatus]);
 
   const params = {
     page: tablePage,
@@ -75,6 +77,8 @@ const Submissions = () => {
       status: queryStatus,
     });
 
+  const { mutate: destroyAttempt } = useAttemptsDestroy();
+
   const updateQueryParams = useFuncDebounce(updatedValue => {
     const updatedParam = {
       ...params,
@@ -88,6 +92,7 @@ const Submissions = () => {
         filterNonNullAndEmpty(updatedParam)
       )
     );
+    setTablePage(1);
   });
 
   const handlePageChange = (page, perPage) => {
@@ -143,13 +148,12 @@ const Submissions = () => {
     setAttemptsData(updateRowData());
   }, [attempts]);
 
-  const handleDelete = async () => {
-    await attemptsApi.destroy({
+  const handleDelete = () => {
+    destroyAttempt({
       slug,
       attemptIds: selectedAttemptIds,
       quiet: true,
     });
-    clearQueryClient(QUERY_KEYS.SUBMISSIONS);
     setSelectedAttemptIds([]);
     setShowDeleteAlert(false);
   };
@@ -163,14 +167,18 @@ const Submissions = () => {
   }
 
   return (
-    <Container className="h-full">
+    <Container className="h-full min-w-[95vw] max-w-[90vw]">
       <Header
         title={t("quizzes.allSubmissions")}
         searchProps={{
           value: searchTerm,
+          enableUrlSync: false,
           className: "w-72",
           placeholder: t("placeholders.names"),
-          onChange: ({ target: { value } }) => setSearchTerm(value),
+          onChange: ({ target: { value } }) => {
+            setSearchTerm(value);
+            updateQueryParams({ searchTerm: value });
+          },
         }}
       />
       <SubHeader
@@ -194,6 +202,14 @@ const Submissions = () => {
                   style="danger"
                   onClick={() => setShowDeleteAlert(true)}
                 />
+                <Button
+                  disabled={!selectedAttemptIds.length}
+                  icon={RemoveCircle}
+                  label={t("labels.clearSelection")}
+                  size="small"
+                  style="tertiary"
+                  onClick={() => setSelectedAttemptIds([])}
+                />
               </div>
             )}
           </div>
@@ -204,7 +220,6 @@ const Submissions = () => {
             <ColumnSelector />
             <StatusFilter
               {...{
-                setSelectedAttemptIds,
                 setStatus,
                 status,
                 updateQueryParams,
@@ -216,7 +231,9 @@ const Submissions = () => {
       <SubHeader
         leftActionBlock={
           <div className="flex flex-row space-x-4">
-            <FilterChips {...{ status }} />
+            <FilterChips
+              {...{ querySearchTerm, setSearchTerm, slug, status }}
+            />
           </div>
         }
       />

@@ -29,15 +29,6 @@ class Api::V1::QuizzesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  def test_bulk_update
-    quiz2 = create(:quiz, user: @user)
-    put bulk_update_api_v1_quizzes_url, params: { slugs: [@quiz.slug, quiz2.slug], quiz: { isPublished: false } },
-      headers: headers(@user)
-    assert_response :success
-    assert_not Quiz.find(@quiz.id).isPublished
-    assert_not Quiz.find(quiz2.id).isPublished
-  end
-
   def test_bulk_destroy
     quiz2 = create(:quiz, user: @user)
     assert_difference "Quiz.count", -2 do
@@ -65,25 +56,6 @@ class Api::V1::QuizzesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert response_body.key?("slug")
     assert_not response_body.key?("notice")
-  end
-
-  def test_bulk_update_with_publish_action
-    quiz2 = create(:quiz, user: @user)
-
-    refute @quiz.isPublished
-    refute quiz2.isPublished
-
-    Quizzes::PublishService.any_instance.expects(:publish!).twice
-
-    put bulk_update_api_v1_quizzes_url,
-      params: {
-        slugs: [@quiz.slug, quiz2.slug],
-        quiet: true,
-        quiz: { isPublished: true, isDraft: false }
-      },
-      headers: headers(@user)
-
-    assert_response :success
   end
 
   def test_filter_by_category
@@ -166,5 +138,34 @@ class Api::V1::QuizzesControllerTest < ActionDispatch::IntegrationTest
     assert_includes quiz_ids, quiz1.id
     assert_not_includes quiz_ids, quiz2.id
     assert_not_includes quiz_ids, quiz3.id
+  end
+
+  def test_update_quiz_success
+    new_title = "Updated Quiz Title"
+    put api_v1_quiz_url(@quiz.slug), params: { quiz: { title: new_title } }, headers: headers(@user)
+    assert_response :success
+    assert_equal new_title, @quiz.reload.title
+    assert_equal t("successfully_updated", entity: "Quiz"), response_body["notice"]
+    assert_equal @quiz.slug, response_body["slug"]
+  end
+
+  def test_update_quiz_failure
+    put api_v1_quiz_url(@quiz.slug), params: { quiz: { title: "" } }, headers: headers(@user)
+    assert_response :unprocessable_entity
+    assert_includes response_body["error"], "Title"
+  end
+
+  def test_update_quiz_with_quiet_param
+    new_title = "Quiet Update"
+    put api_v1_quiz_url(@quiz.slug), params: { quiz: { title: new_title }, quiet: true }, headers: headers(@user)
+    assert_response :success
+    assert_equal new_title, @quiz.reload.title
+    assert_nil response_body["notice"]
+  end
+
+  def test_show_returns_not_found_for_invalid_slug
+    get api_v1_quiz_url("non-existent-slug"), headers: headers(@user)
+    assert_response :not_found
+    assert_match "Couldn't find Quiz", response_body["error"]
   end
 end

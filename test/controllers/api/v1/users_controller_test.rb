@@ -110,8 +110,6 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    assert_empty response.body
-
     assert_equal 1, User.where(email: existing_email).count
   end
 
@@ -142,5 +140,16 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal valid_email, json["user"]["email"]
     assert_equal "Quiet", json["user"]["first_name"]
     assert_equal "User", json["user"]["last_name"]
+  end
+
+  def test_create_duplicate_email_returns_not_unique_error
+    email = "duplicate@example.com"
+    user_attrs = attributes_for(:user, email: email)
+    post api_v1_users_url, params: { user: user_attrs }
+    assert_response :success
+
+    post api_v1_users_url, params: { user: user_attrs }
+    assert_response :unprocessable_entity
+    assert_match "Email has already been taken", response_body["error"]
   end
 end

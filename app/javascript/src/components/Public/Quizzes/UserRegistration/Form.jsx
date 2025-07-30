@@ -24,13 +24,13 @@ const UserRegistrationForm = ({ onSubmit, isSubmitting, t }) => (
             required
             label={t("labels.fullName")}
             name="firstName"
-            placeholder={t("placeholders.authFirstName")}
+            placeholder={t("placeholders.firstName")}
             className="w-1/2"
           />
           <Input
             label="&nbsp;"
             name="lastName"
-            placeholder={t("placeholders.authLastName")}
+            placeholder={t("placeholders.lastName")}
             className="w-1/2"
           />
         </div>
@@ -38,7 +38,7 @@ const UserRegistrationForm = ({ onSubmit, isSubmitting, t }) => (
           required
           label={t("labels.emailAddress")}
           name="email"
-          placeholder={t("placeholders.authEmail")}
+          placeholder={t("placeholders.email")}
           type="email"
         />
         <Button

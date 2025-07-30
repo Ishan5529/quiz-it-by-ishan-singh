@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import attemptsApi from "apis/attempts";
 import createConsumer from "channels/consumer";
 import { subscribeToReportDownloadChannel } from "channels/reportDownloadChannel";
 import { ProgressBar } from "components/commons";
-import { REPORT_PDF_NAME } from "components/Dashboard/Quizzes/constants";
 import { useUserState } from "contexts/user";
-import FileSaver from "file-saver";
+import {
+  useAttemptsGeneratePdf,
+  useAttemptsDownloadReport,
+} from "hooks/reactQuery/useAttemptsApi";
 import { Modal, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -14,30 +15,18 @@ import { useParams } from "react-router-dom";
 const DownloadReport = ({ isOpen = true, setIsOpen }) => {
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState("");
-
-  const { user } = useUserState();
-
   const { slug } = useParams();
 
+  const { user } = useUserState();
   const consumer = createConsumer();
+
+  const { mutate: generateReport } = useAttemptsGeneratePdf();
+  const { mutateAsync: downloadPdf } = useAttemptsDownloadReport();
 
   const { t } = useTranslation();
 
-  const generatePdf = async () => {
-    try {
-      await attemptsApi.generatePdf(slug);
-    } catch (error) {
-      logger.error(error);
-    }
-  };
-
-  const downloadPdf = async () => {
-    try {
-      const { data } = await attemptsApi.download(slug);
-      FileSaver.saveAs(data, REPORT_PDF_NAME);
-    } catch (error) {
-      logger.error(error);
-    }
+  const generatePdf = () => {
+    generateReport({ slug });
   };
 
   useEffect(() => {
@@ -58,7 +47,7 @@ const DownloadReport = ({ isOpen = true, setIsOpen }) => {
     if (progress === 100) {
       const downloadingMessage = t("misc.downloading");
       setMessage(downloadingMessage);
-      downloadPdf();
+      downloadPdf({ slug });
       setIsOpen(false);
     }
   }, [progress]);

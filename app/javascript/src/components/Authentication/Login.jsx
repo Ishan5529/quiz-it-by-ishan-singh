@@ -96,13 +96,6 @@ const Login = ({ history }) => {
               to={routes.auth.signup}
             />
           </div>
-          <Button
-            data-cy="forgot-password-link"
-            label={t("labels.forgotPassword")}
-            size="small"
-            style="link"
-            to={routes.auth.resetPassword}
-          />
         </div>
       </div>
     </div>

@@ -2,11 +2,28 @@ import React from "react";
 import { Dropdown, Input, Typography } from "neetoui";
 import { Search, Filter as FilterIcon } from "neetoicons";
 import withT from "utils/withT";
+import { CATEGORIES } from "components/Dashboard/Quizzes/constants";
+import Select from "react-select";
 
-const Filter = ({ searchTerm, setSearchTerm, updateQueryParams, t }) => {
-  const handleChange = ({ target: { value } }) => {
+const Filter = ({
+  searchTerm,
+  setSearchTerm,
+  selectedCategories,
+  setSelectedCategories,
+  updateQueryParams,
+  t,
+}) => {
+  const handleSearchChange = ({ target: { value } }) => {
     setSearchTerm(value);
     updateQueryParams({ searchTerm: value });
+  };
+
+  const handleCategoryChange = selectedOptions => {
+    const categories = selectedOptions
+      ? selectedOptions.map(option => option.value)
+      : [];
+    setSelectedCategories(categories);
+    updateQueryParams({ category: categories });
   };
 
   return (
@@ -15,17 +32,30 @@ const Filter = ({ searchTerm, setSearchTerm, updateQueryParams, t }) => {
         placeholder={t("placeholders.quizSearch")}
         prefix={<Search />}
         value={searchTerm}
-        onChange={handleChange}
+        onChange={handleSearchChange}
         size="large"
       />
       <Dropdown
         buttonStyle="text"
+        className="h-24 w-64 p-4"
         size="large"
         icon={FilterIcon}
-        strategy="fixed"
       >
-        <div className="p-4">
-          <Typography style="h4">{t("misc.emptyFilter")}</Typography>
+        <div className="w-full" onClick={event => event.stopPropagation()}>
+          <Typography style="h4">{t("labels.category")}</Typography>
+          <Select
+            isClearable
+            isMulti
+            className="absolute mt-2 w-full flex-grow-0"
+            name="category"
+            placeholder={t("placeholders.category")}
+            options={CATEGORIES.map(category => ({
+              label: category,
+              value: category,
+            }))}
+            value={selectedCategories?.map(cat => ({ label: cat, value: cat }))}
+            onChange={handleCategoryChange}
+          />
         </div>
       </Dropdown>
     </div>

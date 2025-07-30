@@ -1,6 +1,9 @@
 import React from "react";
 
-import questionsApi from "apis/questions";
+import {
+  useQuestionsClone,
+  useQuestionsDestroy,
+} from "hooks/reactQuery/useQuestionsApi";
 import { MenuHorizontal } from "neetoicons";
 import { Typography, Radio, Dropdown } from "neetoui";
 import { useTranslation } from "react-i18next";
@@ -9,6 +12,9 @@ import { routes } from "routes";
 
 const Question = ({ question, slug, setIsDirty }) => {
   const history = useHistory();
+
+  const { mutate: cloneQuestion } = useQuestionsClone();
+  const { mutate: destroyQuestion } = useQuestionsDestroy();
 
   const { t } = useTranslation();
 
@@ -25,12 +31,12 @@ const Question = ({ question, slug, setIsDirty }) => {
   };
 
   const handleClone = async () => {
-    await questionsApi.clone(slug, question.id);
+    cloneQuestion({ slug, id: question.id });
     setIsDirty(true);
   };
 
   const handleDelete = async () => {
-    await questionsApi.destroy(slug, question.id);
+    destroyQuestion({ slug, ids: [question.id] });
     setIsDirty(true);
   };
 

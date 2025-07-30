@@ -5,13 +5,7 @@ import { Dropdown, Checkbox, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import withT from "utils/withT";
 
-const StatusFilter = ({
-  status,
-  setStatus,
-  updateQueryParams,
-  setSelectedAttemptIds,
-  t,
-}) => {
+const StatusFilter = ({ status, setStatus, updateQueryParams, t }) => {
   const determineStatus = action => {
     if (!isEmpty(status)) return "";
 
@@ -24,7 +18,6 @@ const StatusFilter = ({
       closeOnSelect={false}
       icon={Filter}
       strategy="fixed"
-      onClick={() => setSelectedAttemptIds([])}
     >
       <div className="flex w-full flex-col items-center justify-start space-y-4 p-4">
         <div className="w-full text-left text-gray-700">

@@ -1,11 +1,8 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useState, useEffect } from "react";
 
-import quizzesApi from "apis/quizzes";
 import { PageNotFound } from "components/commons";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
 import { useQuestionsFetch } from "hooks/reactQuery/useQuestionsApi";
+import { useQuizzesUpdate } from "hooks/reactQuery/useQuizzesApi";
 import { useParams, useHistory, Switch, Route } from "react-router-dom";
 import { routes } from "routes";
 import withTitle from "utils/withTitle";
@@ -17,17 +14,16 @@ const Questions = () => {
   const history = useHistory();
   const { slug } = useParams();
   const [isQuestionDirty, setIsQuestionDirty] = useState(false);
-  const clearQueryClient = useClearQueryClient();
+
+  const { mutate: updateQuiz } = useQuizzesUpdate();
 
   useEffect(() => {
     if (!isQuestionDirty) {
       return;
     }
 
-    clearQueryClient(QUERY_KEYS.QUESTIONS);
-    clearQueryClient(QUERY_KEYS.QUIZZES);
-    quizzesApi.update({
-      slugs: slug,
+    updateQuiz({
+      slug,
       quiet: true,
       payload: { isDraft: true },
     });

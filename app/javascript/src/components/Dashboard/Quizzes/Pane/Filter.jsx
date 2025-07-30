@@ -2,7 +2,7 @@ import React from "react";
 
 import {
   QUIZZES_FILTER_FORM_VALIDATION_SCHEMA,
-  categories,
+  CATEGORIES,
 } from "components/Dashboard/Quizzes/constants";
 import { Pane, Typography } from "neetoui";
 import withT from "utils/withT";
@@ -78,7 +78,7 @@ const Filter = ({
           data: QUIZZES_FILTER_INITIAL_FORM_VALUES,
           validationSchema: QUIZZES_FILTER_FORM_VALIDATION_SCHEMA,
           onClose,
-          categories,
+          CATEGORIES,
         }}
       />
     </Pane>

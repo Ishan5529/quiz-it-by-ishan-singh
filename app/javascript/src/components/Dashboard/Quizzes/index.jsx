@@ -1,14 +1,14 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React, { useState, useEffect } from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
 import SubHeader from "@bigbinary/neeto-molecules/SubHeader";
-import quizzesApi from "apis/quizzes";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
-import { useQuizzesFetch } from "hooks/reactQuery/useQuizzesApi";
+import {
+  useQuizzesFetch,
+  useQuizzesBulkUpdate,
+  useQuizzesClone,
+} from "hooks/reactQuery/useQuizzesApi";
 import useFuncDebounce from "hooks/useFuncDebounce";
 import { useQuizAlerts } from "hooks/useQuizAlerts";
 import { useQuizFilters } from "hooks/useQuizFilters";
@@ -47,15 +47,17 @@ const Quizzes = () => {
   const [category, setCategory] = useState(safeCategory);
 
   const history = useHistory();
-  const clearQueryClient = useClearQueryClient();
+
+  const { mutate: updateBulkQuiz } = useQuizzesBulkUpdate();
+  const { mutate: cloneQuiz } = useQuizzesClone();
+
   const { t } = useTranslation();
 
   useEffect(() => {
-    setTablePage(safePage);
-    setPerPage(safePerPage);
+    setSelectedQuizSlugs([]);
     setStatus(queryStatus);
     setCategory(safeCategory);
-  }, [safePage, safePerPage, queryStatus, safeCategory]);
+  }, [querySearchTerm, queryStatus, safeCategory]);
 
   const params = {
     page: tablePage,
@@ -103,8 +105,8 @@ const Quizzes = () => {
     );
   };
 
-  const handlePublishToggle = async ({ slugs, publishedStatus }) => {
-    await quizzesApi.update({
+  const handlePublishToggle = ({ slugs, publishedStatus }) => {
+    updateBulkQuiz({
       slugs,
       quiet: true,
       payload: {
@@ -112,12 +114,20 @@ const Quizzes = () => {
         isDraft: publishedStatus,
       },
     });
-    clearQueryClient(QUERY_KEYS.QUIZZES);
   };
 
-  const handleQuizClone = async slug => {
-    await quizzesApi.clone(slug);
-    clearQueryClient(QUERY_KEYS.QUIZZES);
+  const handleCategoryToggle = ({ slugs, category }) => {
+    updateBulkQuiz({
+      slugs,
+      quiet: true,
+      payload: {
+        category,
+      },
+    });
+  };
+
+  const handleQuizClone = slug => {
+    cloneQuiz({ slug });
   };
 
   const quizzesData = useQuizTableData({
@@ -172,6 +182,7 @@ const Quizzes = () => {
                 Menu,
                 MenuItem,
                 handlePublishToggle,
+                handleCategoryToggle,
                 selectedQuizSlugs,
                 setSelectedQuizSlugs,
                 setShowDeleteAlert,
@@ -190,7 +201,13 @@ const Quizzes = () => {
           </div>
         }
       />
-      <SubHeader leftActionBlock={<FilterChips {...{ category, status }} />} />
+      <SubHeader
+        leftActionBlock={
+          <FilterChips
+            {...{ querySearchTerm, category, status, setSearchTerm }}
+          />
+        }
+      />
       <TableContainer
         {...{
           quizzesData,

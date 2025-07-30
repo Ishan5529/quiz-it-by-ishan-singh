@@ -32,12 +32,16 @@
 en:
   not_found: "%{entity} not found!"
   invalid_credentials: "Incorrect email or password!"
+  unauthorized_standard_access: "Standard users are not allowed to access this resource!"
   successfully_created: "%{entity} was successfully created!"
   successfully_updated: "%{entity} has been successfully updated!"
   successfully_deleted:
     one: "%{entity} has been successfully deleted!"
     other: "%{entity} have been successfully deleted!"
   update_failure: "Couldn't update the %{entity}! Please try again."
+  failed_to_publish_quiz:
+    one: "Failed to publish the quiz: %{title}.\nPlease ensure it has at least one question."
+    other: "Failed to publish the quizzes: %{title}.\nPlease ensure they have at least one question."
   signup_successful: "Signup successful. Please login to continue"
   something_went_wrong: "Something went wrong! Please try again."
   session:

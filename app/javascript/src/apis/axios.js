@@ -32,7 +32,7 @@ const handleSuccessResponse = response => {
     if (response.data.notice) {
       showToastr({
         message: response.data.notice,
-        type: "success",
+        type: response.data.type || "success",
       });
     }
   }

@@ -1,15 +1,14 @@
-import { QUERY_KEYS } from "constants/query";
-
 import React from "react";
 
 import Container from "@bigbinary/neeto-molecules/Container";
 import Header from "@bigbinary/neeto-molecules/Header";
 import PageLoader from "@bigbinary/neeto-molecules/PageLoader";
-import organizationsApi from "apis/organizations";
 import { Form, Formik } from "formik";
-import { useClearQueryClient } from "hooks/reactQuery/useClearQueryClient";
-import { useOrganizationsShow } from "hooks/reactQuery/useOrganizationsApi";
-import { Button } from "neetoui";
+import {
+  useOrganizationsShow,
+  useOrganizationsUpdate,
+} from "hooks/reactQuery/useOrganizationsApi";
+import { Button, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +16,8 @@ import { ORGANIZATION_FORM_VALIDATION_SCHEMA } from "./constants";
 
 const Organization = () => {
   const { t } = useTranslation();
-  const clearQueryClient = useClearQueryClient();
+
+  const { mutate: updateOrganization } = useOrganizationsUpdate();
 
   const {
     data: { data: { organization: organizationData } = {} } = {},
@@ -30,25 +30,24 @@ const Organization = () => {
 
   const initialFormValues = { organization: organizationData?.name || "" };
 
-  const handleSubmit = async (data, { resetForm }) => {
-    try {
-      await organizationsApi.update({
-        name: data.organization,
-      });
-      clearQueryClient(QUERY_KEYS.ORGANIZATIONS);
-    } catch (err) {
-      resetForm();
-      logger.error(err);
-    }
+  const handleSubmit = (data, { resetForm }) => {
+    updateOrganization({ name: data.organization }, { onError: resetForm });
   };
 
   return (
     <Container>
       <Header
         className="neeto-ui-border-gray-200 border-b"
-        title={t("labels.updateOrganization")}
+        title={
+          <Typography style="h1">
+            {t("labels.general")}
+            <Typography style="body1">
+              {t("labels.customizeQuizSiteName")}
+            </Typography>
+          </Typography>
+        }
       />
-      <div className="mx-auto flex h-full w-full flex-col items-center justify-center sm:max-w-md">
+      <div className="mt-4 w-2/5">
         <Formik
           enableReinitialize
           initialValues={initialFormValues}
@@ -56,21 +55,31 @@ const Organization = () => {
           onSubmit={handleSubmit}
         >
           {({ dirty, isSubmitting }) => (
-            <Form className="neeto-ui-rounded-lg neeto-ui-bg-white neeto-ui-shadow-s w-full space-y-6 border p-8">
+            <Form className="neeto-ui-rounded-lg neeto-ui-bg-white w-full space-y-6 p-8">
               <Input
                 required
-                label={t("labels.organization")}
+                label={t("labels.organizationName")}
                 name="organization"
+                placeholder={t("placeholders.organization")}
+                size="large"
                 type="name"
               />
               <Button
-                fullWidth
                 className="h-8"
                 disabled={!dirty || isSubmitting}
-                label={t("labels.update")}
+                label={t("labels.saveChanges")}
                 loading={isSubmitting}
                 size="small"
                 type="submit"
+              />
+              <Button
+                className="ml-4 h-8"
+                disabled={!dirty || isSubmitting}
+                label={t("labels.cancel")}
+                loading={isSubmitting}
+                size="small"
+                style="secondary"
+                type="reset"
               />
             </Form>
           )}

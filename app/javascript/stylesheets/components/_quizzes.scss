@@ -1,3 +1,7 @@
 .quizzes-table-height {
   height: calc(100vh - 160px);
 }
+
+.neeto-ui-toast__message, .Toastify__toast-body {
+  white-space: pre-line;
+}

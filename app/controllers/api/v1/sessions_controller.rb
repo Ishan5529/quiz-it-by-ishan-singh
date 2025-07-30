@@ -9,6 +9,10 @@ class Api::V1::SessionsController < Api::V1::BaseController
     if invalid_password?(user)
       render_error(t("invalid_credentials"), :unauthorized)
     else
+      if user.role == "standard" && !params[:attempt]
+        render_error(t("unauthorized_standard_access"), :unauthorized)
+        return
+      end
       sign_in(user)
       render_json({ auth_token: user.authentication_token, user:, is_admin: user.super_admin? }, :created)
     end
@@ -22,7 +26,7 @@ class Api::V1::SessionsController < Api::V1::BaseController
   private
 
     def session_params
-      params.require(:user).permit(:email, :password)
+      params.require(:user).permit(:email, :password, attempt: false)
     end
 
     def invalid_password?(user)
