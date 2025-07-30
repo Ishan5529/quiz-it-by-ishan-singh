@@ -182,7 +182,6 @@
     "linkCopied": "Link copied to clipboard",
     "stringExpected": "Expected a string",
     "draftSaved": "Draft saved at",
-    "emptyFilter": "No filters yet.",
     "noPage": "The page you're looking for is missing.",
     "noAdmin": "Admins cannot attempt quiz. Please login with a standard user account.\nOr you can preview the quiz.",
     "noStandardUserPreview": "Standard users cannot preview the quiz. Please login with an admin account to preview."

@@ -21,14 +21,19 @@ import Filter from "./Filter";
 import QuizCard from "./QuizCard";
 
 const Public = () => {
-  const { searchTerm: querySearchTerm = "" } = useQueryParams();
+  const { searchTerm: querySearchTerm = "", category: queryCategory = [] } =
+    useQueryParams();
 
   const [searchTerm, setSearchTerm] = useState(querySearchTerm);
+  const [selectedCategories, setSelectedCategories] = useState(
+    [queryCategory].flat()
+  );
 
   const { t } = useTranslation();
 
   const params = {
     searchTerm,
+    selectedCategories,
   };
 
   const { isAdmin } = useAuthState();
@@ -37,6 +42,7 @@ const Public = () => {
   const { data: { data: { quizzes } = {} } = {}, isLoading } =
     usePublicQuizzesFetch({
       title: querySearchTerm,
+      category: queryCategory,
     });
 
   const {
@@ -81,7 +87,15 @@ const Public = () => {
         }
       />
       <div className="mb-12 mt-12 flex w-full items-center justify-center">
-        <Filter {...{ searchTerm, setSearchTerm, updateQueryParams }} />
+        <Filter
+          {...{
+            searchTerm,
+            setSearchTerm,
+            selectedCategories,
+            setSelectedCategories,
+            updateQueryParams,
+          }}
+        />
       </div>
       <Scrollable className="w-full gap-6 py-6">
         <div className="flex w-full flex-row flex-wrap justify-center gap-8">
