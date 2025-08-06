@@ -1,7 +1,3 @@
-Made by the team at [BigBinary](https://bigbinary.com), this is a base project
-to quickly spin up a Rails application built with opinions of BigBinary style of
-working.
-
 ## Local Development Setup
 
 First clone this repo.
@@ -57,7 +53,6 @@ perl -pi -w -e 's/QuizIt/Pump/g;' $(git ls-files)
 - `rake setup` to set sensible sample data including user `oliver@example.com`
   with password `welcome`.
 - Uses [devise](https://github.com/plataformatec/devise).
-- Uses [Honeybadger](https://www.honeybadger.io/).
 - Uses slim for cleaner syntax over erb and better performance over haml.
 - Uses [ActiveAdmin](http://activeadmin.info).
 - Uses [Sidekiq](https://github.com/mperham/sidekiq).
@@ -71,18 +66,3 @@ perl -pi -w -e 's/QuizIt/Pump/g;' $(git ls-files)
 - Auto-formats JavaScript and CSS code with
   [prettier](https://github.com/prettier/prettier).
 - Letter opener gem for development.
-
-## neetoDeploy Review
-
-[neetoDeploy Review](https://www.neeto.com/neetodeploy) is enabled on this
-application. Thus all PRs will have a review app and once the PR is merged to
-main, it will be deployed to production instance. The neetoDeploy instance for
-QuizIt is hosted in `neeto-engineering` organization.
-
-## About BigBinary
-
-![BigBinary](https://raw.githubusercontent.com/bigbinary/bigbinary-assets/press-assets/PNG/logo-light-solid-small.png?raw=true)
-
-wheel is maintained by [BigBinary](https://www.bigbinary.com). BigBinary is a
-software consultancy company. We build web and mobile applications using Ruby on
-Rails, React.js, React Native and Node.js.
