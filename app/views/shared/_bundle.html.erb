@@ -1,14 +1,22 @@
 <% if Rails.env.development? || Rails.env.test? %>
-  <script type="module">
+<script type="module">
     import RefreshRuntime from 'http://localhost:8000/@react-refresh';
     RefreshRuntime.injectIntoGlobalHook(window);
     window.$RefreshReg$ = () => {};
     window.$RefreshSig$ = () => (type) => type;
     window.__vite_plugin_react_preamble_installed__ = true;
-  </script>
-  <%= javascript_include_tag "http://localhost:8000/@vite/client", type: "module" %>
-  <%= javascript_include_tag "http://localhost:8000/#{entrypoint}.js", type: "module" %>
+</script>
+<%= javascript_include_tag "http://localhost:8000/@vite/client", type: "module" %>
+<%= javascript_include_tag "http://localhost:8000/#{entrypoint}.js", type: "module" %>
 <% else %>
-  <%= stylesheet_link_tag "#{entrypoint}", media: "all" %>
-  <%= javascript_include_tag "#{entrypoint}", type: "module", crossorigin: "anonymous" %>
+<% manifest_path = Rails.root.join("dist/manifest.json") %>
+<% manifest = JSON.parse(File.read(manifest_path)) if File.exist?(manifest_path) %>
+
+<% if manifest && manifest["#{entrypoint}.js"] %>
+<%= stylesheet_link_tag "/#{manifest["#{entrypoint}.css"]["file"]}", media: "all" if manifest["#{entrypoint}.css"] %>
+<%= javascript_include_tag "/#{manifest["#{entrypoint}.js"]["file"]}", type: "module", crossorigin: "anonymous" %>
+<% else %>
+<!-- Fallback if manifest not found -->
+<%= javascript_include_tag "/dist/#{entrypoint}.js", type: "module", crossorigin: "anonymous" %>
+<% end %>
 <% end %>

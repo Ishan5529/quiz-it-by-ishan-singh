@@ -1,0 +1,12 @@
+{
+  "application.js": {
+    "file": "assets/application-DQ2ZnwGh.js",
+    "name": "application",
+    "src": "application.js",
+    "isEntry": true
+  },
+  "style.css": {
+    "file": "assets/style-CYOU3Hh8.css",
+    "src": "style.css"
+  }
+}

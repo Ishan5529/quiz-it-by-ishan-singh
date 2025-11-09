@@ -1,6 +1,6 @@
 import { mergeDeepRight } from "ramda";
 import { alias } from "./config/build/config";
-import { define, entryPoints, extensions } from "./config/build/constants";
+import { define, extensions } from "./config/build/constants";
 import svgr from "vite-plugin-svgr";
 const postCssConfig = require("./postcss.config");
 
@@ -14,10 +14,16 @@ const baseConfig = {
     manifest: true,
     sourcemap: true,
     cssCodeSplit: false,
+    rollupOptions: {
+      input: {
+        application: "app/javascript/packs/application.js",
+      },
+    },
   },
   root: "app/javascript/packs",
   resolve: {
     alias,
+    extensions,
   },
   define,
   plugins: [
@@ -28,12 +34,4 @@ const baseConfig = {
   ],
 };
 
-const viteConfig = mergeDeepRight(baseConfig, {
-  resolve: {
-    alias,
-    extensions,
-  },
-  rollupOptions: { input: entryPoints },
-});
-
-module.exports = viteConfig;
+export default baseConfig;
